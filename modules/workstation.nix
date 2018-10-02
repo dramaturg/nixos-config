@@ -69,6 +69,7 @@
     libreoffice
     firefox chromium
     torbrowser
+    thunderbird
 
     # desktop
     arandr
@@ -104,7 +105,17 @@
   virtualisation.libvirtd.enable = true;
   documentation.man.enable = true;
 
-  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio = {
+    enable = true;
+
+    # for bluetooth
+    package = pkgs.pulseaudioFull;
+
+    configFile = pkgs.writeText "default.pa" ''
+      load-module module-bluetooth-policy
+      load-module module-bluetooth-discover
+    '';
+  };
 
   services.udisks2.enable = true;
 

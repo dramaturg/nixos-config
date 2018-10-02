@@ -15,7 +15,6 @@
         extraConfig = ''
           ACPI_CUSTOM_METHOD m
           B43_SDIO y
-
           BATTERY_MAX17042 m
 
           COMMON_CLK y
@@ -54,6 +53,7 @@
           TYPEC_MUX_PI3USB30532 m
           #MUX_INTEL_CHT_USB_MUX m
           # MUX_PI3USB30532 m
+          TYPEC_MUX_PI3USB30532 m
           NVRAM y
           POWER_RESET y
           PWM y
@@ -116,7 +116,10 @@
       # "i915.enable_fbc=1"
       "gpd-pocket-fan.speed_on_ac=0"
     ];
-    kernelModules = [ "kvm-intel" ];
+    kernelModules = [
+      "kvm-intel"
+      "btusb"
+    ];
     kernelPackages = pkgs.linuxPackagesFor pkgs.linux_4_18;
 
     initrd = {

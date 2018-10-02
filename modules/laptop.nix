@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   imports = [
     ./workstation.nix
@@ -23,9 +23,24 @@
     };
   };
 
-  hardware = {
-    bluetooth = {
-      enable = true;
-    };
+  hardware.bluetooth = {
+    enable = true;
+  };
+
+  hardware.pulseaudio = lib.mkForce {
+    enable = true;
+
+    # for bluetooth
+    package = pkgs.pulseaudioFull;
+
+    configFile = pkgs.writeText "default.pa" ''
+      load-module module-bluetooth-policy
+      load-module module-bluetooth-discover
+    '';
+
+    extraConfig = "
+     [General]
+     Enable=Source,Sink,Media,Socket
+    ";
   };
 }
