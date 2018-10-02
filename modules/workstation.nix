@@ -1,109 +1,117 @@
-{ pkgs, config, ... }:
+{ pkgs, lib, config, ... }:
 {
-  nixpkgs.config = {
-
-    packageOverrides = pkgs: rec {
-      yarn = pkgs.yarn.override { nodejs = pkgs.nodejs-8_x;  };
-
-      haskellPackages = pkgs.haskellPackages.override {
-        overrides = haskellPackagesNew: haskellPackagesOld: rec {
-          beans = haskellPackagesNew.callPackage ./beans.nix {};
-        };
-      };
-
-      gw = pkgs.callPackage ./gradlew.nix {};
-
-    };
-  };
 
   environment.systemPackages = with pkgs; [
-    # flashplayer
-    # skypeforlinux
-    ack
-    arandr
     beancount
-    chromium
     darktable
-    dmenu
-    docker_compose
-    emacs
-    evince
-    firefox
     fdupes
-    git-review
-    gw
-    # flashplayer
-    gnome3.eog
-    gnome3.nautilus
     gradle
     gthumb
     hplip
-    i3lock
-    icedtea8_web
     imagemagick7
     ispell
     isync
     jetbrains.datagrip
     jetbrains.idea-community
-    keepassx2
     libreoffice
     libxml2
-    mitscheme
     mu
-    nix-repl
-    nodejs-8_x
-    notmuch
-    offlineimap
-    openjdk10
-    pavucontrol
-    pandoc
     rofi
     rubber
-    sbcl
     shared_mime_info
     silver-searcher
-    spotify
-    termite
-    texlive.combined.scheme-full
-    unstable.exiftool
-    vanilla-dmz
     virtmanager
-    virtmanager
-    vlc
     wpa_supplicant
     xautolock
     xiccd
-    xorg.xbacklight
-    xorg.xcursorthemes
-    xorg.xdpyinfo
-    xorg.xev
-    xorg.xkill
     xsel
     xss-lock
     yarn
     zbar
-    zip
-  ]
 
-  ++ (with pkgs.haskellPackages; [
-    beans
-    cabal-install
-    apply-refact
-    cabal2nix
-    # hasktags
-    hindent
-    # hlint
-    hpack
-    stylish-haskell
-    xmobar
+    # shell
+    mosh
 
-  ]);
+    # media
+    vlc mpv
+    glxinfo vdpauinfo libva
+
+    # nix
+    nixops
+
+    # ops
+    aws kubectl terraform
+    ansible
+    docker_compose
+    linuxPackages.virtualbox
+    freeipmi
+
+    # network
+    speedtest-cli
+    wireshark tcpdump
+    nmap 
+    socat
+
+    # dev
+    gdb gradle
+    python3Full python3Packages.virtualenv
+    gitAndTools.gitflow gitAndTools.gitFull
+    man-pages posix_man_pages
+    binutils jq
+    git-review
+    rustup gcc stack nim
+    chicken racket
+    valgrind
+    nodejs
+
+    # web & docs
+    evince okular
+    libreoffice
+    firefox chromium
+    torbrowser
+
+    # desktop
+    arandr
+    i3 i3lock dmenu
+    termite rxvt_unicode_with-plugins
+    icedtea8_web
+    pavucontrol
+    networkmanagerapplet
+    blueman
+    gnome3.eog gnome3.nautilus
+    xorg.xbacklight xorg.xcursorthemes xorg.xdpyinfo
+    xorg.xev xorg.xkill
+
+    # misc
+    fuse
+    sshfsFuse
+  ];
+
+  nix.daemonIONiceLevel = 7;
+  nix.daemonNiceLevel = 19;
+
+  # boot.initrd.kernelModules = [
+  #   "vboxdrv" "vboxnetadp" "vboxnetflt"
+  # ];
+
+  # boot.extraModulePackages = [
+  #   pkgs.linuxPackages.virtualbox
+  # ];
+
+  programs.mosh.enable = true;
+  programs.mtr.enable = true;
 
   virtualisation.libvirtd.enable = true;
+  documentation.man.enable = true;
 
   hardware.pulseaudio.enable = true;
 
   services.udisks2.enable = true;
+
+  services.avahi = {
+    enable = true;
+    nssmdns = true;
+  };
 
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
@@ -112,7 +120,7 @@
   services.xserver = {
     enable = true;
     layout = "us(altgr-intl)";
-    xkbOptions = "ctrl:nocaps,compose:ralt,terminate:ctrl_alt_bksp";
+    xkbOptions = "ctrl:nocaps,compose:caps,terminate:ctrl_alt_bksp";
     libinput = {
       enable = true;
       naturalScrolling = true;
@@ -133,30 +141,25 @@
       };
     };
     windowManager = {
-      default = "xmonad";
-      xmonad = {
+      default = "i3";
+      i3 = {
         enable = true;
-        enableContribAndExtras = true;
-        extraPackages = haskellPackages: [
-          haskellPackages.hostname
-        ];
       };
     };
   };
 
-  networking.extraHosts = ''
-    127.0.0.1	portal.test
-    127.0.0.1	truewealth.test
-    127.0.0.1 s3mock
-  '';
-
   services.redshift = {
     enable = true;
-    provider = "geoclue2";
+    brightness.day = "1";
+    brightness.night = "0.6";
+    temperature.day = 5500;
+    temperature.night = 3400;
+
+    provider = "manual";
+    latitude = "54.515";
+    longitude = "9.569";
     extraOptions = ["-v"];
   };
-
-  services.emacs.enable = true;
 
   fonts = {
     enableDefaultFonts = true;
@@ -173,10 +176,26 @@
 
   services.printing = {
     enable = true;
-    drivers = [pkgs.hplip];
+    drivers = [pkgs.gutenprint];
   };
 
   services.colord = {
     enable = true;
+  };
+
+  environment.etc."fuse.conf".text = ''
+    user_allow_other
+  '';
+
+  virtualisation.virtualbox.host = {
+    enable = true;
+    enableHardening = false;
+    addNetworkInterface = true;
+  };
+
+  services.syncthing = {
+    enable = true;
+    user = "seb";
+    dataDir = "/home/seb/.syncthing";
   };
 }

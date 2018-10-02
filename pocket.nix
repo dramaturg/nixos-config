@@ -4,19 +4,14 @@
   imports =
     [
       <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
-      ./modules/networking.nix
-      ./modules/wifi.nix
       ./modules/laptop.nix
-      ./modules/workstation.nix
-      ./modules/resolved.nix
       ./modules/base.nix
-      ./modules/efi.nix
       ./modules/broadcom
     ];
 
   nixpkgs.config = {
     packageOverrides = pkgs: {
-      linux_4_17 = pkgs.linux_4_17.override {
+      linux_4_18 = pkgs.linux_4_18.override {
         extraConfig = ''
           ACPI_CUSTOM_METHOD m
           B43_SDIO y
@@ -122,7 +117,7 @@
       "gpd-pocket-fan.speed_on_ac=0"
     ];
     kernelModules = [ "kvm-intel" ];
-    kernelPackages = pkgs.linuxPackagesFor pkgs.linux_4_17;
+    kernelPackages = pkgs.linuxPackagesFor pkgs.linux_4_18;
 
     initrd = {
       kernelModules = [
@@ -145,17 +140,17 @@
         "sdhci_acpi"
         "rtsx_pci_sdmmc"
       ];
-      luks.devices = [
-        {
-          name = "root";
-          device = "/dev/mmcblk0p2";
-          preLVM = true;
-        }
-      ];
+      #luks.devices = [
+      #  {
+      #    name = "root";
+      #    device = "/dev/mmcblk0p2";
+      #    preLVM = true;
+      #  }
+      #];
     };
   };
 
-  networking.hostName = "pocket";
+  networking.hostName = "zwerg";
 
   i18n.consoleFont = "latarcyrheb-sun32";
 
@@ -164,17 +159,6 @@
     GDK_DPI_SCALE = "0.5";
     MOZ_USE_XINPUT2 = "1";
   };
-
-  nix.buildMachines = [{
-    hostName = "xps15";
-    sshUser = "nixBuild";
-    sshKey = "/root/id_rsa.build";
-    system = "x86_64-linux";
-    speedFactor = 4;
-    supportedFeatures = [ "big-parallel" ];
-    maxJobs = 4;
-  }];
-  nix.distributedBuilds = true;
 
   fonts.fontconfig.dpi = 168;
 
@@ -186,7 +170,7 @@
         Xcursor.size: 48
       ''}"
     '';
-    # videoDrivers = [ "intel" ];
+    videoDrivers = [ "intel" ];
     # useGlamor = true;
     xrandrHeads = [
       {
@@ -231,27 +215,5 @@
     };
   };
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/f9c1df0d-5bcf-448b-9684-1b0b6712f5e1";
-    fsType = "btrfs";
-    options = [ "subvol=@nixos" ];
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/6CA0-301F";
-    fsType = "vfat";
-  };
-
-  fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/f9c1df0d-5bcf-448b-9684-1b0b6712f5e1";
-    fsType = "btrfs";
-    options = [ "subvol=@home" ];
-  };
-
-  swapDevices = [{
-    device = "/dev/disk/by-uuid/6c4af545-7c97-4c3e-8015-17d8103430fa";
-  }];
-
   system.stateVersion = "18.03"; # Did you read the comment?
-  nix.maxJobs = lib.mkDefault 4;
 }
