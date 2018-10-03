@@ -5,90 +5,10 @@
     [
       <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
       ./modules/laptop.nix
+	  ./modules/pocket-kernel.nix
       ./modules/base.nix
       ./modules/broadcom
     ];
-
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-      linux_4_18 = pkgs.linux_4_18.override {
-        extraConfig = ''
-          ACPI_CUSTOM_METHOD m
-          B43_SDIO y
-          BATTERY_MAX17042 m
-
-          COMMON_CLK y
-
-          INTEL_SOC_PMIC? y
-          INTEL_SOC_PMIC_CHTWC? y
-          INTEL_PMC_IPC m
-          INTEL_BXTWC_PMIC_TMU m
-
-          ACPI y
-          PMIC_OPREGION y
-          CHT_WC_PMIC_OPREGION? y
-          XPOWER_PMIC_OPREGION y
-          BXT_WC_PMIC_OPREGION y
-          CHT_DC_TI_PMIC_OPREGION y
-          XPOWER_PMIC_OPREGION y
-
-          MATOM y
-
-          PINCTRL_CHERRYVIEW y
-
-          DW_DMAC y
-          DW_DMAC_CORE y
-          DW_DMAC_PCI y
-
-          GPD_POCKET_FAN y
-
-          HSU_DMA y
-
-          I2C y
-          I2C_CHT_WC y
-          I2C_DESIGNWARE_BAYTRAIL? y
-
-          INTEL_CHT_INT33FE m
-          MFD_AXP20X m
-          TYPEC_MUX_PI3USB30532 m
-          #MUX_INTEL_CHT_USB_MUX m
-          # MUX_PI3USB30532 m
-          TYPEC_MUX_PI3USB30532 m
-          NVRAM y
-          POWER_RESET y
-          PWM y
-          PWM_LPSS m
-          PWM_LPSS_PCI m
-          PWM_LPSS_PLATFORM m
-          PWM_SYSFS y
-          RAW_DRIVER y
-          RTC_DS1685_SYSFS_REGS y
-          SERIAL_8250_DW y
-          SERIAL_8250_MID y
-          SERIAL_8250_NR_UARTS 32
-          SERIAL_8250_PCI m
-          SERIAL_DEV_BUS y
-          SERIAL_DEV_CTRL_TTYPORT y
-          TOUCHSCREEN_ELAN m
-          TULIP_MMIO y
-          W1_SLAVE_DS2433_CRC y
-          XXHASH m
-
-          INTEL_INT0002_VGPIO m
-          REGULATOR y
-          TYPEC m
-          TYPEC_TCPM m
-          TYPEC_FUSB302 m
-
-          BATTERY_MAX17042 m
-          CHARGER_BQ24190 m
-          # EXTCON m
-          # EXTCON_INTEL m
-          EXTCON_INTEL_CHT_WC m
-        '';
-      };
-    };
-  };
 
   powerManagement = {
     enable = true;
@@ -120,7 +40,7 @@
       "kvm-intel"
       "btusb"
     ];
-    kernelPackages = pkgs.linuxPackagesFor pkgs.linux_4_18;
+    kernelPackages = pkgs.linuxPackagesFor pkgs.linux_gpd_pocket;
 
     initrd = {
       kernelModules = [
