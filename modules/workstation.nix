@@ -63,6 +63,7 @@
     chicken racket
     valgrind
     nodejs
+    ctags
 
     # web & docs
     evince okular
@@ -86,6 +87,7 @@
     # misc
     fuse
     sshfsFuse
+    cifs_utils
   ];
 
   nix.daemonIONiceLevel = 7;
@@ -107,20 +109,14 @@
 
   hardware.pulseaudio = {
     enable = true;
-
-    # for bluetooth
-    package = pkgs.pulseaudioFull;
-
-    configFile = pkgs.writeText "default.pa" ''
-      load-module module-bluetooth-policy
-      load-module module-bluetooth-discover
-    '';
+    systemWide = true;
   };
 
   services.udisks2.enable = true;
 
   services.avahi = {
     enable = true;
+    ipv6 = true;
     nssmdns = true;
   };
 

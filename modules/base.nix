@@ -93,6 +93,20 @@
     borgbackup
   ];
 
+  environment.interactiveShellInit = ''
+    # A nix query helper function
+    nq()
+    {
+      case "$@" in
+        -h|--help|"")
+          printf "nq: A tiny nix-env wrapper to search for packages in package name, attribute name and description fields\n";
+          printf "\nUsage: nq <case insensitive regexp>\n";
+          return;;
+      esac
+      nix-env -qaP --description \* | grep -i "$@"
+    }
+  '';
+
   programs = {
     gnupg = {
       agent = {
@@ -107,16 +121,32 @@
         custom = "${./zsh-custom}";
         theme = "silvio";
         plugins = [
-          "git"
-          "gradle"
-          "nvm"
           "rsync"
           "stack"
           "history-substring-search"
+          "aws"
+          "cargo"
+          "docker"
+          "docker-compose"
+          "docker-machine"
+          "git"
+          "git-flow"
+          "golang"
+          "helm"
+          "kubectl"
+          "nomad"
+          "mosh"
+          "perl"
+          "python"
+          "rust"
+          "sudo"
+          "systemd"
+          "terraform"
+          "vagrant"
         ];
       };
       interactiveShellInit = ''
-        #export EDITOR="emacsclient -c"
+        export EDITOR=vim
         export PATH=$HOME/.local/bin:$PATH
         export PASSWORD_STORE_X_SELECTION=primary
         export GPG_TTY=$(tty)

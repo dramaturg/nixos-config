@@ -29,6 +29,7 @@
 
   hardware.pulseaudio = lib.mkForce {
     enable = true;
+    systemWide = true;
 
     # for bluetooth
     package = pkgs.pulseaudioFull;
