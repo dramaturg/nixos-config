@@ -63,13 +63,13 @@
     exfat gptfdisk hdparm nvme-cli
     lsof
     patchelf
-    pciutils
+    pciutils usbutils
     psmisc
     smartmontools
     sysstat
     upower
     lshw
-    usbutils
+    acpi
     #cryptsetup
 
     # base tools

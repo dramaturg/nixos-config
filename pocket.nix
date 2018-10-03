@@ -10,7 +10,7 @@
       ./modules/broadcom
     ];
 
-  powerManagement = {
+  powerManagement = lib.mkForce {
     enable = true;
     powerDownCommands = ''
       rmmod goodix

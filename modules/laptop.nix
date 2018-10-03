@@ -5,6 +5,10 @@
     "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
   ];
 
+  powerManagement = {
+    enable = true;
+  };
+
   services.tlp.enable = true;
 
   services.logind.extraConfig = ''
