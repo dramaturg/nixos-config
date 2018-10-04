@@ -81,8 +81,11 @@
     networkmanagerapplet
     blueman
     gnome3.eog gnome3.nautilus
+    #xautolock
     xorg.xbacklight xorg.xcursorthemes xorg.xdpyinfo
     xorg.xev xorg.xkill
+#mate.mate-common mate.mate-session-manager
+#mate.mate-settings-daemon mate.mate-utils
 
     # misc
     fuse
@@ -139,18 +142,26 @@
       sessionCommands = ''
           xset s 600 0
           xset r rate 440 50
-          xss-lock -l -- i3lock -n &
+          xss-lock -l -- i3lock -c b31051 -n &
       '';
     };
     desktopManager = {
-      xterm = {
-        enable = false;
-      };
+	  default = "mate";
+	  xterm.enable = false;
+
+      mate.enable = true;
+#xfce.enable = true;
     };
     windowManager = {
       default = "i3";
       i3 = {
         enable = true;
+		extraPackages = with pkgs; [
+			dmenu
+			i3lock
+			i3status
+		];
+		configFile = "/etc/nixos/dotfiles/i3/config";
       };
     };
   };
@@ -205,4 +216,37 @@
     user = "seb";
     dataDir = "/home/seb/.syncthing";
   };
+
+
+  systemd.user.services."unclutter" = {
+    enable = true;
+    description = "hide cursor after X seconds idle";
+    wantedBy = [ "default.target" ];
+    serviceConfig.Restart = "always";
+    serviceConfig.RestartSec = 2;
+    serviceConfig.ExecStart = "${pkgs.unclutter}/bin/unclutter";
+  };
+
+  systemd.user.services."autocutsel" = {
+    enable = true;
+    description = "AutoCutSel";
+    wantedBy = [ "default.target" ];
+    serviceConfig.Type = "forking";
+    serviceConfig.Restart = "always";
+    serviceConfig.RestartSec = 2;
+    serviceConfig.ExecStartPre = "${pkgs.autocutsel}/bin/autocutsel -fork";
+    serviceConfig.ExecStart = "${pkgs.autocutsel}/bin/autocutsel -selection PRIMARY -fork";
+  };
+
+  systemd.user.services."xautolock" = {
+    enable = true;
+    description = "Automatically lock X screen";
+    wantedBy = [ "default.target" ];
+    serviceConfig.Type = "simple";
+    serviceConfig.Restart = "always";
+    serviceConfig.RestartSec = 10;
+    serviceConfig.ExecStart = "${pkgs.xautolock}/bin/xautolock -time 15 -locker \"i3lock -c b31051 -t\"";
+    serviceConfig.Environment = "DISPLAY=:0 XAUTHORITY=/home/seb/.Xauthority";
+  };
+
 }

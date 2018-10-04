@@ -69,7 +69,7 @@
     sysstat
     upower
     lshw
-    acpi
+    acpi lm_sensors
     #cryptsetup
 
     # base tools
