@@ -1,0 +1,492 @@
+
+filetype on
+filetype plugin on
+filetype indent on
+
+set enc=utf-8
+set fenc=utf-8
+
+set nocompatible " Use Vim defaults instead of 100% vi compatibility
+set backspace=indent,eol,start " more powerful backspacing
+
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set shiftround
+set cindent
+set expandtab
+"set term=xterm-color
+set binary noeol
+set showmatch
+set vb
+" set noautoindent
+set history=1024
+"set undolevels=1000
+"set ruler " show the cursor position all the time
+set laststatus=2 "make sure that bottom status bar is running.
+set showcmd
+set hidden
+set scrolloff=5
+set joinspaces
+"set completeopt=longest,menuone
+set visualbell
+set noerrorbells
+set autochdir
+
+" More natural splitting
+set splitbelow
+set splitright
+
+" Set title string and push it to xterm/screen window title
+set titlestring=vim\ %<%F%(\ %)%m%h%w%=%l/%L-%P
+set titlelen=70
+if &term == "screen"
+	set t_fs=k
+	set t_ts=\
+endif
+set title
+
+"Persistent undo
+try
+	if MySys() == "windows"
+		set undodir=C:\Windows\Temp
+	else
+		set undodir=~/.vim_undodir
+	endif
+
+	if !isdirectory(&undodir)
+		exec "silent !mkdir -p " . &undodir
+	endif
+	set undofile
+catch
+endtry
+
+
+set smartindent
+set smarttab
+
+set wildmenu
+set wildmode=list:longest,full
+
+if has("gui_running")
+	set guioptions-=T
+	set guioptions-=m
+
+	"set guifont=Mensch\ 10
+	set guifont=PragmataPro\ 9
+endif
+
+" show a wrapper char at wrapped lines
+if has("linebreak")
+	let &sbr = nr2char(8618).' '
+endif
+
+" highligh column 81
+"if v:version >= 703
+"	set colorcolumn=81
+"endif
+
+" change directory to dirname(__file__)
+if has("autocmd")
+	autocmd bufenter * :lcd %:p:h
+endif
+
+" status line
+set stl=%f\ %m\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
+hi StatusLine term=reverse ctermfg=4 gui=undercurl guisp=Blue
+
+" dark background, 265 colors, colorscheme
+set background=dark
+"colorscheme desert
+"colorscheme gruvbox
+
+if &t_Co > 2 || has("gui_running")
+   syntax on
+   highlight SpellBad term=underline gui=undercurl guisp=Red
+endif
+
+" fancy cursor-crosshair
+"set cursorcolumn
+set cursorline
+"hi CursorLine ctermbg=Gray cterm=Bold
+"hi CursorColumn ctermbg=Black cterm=Bold
+
+" Suffixes that get lower priority when doing tab completion for filenames.
+set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.pyc
+
+" p in Visual mode replace the selected text with the "" register.
+vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
+
+" force vim to always create backups by copying, ensuring the original file
+" gets updated
+set backupcopy=yes
+
+" Automatically save before commands like :next and :make
+set autowrite
+set autowriteall
+
+cmap w!! w !sudo tee % >/dev/null
+
+nnoremap <F5> :GundoToggle<CR>
+
+" Golang
+let g:go_fmt_options = "-tabs=false -tabwidth=4"
+
+" Perl syntax highlighting settings. (perl.vim)
+let perl_fold=1
+let perl_sync_dist=250
+let perl_string_as_statement=1
+let perl_include_pod=0
+
+" substitute tabs with Â» and trailing spaces with
+"set list listchars=tab:>·,trail:·
+set listchars=tab:\|·,trail:·
+nmap <silent> <F6> :set list!<CR>
+
+" spell checking stuff
+nn <F7> :setlocal spell! spell?<CR>
+set spelllang=en,de,nl,fr
+
+" paste stuff
+nnoremap <F2> :set invpaste paste?<CR>
+set pastetoggle=<F2>
+set showmode
+" select pasted text
+nnoremap gp `[v`]
+
+" redirect K to use 'perldoc -f' in a Perl file
+" :e `perldoc -m Module::Name`
+au FileType perl setlocal keywordprg=perldoc\ -T\ -f
+
+" Avoid command-line redraw on every entered character
+" by turning off Arabic shaping (which is implemented poorly).
+if has('arabic')
+   set noarabicshape
+endif
+
+" I don't need help when I want escape
+inoremap <F1> <ESC>
+nnoremap <F1> <ESC>
+vnoremap <F1> <ESC>
+
+" navigate more naturally when editing wrapped lines
+nnoremap j gj
+nnoremap k gk
+
+" windows resizing
+if bufwinnr(1)
+	map + <C-W>+
+	map - <C-W>-
+endif
+
+" Make the command-line completion better
+set wildmenu
+
+" Make it easier to complete buffers, open files, etc...
+try
+   set wildignorecase
+catch
+endtry
+
+" Add ignorance of whitespace to diff
+set diffopt+=iwhite
+
+" Automatically read a file that has changed on disk
+set autoread
+
+" Make shift-insert work like in Xterm
+map <S-Insert> <MiddleMouse>
+map! <S-Insert> <MiddleMouse>
+
+map jj <esc>
+nore ; :
+
+" Set visual mode indent
+:vnoremap < <gv
+:vnoremap > >gv
+
+" Do normal tabs for Makefiles
+autocmd FileType make set noexpandtab
+
+" view/folds auto-save/restore
+autocmd BufWinLeave *.* mkview
+autocmd BufWinEnter *.* silent loadview
+
+let g:airline#extensions#tabline#enabled = 1
+
+let g:rustfmt_autosave = 1
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Goyo and Limelight
+"
+
+autocmd BufWritePost *.py call Flake8()
+
+let NERDTreeIgnore=['\.pyc$', '\~$']
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" tmux integration
+
+" tmux-navigator
+let g:tmux_navigator_no_mappings = 1
+"let g:tmux_navigator_save_on_switch = 1
+
+nnoremap <silent> <C-H> :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-J> :TmuxNavigateDown<cr>
+nnoremap <silent> <C-K> :TmuxNavigateUp<cr>
+nnoremap <silent> <C-L> :TmuxNavigateRight<cr>
+nnoremap <silent> <C-A> :TmuxNavigatePrevious<cr>
+
+
+" tslime
+let g:tslime_always_current_session = 1
+let g:tslime_always_current_window = 1
+
+vmap <C-c><C-c> <Plug>SendSelectionToTmux
+nmap <C-c><C-c> <Plug>NormalModeSendToTmux
+nmap <C-c>r <Plug>SetTmuxVars
+nmap <C-c>m :Tmux make
+nmap <C-c>t :Tmux 
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Strip all trailing whitespace in file
+
+function! StripWhitespace ()
+	exec ':%s/ \+$//gc'
+endfunction
+map ,s :call StripWhitespace ()<CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" cscope
+"
+" http://vimdoc.sourceforge.net/htmldoc/if_cscop.html#cscope-suggestions
+"
+
+if has('cscope')
+  set cscopetag cscopeverbose
+
+  if has('quickfix')
+    set cscopequickfix=s-,c-,d-,i-,t-,e-
+  endif
+
+  "cnoreabbrev csa cs add
+  "cnoreabbrev csf cs find
+  "cnoreabbrev csk cs kill
+  "cnoreabbrev csr cs reset
+  "cnoreabbrev css cs show
+  "cnoreabbrev csh cs help
+
+  map g<C-]> :cs find 3 <C-R>=expand("<cword>")<CR><CR>
+  map g<C-\> :cs find 0 <C-R>=expand("<cword>")<CR><CR>
+
+
+  "command -nargs=0 Cscope cs add $VIMSRC/src/cscope.out $VIMSRC/src
+
+  set nocsverb
+  " add any database in current directory
+  if filereadable("cscope.out")
+    cs add cscope.out %:p:h
+  " else add database pointed to by environment
+  elseif $CSCOPE_DB != ""
+    cs add $CSCOPE_DB
+  endif
+  set csverb
+
+  " To do the first type of search, hit 'CTRL-\', followed by one of the
+  " cscope search types above (s,g,c,t,e,f,i,d).  The result of your cscope
+  " search will be displayed in the current window.  You can use CTRL-T to
+  " go back to where you were before the search.  
+  "
+
+  nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+  nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+  nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
+
+
+  " Using 'CTRL-spacebar' (intepreted as CTRL-@ by vim) then a search type
+  " makes the vim window split horizontally, with search result displayed in
+  " the new window.
+  "
+  " (Note: earlier versions of vim may not have the :scs command, but it
+  " can be simulated roughly via:
+  "    nmap <C-@>s <C-W><C-S> :cs find s <C-R>=expand("<cword>")<CR><CR>	
+
+  nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>	
+  nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
+  nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>	
+
+
+  " Hitting CTRL-space *twice* before the search type does a vertical 
+  " split instead of a horizontal one (vim 6 and up only)
+  "
+  " (Note: you may wish to put a 'set splitright' in your .vimrc
+  " if you prefer the new window on the right instead of the left
+
+  nmap <C-@><C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@><C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>	
+  nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
+  nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
+endif
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tlist
+nnoremap <silent> <F8> :TlistToggle<CR>  " F8 toggle the taglist
+let Tlist_Ctags_Cmd = 'ctags'
+let Tlist_Auto_Refresh = 1
+let Tlist_Inc_Winwidth = 0
+let Tlist_Exit_OnlyWindow = 1
+let Tlist_Process_File_Always = 1
+let Tlist_Use_Right_Window = 1
+let Tlist_Display_Tag_Scope = 1
+let Tlist_Show_Menu = 1
+
+"au bufreadpost *.cpp,*.c,*.h call Generate_Highlighting()
+
+" Lookup ctags "tags" file up the directory, until one is found:
+"set tags=tags;/
+set tags=./tags;/
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" better searching
+
+set ignorecase
+set smartcase
+set hlsearch
+set wrapscan
+set incsearch
+
+" Press Space to turn off highlighting and clear any message already displayed.
+:nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
+
+" \w will split the window, then search for the current word in the
+" other window. Press n for the next match, or N for the previous match.
+" When finished, press Ctrl-w c to close the window.
+" If the cursor is on "rain", pressing \w will find "rain" and "drain" and
+" "rainbow". However, pressing \W will find "rain" only.
+nnoremap <Leader>w :let @/=expand("<cword>")<Bar>split<Bar>normal n<CR>
+nnoremap <Leader>W :let @/='\<'.expand("<cword>").'\>'<Bar>split<Bar>normal n<CR>
+" use this if you already have split windows
+"nnoremap <Leader>w :let @/=expand("<cword>")<Bar>wincmd w<Bar>normal n<CR>
+
+" Search for selected text, forwards or backwards.
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Drag selection
+" http://vim.wikia.com/wiki/Drag_words_with_Ctrl-left/right
+
+" In order to use the arrow keys when visually selecting text:
+vnoremap <Left> h
+vnoremap <Right> l
+vnoremap <Down> j
+vnoremap <Up> k
+
+vmap <C-Left> <Esc>`<<Left>i_<Esc>mz"_xgvx`zPgv<Left>o<Left>o
+vmap <C-Right> <Esc>`><Right>gvxpgv<Right>o<Right>o
+
+" Visually drag a block of text, one char/line at a time, using Ctrl-arrows.
+vnoremap <C-Right> lholhxp`[1v<Space>
+vnoremap <C-Left> hlohlxhP`[1v<Space>
+vnoremap <C-Down> jkojkxjzvP`[1v<Space>
+vnoremap <C-Up> kjokjxkzvP`[1v<Space>
+
+" Visually drag a block of text, one word/line at a time, using Alt-arrows.
+vnoremap <A-Right> y1v<Space>w`>xwzvP`[1v<Space>
+vnoremap <A-Left> y1v<Space>ob`<xbzvP`[1v<Space>
+vnoremap <A-Down> jkojkxjzvP`[1v<Space>
+vnoremap <A-Up> kjokjxkzvP`[1v<Space>
+
+" When nothing is selected, <A-Right>, <A-Left>, <A-Down>, or <A-Up> selects
+" the word under the cursor, and moves it one word in that direction.
+nnoremap <A-Right> viwm`w``xwzvP`[1v<Space>
+nnoremap <A-Left> viwm`bb``xbzvP`[1v<Space>
+nnoremap <A-Down> viwjkxjzvP`[1v<Space>
+nnoremap <A-Up> viwkjxkzvP`[1v<Space>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Toggle line numbering
+
+nmap <silent> <F9> :call NumberToggle()<CR>
+imap <silent> <F9> <C-O>:call NumberToggle()<CR>
+
+
+function! NumberToggle()
+  if exists("&rnu")
+    if &number
+      setlocal relativenumber
+    else
+      if &relativenumber
+	setlocal norelativenumber
+      else
+	setlocal number
+      endif
+    endif
+  else
+    if &number
+      setlocal nonumber
+    else
+      setlocal number
+    endif
+  endif
+endfunction
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Rainbow Parentheses
+
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Open different kind of file formats
+
+augroup Binary
+  au!
+  au BufReadPre *.bin let &bin=1
+  au BufReadPost *.bin if &bin | %!xxd
+  au BufReadPost *.bin set filetype=xxd | endif
+  au BufWritePre *.bin if &bin | %!xxd -r
+  au BufWritePre *.bin endif
+  au BufWritePost *.bin if &bin | %!xxd
+  au BufWritePost *.bin set nomod | endif
+augroup END
+
+" puppet
+au BufRead,BufNewFile *.pp set filetype=puppet
+
+" opencl
+au! BufRead,BufNewFile *.cl set filetype=opencl
+

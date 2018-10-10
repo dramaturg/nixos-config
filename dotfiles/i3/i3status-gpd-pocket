@@ -23,13 +23,8 @@ wireless wlp1s0 {
 }
 
 battery 0 {
-        format = "%status %percentage %remaining %emptytime"
-        format_down = "No battery"
-        status_chr = "⚡ CHR"
-        status_bat = "🔋 BAT"
-        status_unk = "? UNK"
-        status_full = "☻ FULL"
-	low_threshold = 20
+        format = "%percentage"
+	low_threshold = 15
         path = "/sys/class/power_supply/max170xx_battery/uevent"	
 }
 

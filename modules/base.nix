@@ -71,6 +71,7 @@
     lshw
     acpi lm_sensors
     #cryptsetup
+    ltrace strace linuxPackages.perf
 
     # base tools
     file
@@ -78,19 +79,21 @@
     gnupg
     vim
     stow
-    parallel moreutils
+    parallel
+    moreutils
+    patchutils
     p7zip zip
+    gnumake
 
     # net
     wget curl rclone rsync
     mtr
     tcpdump
     iptables
+    inetutils
 
     # nix
     nix-prefetch-scripts
-
-    borgbackup
   ];
 
   environment.interactiveShellInit = ''
@@ -214,9 +217,4 @@
       wheelNeedsPassword = false;
     };
   };
-
-
-  #home-manager.users.my_username = { seb };
-	
-
 }

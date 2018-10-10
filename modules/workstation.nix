@@ -1,40 +1,24 @@
 { pkgs, lib, config, ... }:
 {
-
   environment.systemPackages = with pkgs; [
-    beancount
-    darktable
-    fdupes
-    gradle
-    gthumb
-    hplip
-    imagemagick7
-    ispell
-    isync
-    jetbrains.datagrip
-    jetbrains.idea-community
-    libreoffice
-    libxml2
+    shared_mime_info
+    wpa_supplicant
+
     mu
     rofi
-    rubber
-    shared_mime_info
-    silver-searcher
     virtmanager
-    wpa_supplicant
-    xautolock
     xiccd
     xsel
     xss-lock
-    yarn
-    zbar
 
     # shell
     mosh
+    fdupes
 
     # media
     vlc mpv
     glxinfo vdpauinfo libva
+    imagemagick7
 
     # nix
     nixops
@@ -43,6 +27,7 @@
     aws kubectl terraform
     ansible
     docker_compose
+    docker-machine
     linuxPackages.virtualbox
     freeipmi
 
@@ -51,12 +36,14 @@
     wireshark tcpdump
     nmap 
     socat
+    wireguard
+    wireguard-tools
 
     # dev
     gdb gradle
     python3Full python3Packages.virtualenv
-    gitAndTools.gitflow gitAndTools.gitFull
-    man-pages posix_man_pages
+    gitAndTools.gitflow gitAndTools.gitFull git-cola
+    man stdman man-pages posix_man_pages
     binutils jq
     git-review
     rustup gcc stack nim
@@ -69,23 +56,25 @@
     evince okular
     libreoffice
     firefox chromium
-    torbrowser
     thunderbird
 
     # desktop
     arandr
     i3 i3lock dmenu
-    termite rxvt_unicode_with-plugins
+    feh scrot
+    xautolock
+    alacritty termite rxvt_unicode_with-plugins
     icedtea8_web
-    pavucontrol
+    pavucontrol pasystray
     networkmanagerapplet
+    networkmanager_dmenu
+    networkmanager_iodine
+    networkmanager_openvpn
     blueman
     gnome3.eog gnome3.nautilus
-    #xautolock
     xorg.xbacklight xorg.xcursorthemes xorg.xdpyinfo
     xorg.xev xorg.xkill
-#mate.mate-common mate.mate-session-manager
-#mate.mate-settings-daemon mate.mate-utils
+    numix-sx-gtk-theme
 
     # misc
     fuse
@@ -110,10 +99,15 @@
   virtualisation.libvirtd.enable = true;
   documentation.man.enable = true;
 
+  sound.enable = true;
+  nixpkgs.config.pulseaudio = true;
   hardware.pulseaudio = {
     enable = true;
     systemWide = true;
+    support32Bit = true;
+    package = pkgs.pulseaudioFull;
   };
+  
 
   services.udisks2.enable = true;
 
@@ -138,34 +132,62 @@
     displayManager = {
       lightdm = {
         enable = true;
+#        autoLogin = {
+#          enable = true;
+#          user = "seb";
+#        };
       };
       sessionCommands = ''
           xset s 600 0
           xset r rate 440 50
           xss-lock -l -- i3lock -c b31051 -n &
+          ${pkgs.networkmanagerapplet}/bin/nm-applet &
       '';
     };
     desktopManager = {
-	  default = "mate";
-	  xterm.enable = false;
+      default = "xfce";
+      xterm.enable = false;
 
-      mate.enable = true;
-#xfce.enable = true;
+      #mate.enable = true;
+      xfce = {
+        enable = true;
+        noDesktop = true;
+        enableXfwm = false;
+      };
     };
     windowManager = {
       default = "i3";
       i3 = {
         enable = true;
-		extraPackages = with pkgs; [
-			dmenu
-			i3lock
-			i3status
-		];
-		configFile = "/etc/nixos/dotfiles/i3/config";
+        extraPackages = with pkgs; [
+          dmenu
+          i3lock
+          i3status
+        ];
+        configFile = "/etc/nixos/dotfiles/i3/config";
       };
     };
   };
 
+  # QT4/5 global theme
+  environment.etc."xdg/Trolltech.conf" = {
+    text = ''
+      [Qt]
+      style=Breeze
+    '';
+    mode = "444";
+  };
+
+  # GTK3 global theme (widget and icon theme)
+  environment.etc."xdg/gtk-3.0/settings.ini" = {
+    text = ''
+      [Settings]
+      gtk-theme-name=Numix-SX-FullDark
+    '';
+    mode = "444";
+  };
+
+  services.dbus.socketActivated = true;
   services.redshift = {
     enable = true;
     brightness.day = "1";
@@ -180,15 +202,17 @@
   };
 
   fonts = {
+    enableFontDir = true;
     enableDefaultFonts = true;
     fonts = with pkgs; [
+      carlito
       corefonts
       dejavu_fonts
-      source-code-pro
       google-fonts
-      liberation_ttf
-      carlito
       inconsolata
+      liberation_ttf
+      source-code-pro
+      terminus_font
     ];
   };
 
@@ -249,4 +273,6 @@
     serviceConfig.Environment = "DISPLAY=:0 XAUTHORITY=/home/seb/.Xauthority";
   };
 
+
+  home-manager.users.seb = import ./home-desktop.nix;
 }
