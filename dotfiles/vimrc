@@ -481,3 +481,10 @@ au BufRead,BufNewFile *.pp set filetype=puppet
 " opencl
 au! BufRead,BufNewFile *.cl set filetype=opencl
 
+" scheme
+au BufReadPost *.rkt,*.rktl set filetype=scheme
+" au BufReadPost *.rkt,*.rktl set filetype=racket
+" au filetype racket set lisp
+" au filetype racket set autoindent
+" set lispwords+=public-method,override-method,private-method,syntax-case,syntax-rules
+" set lispwords+=..more..

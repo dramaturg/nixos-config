@@ -22,6 +22,7 @@
 
     # nix
     nixops
+    nixpkgs-lint
 
     # ops
     aws kubectl terraform
@@ -47,23 +48,28 @@
     binutils jq
     git-review
     rustup gcc stack nim
-    chicken racket
+    racket gambit chez
     valgrind
+
+    microscheme
+    sdcc
     nodejs
     ctags
+    nim
 
-    # web & docs
+    # web, chat & docs
     evince okular
-    libreoffice
-    firefox chromium
+    #libreoffice
+    firefox
     thunderbird
+    skypeforlinux
 
     # desktop
     arandr
     i3 i3lock dmenu
     feh scrot
     xautolock
-    alacritty termite rxvt_unicode_with-plugins
+    alacritty termite st
     icedtea8_web
     pavucontrol pasystray
     networkmanagerapplet
@@ -75,11 +81,13 @@
     xorg.xbacklight xorg.xcursorthemes xorg.xdpyinfo
     xorg.xev xorg.xkill
     numix-sx-gtk-theme
+    xclip
 
     # misc
     fuse
     sshfsFuse
     cifs_utils
+    enpass
   ];
 
   nix.daemonIONiceLevel = 7;
@@ -103,7 +111,6 @@
   nixpkgs.config.pulseaudio = true;
   hardware.pulseaudio = {
     enable = true;
-    systemWide = true;
     support32Bit = true;
     package = pkgs.pulseaudioFull;
   };
@@ -217,6 +224,9 @@
       terminus_font
     ];
   };
+
+  i18n.consoleFont = "latarcyrheb-sun32";
+
 
   services.printing = {
     enable = true;

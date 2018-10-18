@@ -18,9 +18,6 @@ bindsym $mod+d exec dmenu_run
 # (g)oto named window
 bindsym $mod+g exec i3-winmenu.py
 
-# networkmanager
-bindsym $mod+n exec networkmanager_dmenu
-
 #######################################################
 # Focus + Movement
 #

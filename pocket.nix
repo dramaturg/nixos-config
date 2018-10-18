@@ -3,11 +3,14 @@
 {
   imports =
     [
+      <nixpkgs/nixos/modules/hardware/network/broadcom-43xx.nix>
       <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
+      ./modules/mobiledev.nix
+      ./modules/embeddeddev.nix
       ./modules/laptop.nix
 	  ./modules/pocket-kernel.nix
       ./modules/base.nix
-      ./modules/broadcom
+      ./firmware
     ];
 
   powerManagement = lib.mkForce {
@@ -94,7 +97,7 @@
       ''}"
     '';
     videoDrivers = [ "intel" ];
-    # useGlamor = true;
+    useGlamor = true;
     xrandrHeads = [
       {
         output = "DSI1";
@@ -122,7 +125,7 @@
         Option          "ScrollMethod" "button"
         Option          "MiddleEmulation" "True"
         Option          "AccelSpeed" "1"
-        Option  	      "TransformationMatrix" "3 0 0 0 3 0 0 0 1"
+        Option 	        "TransformationMatrix" "3 0 0 0 3 0 0 0 1"
       ''
     ];
   };
@@ -134,9 +137,9 @@
       set-sink-port alsa_output.platform-cht-bsw-rt5645.HiFi__hw_chtrt5645_0__sink [Out] Speaker
     '';
     daemon.config = {
-      "realtime-scheduling" = "no";
+      realtime-scheduling = "no";
     };
   };
 
-  system.stateVersion = "18.03"; # Did you read the comment?
+  system.stateVersion = "18.03";
 }
