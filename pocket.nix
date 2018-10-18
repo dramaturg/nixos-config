@@ -78,8 +78,6 @@
 
   networking.hostName = "zwerg";
 
-  i18n.consoleFont = "latarcyrheb-sun32";
-
   environment.variables = {
     GDK_SCALE = "2";
     GDK_DPI_SCALE = "0.5";

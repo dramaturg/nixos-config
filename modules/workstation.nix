@@ -213,16 +213,31 @@
   fonts = {
     enableFontDir = true;
     enableDefaultFonts = true;
+
     fonts = with pkgs; [
+      comic-relief
+      fira
+      fira-code
+      nerdfonts
       carlito
       corefonts
       dejavu_fonts
       google-fonts
       inconsolata
+      iosevka
       liberation_ttf
       source-code-pro
       terminus_font
     ];
+    fontconfig = {
+      enable = true;
+      useEmbeddedBitmaps = true;
+      defaultFonts = {
+        monospace = [ "Iosevka" ];
+        sansSerif = [ "Roboto" ];
+        serif     = [ "Roboto Slab" ];
+      };
+    };
   };
 
   i18n.consoleFont = "latarcyrheb-sun32";
