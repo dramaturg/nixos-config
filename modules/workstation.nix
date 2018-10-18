@@ -138,10 +138,12 @@
 #        };
       };
       sessionCommands = ''
-          xset s 600 0
-          xset r rate 440 50
-          xss-lock -l -- i3lock -c b31051 -n &
-          ${pkgs.networkmanagerapplet}/bin/nm-applet &
+        export TERMINAL=termite
+
+        xset s 600 0
+        xset r rate 440 50
+        xss-lock -l -- i3lock -c b31051 -n &
+        ${pkgs.networkmanagerapplet}/bin/nm-applet &
       '';
     };
     desktopManager = {

@@ -58,6 +58,7 @@
     ack
     lftp
     screen tmux
+    rlwrap
 
     # system, hardware & fs
     exfat gptfdisk hdparm nvme-cli
@@ -72,6 +73,7 @@
     acpi lm_sensors
     #cryptsetup
     ltrace strace linuxPackages.perf
+    cron
 
     # base tools
     file
@@ -111,18 +113,12 @@
   '';
 
   programs = {
-    gnupg = {
-      agent = {
-        enable = true;
-      };
-    };
     zsh = {
       enable = true;
       enableCompletion = true;
       ohMyZsh = {
         enable = true;
-        custom = "${./zsh-custom}";
-        theme = "silvio";
+        theme = "agnoster";
         plugins = [
           "rsync"
           "stack"
@@ -155,11 +151,19 @@
         export GPG_TTY=$(tty)
         HYPHEN_INSENSITIVE="true"
 
+        setopt autocd extendedglob
+        setopt share_history
+        setopt hist_ignore_dups
+
         eval $(${pkgs.coreutils}/bin/dircolors "${./dircolors.ansi-universal}")
 
         if [ $USER = "seb" ]; then
           systemctl --user import-environment
         fi
+      '';
+      shellInit = ''
+        #disable config wizard
+        zsh-newuser-install() { :; }
       '';
     };
     ssh = {
@@ -168,6 +172,7 @@
         AddKeysToAgent yes
         '';
     };
+    tmux.enable = true;
   };
 
   virtualisation.docker.enable = true;
