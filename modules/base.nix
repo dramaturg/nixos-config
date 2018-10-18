@@ -47,7 +47,7 @@
     };
   };
   # zramSwap.enable = true;
-  boot.cleanTmpDir = true;
+  boot.cleanTmpDir = false;
   boot.kernel.sysctl = {
     "fs.inotify.max_user_watches" = 1048576;
     "net.ipv4.tcp_congestion_control" = "bbr";
