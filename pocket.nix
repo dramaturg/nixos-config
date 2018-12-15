@@ -5,10 +5,10 @@
     [
       <nixpkgs/nixos/modules/hardware/network/broadcom-43xx.nix>
       <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
-      ./modules/mobiledev.nix
+      #./modules/mobiledev.nix
       ./modules/embeddeddev.nix
       ./modules/laptop.nix
-	  ./modules/pocket-kernel.nix
+      ./modules/pocket-kernel.nix
       ./modules/base.nix
       ./firmware
     ];
@@ -123,21 +123,27 @@
         Option          "ScrollMethod" "button"
         Option          "MiddleEmulation" "True"
         Option          "AccelSpeed" "1"
-        Option 	        "TransformationMatrix" "3 0 0 0 3 0 0 0 1"
+        Option          "TransformationMatrix" "3 0 0 0 3 0 0 0 1"
       ''
     ];
   };
 
+  environment.systemPackages = with pkgs; [
+    beignet
+  ];
+
   hardware.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull;
+    # systemWide = true;
+    support32Bit = true;
     extraConfig = ''
-      set-card-profile alsa_card.platform-cht-bsw-rt5645 HiFi
-      set-default-sink alsa_output.platform-cht-bsw-rt5645.HiFi__hw_chtrt5645_0__sink
-      set-sink-port alsa_output.platform-cht-bsw-rt5645.HiFi__hw_chtrt5645_0__sink [Out] Speaker
+    set-card-profile alsa_card.platform-cht-bsw-rt5645 HiFi
+    set-default-sink alsa_output.platform-cht-bsw-rt5645.HiFi__hw_chtrt5645_0__sink
+    set-sink-port alsa_output.platform-cht-bsw-rt5645.HiFi__hw_chtrt5645_0__sink [Out] Speaker
     '';
     daemon.config = {
       realtime-scheduling = "no";
     };
   };
-
-  system.stateVersion = "18.03";
 }

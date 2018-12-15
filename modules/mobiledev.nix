@@ -4,6 +4,12 @@
   programs.adb.enable = true;
   users.users.seb.extraGroups = ["adbusers"];
 
+  nixpkgs = {
+    config = {
+      android_sdk.accept_license = true;
+    };
+  };
+
   environment.systemPackages = with pkgs; [
     gambit
 

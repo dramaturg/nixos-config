@@ -19,6 +19,7 @@
     vlc mpv
     glxinfo vdpauinfo libva
     imagemagick7
+    geeqie
 
     # nix
     nixops
@@ -48,8 +49,10 @@
     binutils jq
     git-review
     rustup gcc stack nim
-    racket gambit chez
+    racket gambit chez chibi chicken
+    guile guile-lib guile-fibers slibGuile guile-lint
     valgrind
+    ocl-icd
 
     microscheme
     sdcc
@@ -90,6 +93,12 @@
     enpass
   ];
 
+#  nixpkgs.config.packageOverrides = pkgs: rec {
+#    st = pkgs.st.override {
+#      conf = (builtins.readFile ../packages/st/config.h);
+#    };
+#  };
+
   nix.daemonIONiceLevel = 7;
   nix.daemonNiceLevel = 19;
 
@@ -115,7 +124,6 @@
     package = pkgs.pulseaudioFull;
   };
   
-
   services.udisks2.enable = true;
 
   services.avahi = {
@@ -197,6 +205,16 @@
   };
 
   services.dbus.socketActivated = true;
+
+#  systemd.services.dconf-update = {
+#    serviceConfig.Type = "oneshot";
+#    wantedBy = [ "multi-user.target" ];
+#    path = [ pkgs.gnome3.dconf ];
+#    script = ''
+#      dconf update
+#    '';
+#  }; 
+
   services.redshift = {
     enable = true;
     brightness.day = "1";
@@ -242,6 +260,22 @@
 
   i18n.consoleFont = "latarcyrheb-sun32";
 
+
+#  pkgs = with <nixpkgs>; {
+#    iosevka = callPackage (<nixpkgs> + /pkgs/data/fonts/iosevka) {
+#      nodejs = pkgs.nodejs-8_x;
+#      design = [ "term"
+#        "v-i-zshaped" "v-l-zshaped"
+#        "v-g-singlestorey" "v-a-singlestorey"
+#        "v-q-taily"
+#        "v-asterisk-low"
+#        "v-at-long"
+#        "v-brace-straight"
+#        "v-dollar-open"
+#      ];
+#      set = "t184256";
+#    };
+#  };
 
   services.printing = {
     enable = true;
@@ -300,6 +334,20 @@
     serviceConfig.Environment = "DISPLAY=:0 XAUTHORITY=/home/seb/.Xauthority";
   };
 
+#  stdenv.mkDerivation {
+#    name = "i3-winmenu";
+#    buildInputs = [
+#      (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
+#        i3
+#      ]))
+#    ];
+#    unpackPhase = "true";
+#    installPhase = ''
+#      mkdir -p $out/bin
+#      cp ${../scripts/i3-winmenu.py} $out/bin/i3-winmenu.py
+#      chmod +x $out/bin/i3-winmenu.py
+#    '';
+#  };
 
   home-manager.users.seb = import ./home-desktop.nix;
 }

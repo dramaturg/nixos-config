@@ -8,6 +8,10 @@
   imports =
     [ # Include the results of the hardware scan.
       <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
+      <nixpkgs/nixos/modules/profiles/hardened.nix>
+      <nixpkgs/nixos/modules/profiles/headless.nix>
+      <nixpkgs/nixos/modules/profiles/minimal.nix>
+
       ./modules/initrd-ssh.nix
       ./modules/base.nix
       ./modules/networking.nix
@@ -116,7 +120,7 @@
     [ { device = "/dev/disk/by-uuid/a133db75-d57d-4b9c-8e1f-f4ce264b947c"; }
     ];
 
+  system.autoUpgrade.enable = true;
   nix.maxJobs = lib.mkDefault 2;
   powerManagement.cpuFreqGovernor = "ondemand";
-  system.stateVersion = "18.03"; # Did you read the comment?
 }

@@ -12,9 +12,12 @@
 
   nixpkgs = {
     config = {
-#      packageOverrides = pkgs: {
-#        unstable = import unstableTarball {
-#          config = config.nixpkgs.config;
+#      packageOverrides = super: let self = super.pkgs; in {
+#        fftw = super.fftw.override {
+#          configureFlags =
+#            [ "--enable-shared" "--disable-static"
+#              "--enable-threads" "--disable-doc"
+#            ]
 #        };
 #      };
       allowUnfree = true;
@@ -74,6 +77,10 @@
     #cryptsetup
     ltrace strace linuxPackages.perf
     cron
+
+    # backup
+    #dyno
+    #duplicity
 
     # base tools
     file
