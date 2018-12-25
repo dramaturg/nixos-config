@@ -10,6 +10,7 @@ in
       <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
       #<nixos-hardware/lenovo/thinkpad/x250>
       (hardwareTarball + "/lenovo/thinkpad/x250")
+      ./modules/embeddeddev.nix
       ./modules/laptop.nix
       ./modules/base.nix
     ];

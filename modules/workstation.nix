@@ -225,14 +225,6 @@ in
 
   services.dbus.socketActivated = true;
 
-#  systemd.services.dconf-update = {
-#    serviceConfig.Type = "oneshot";
-#    wantedBy = [ "multi-user.target" ];
-#    path = [ pkgs.gnome3.dconf ];
-#    script = ''
-#      dconf update
-#    '';
-#  }; 
 
   services.redshift = {
     enable = true;
