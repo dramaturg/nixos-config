@@ -1,5 +1,8 @@
 { pkgs, lib, config, ... }:
 
+let
+  configName = "pocket";
+in
 {
   imports =
     [

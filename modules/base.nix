@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
-#  let
-#    unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs/archive/2428f5dda13475afba2dee93f4beb2bd97086930.tar.gz;
-#  in
+  let
+    configName = lib.mkDefault "default";
+  in
 {
   imports = [
     ./networking.nix
