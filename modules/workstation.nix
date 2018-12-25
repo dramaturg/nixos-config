@@ -1,4 +1,20 @@
 { pkgs, lib, config, ... }:
+let
+  i3-winmenu = pkgs.stdenv.mkDerivation {
+    name = "i3-winmenu";
+    buildInputs = [
+      (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
+        i3-py
+      ]))
+    ];
+    unpackPhase = "true";
+    installPhase = ''
+      mkdir -p $out/bin
+      cp ${../scripts/i3-winmenu.py} $out/bin/i3-winmenu
+      chmod +x $out/bin/i3-winmenu
+    '';
+  };
+in
 {
   environment.systemPackages = with pkgs; [
     shared_mime_info
@@ -70,7 +86,7 @@
 
     # desktop
     arandr
-    i3 i3lock dmenu
+    i3 i3lock dmenu i3-winmenu
     feh scrot
     xautolock
     alacritty termite st
@@ -181,7 +197,9 @@
           dmenu
           i3lock
           i3status
+          i3-winmenu
         ];
+        #configFile = i3Config;
         configFile = "/etc/nixos/dotfiles/i3/config";
       };
     };
@@ -342,21 +360,6 @@
     serviceConfig.ExecStart = "${pkgs.xautolock}/bin/xautolock -time 15 -locker \"i3lock -c b31051 -t\"";
     serviceConfig.Environment = "DISPLAY=:0 XAUTHORITY=/home/seb/.Xauthority";
   };
-
-#  stdenv.mkDerivation {
-#    name = "i3-winmenu";
-#    buildInputs = [
-#      (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
-#        i3
-#      ]))
-#    ];
-#    unpackPhase = "true";
-#    installPhase = ''
-#      mkdir -p $out/bin
-#      cp ${../scripts/i3-winmenu.py} $out/bin/i3-winmenu.py
-#      chmod +x $out/bin/i3-winmenu.py
-#    '';
-#  };
 
   home-manager.users.seb = import ./home-desktop.nix;
 }
