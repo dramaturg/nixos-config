@@ -172,6 +172,10 @@
         #disable config wizard
         zsh-newuser-install() { :; }
       '';
+      shellAliases = {
+        nix-search       = "nix-env -qaP";
+        nix-list         = "nix-env -qaP \"*\" --description";
+      };
     };
     ssh = {
       startAgent = true;
@@ -179,11 +183,12 @@
         AddKeysToAgent yes
         '';
     };
-    tmux.enable = true;
-  };
-
-  environment.variables = {
-    EDITOR = "vim";
+    tmux = {
+      enable = true;
+      keyMode = "vi";
+      shortcut = "`";
+      terminal = "screen-256color";
+    };
   };
 
   virtualisation.docker.enable = true;

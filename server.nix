@@ -120,7 +120,6 @@
         "x-systemd.requires=/dev/mapper/data4"
       ];
     };
-
   };
 
   systemd.generator-packages = [ pkgs.systemd-cryptsetup-generator ];

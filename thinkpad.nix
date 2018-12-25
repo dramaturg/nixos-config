@@ -8,7 +8,6 @@ in
   imports =
     [
       <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
-      #<nixos-hardware/lenovo/thinkpad/x250>
       (hardwareTarball + "/lenovo/thinkpad/x250")
       ./modules/embeddeddev.nix
       ./modules/laptop.nix
@@ -17,10 +16,6 @@ in
 
 
   boot = {
-    loader = {
-      grub.gfxmodeEfi = "1920x1080";
-    };
-
     kernelModules = [
       "kvm-intel"
     ];
@@ -28,18 +23,13 @@ in
     kernelParams = [
       "video.use_native_backlight=1"
       "pcie_aspm=force"
-      "drm_kms_helper.edid_firmware=edid/1920x1080.bin"
-      "video=1920x1080"
       "clocksource=acpi_pm"
       "pci=use_crs"
       "consoleblank=0"
-      # colors
-      "vt.default_red=0x07,0xdc,0x85,0xb5,0x26,0xd3,0x2a,0xee,0x00,0xcb,0x58,0x65,0x83,0x6c,0x93,0xfd vt.default_grn=0x36,0x32,0x99,0x89,0x8b,0x36,0xa1,0xe8,0x2b,0x4b,0x6e,0x7b,0x94,0x71,0xa1,0xf6 vt.default_blu=0x42,0x2f,0x00,0x00,0xd2,0x82,0x98,0xd5,0x36,0x16,0x75,0x83,0x96,0xc4,0xa1,0xe3"
     ];
 
     initrd = {
       kernelModules = [
-        "fbcon"
         "libata"
       ];
       availableKernelModules = [
@@ -48,7 +38,6 @@ in
         "ahci"
         "usbhid"
         "usb_storage"
-        "fbcon"
         "btrfs"
         "crc23c"
         "usbhid"
@@ -87,6 +76,14 @@ in
     videoDrivers = [ "intel" ];
   };
 
+  hardware = {
+    opengl = {
+      extraPackages = with pkgs; [ vaapiIntel vaapiVdpau ];
+      driSupport32Bit = true;
+      s3tcSupport = true;
+    };
+  };
+
   services.thermald.enable = true;
   #services.thinkfan.enable = true;
 
@@ -116,6 +113,4 @@ in
     speed = 0;
     emulateWheel = true;
   };
-  
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
 }

@@ -13,9 +13,19 @@
 
   powerManagement = {
     enable = true;
+    #scsiLinkPolicy = "min_power";
+    cpuFreqGovernor = "powersave";
+    powerUpCommands = ''
+      echo 'min_power' > '/sys/class/scsi_host/host0/link_power_management_policy';
+      echo '1500' > '/proc/sys/vm/dirty_writeback_centisecs';
+      echo '1' > '/sys/module/snd_hda_intel/parameters/power_save';
+      echo 'min_power' > '/sys/class/scsi_host/host1/link_power_management_policy';
+      echo 'min_power' > '/sys/class/scsi_host/host2/link_power_management_policy';
+    '';
   };
 
   services.tlp.enable = true;
+  services.upower.enable = true;
 
   services.logind.extraConfig = ''
     IdleAction=suspend
@@ -37,23 +47,19 @@
 
   hardware.bluetooth = {
     enable = true;
+    powerOnBoot = false;
   };
 
   hardware.pulseaudio = lib.mkForce {
     enable = true;
-    systemWide = true;
 
     # for bluetooth
     package = pkgs.pulseaudioFull;
 
-    configFile = pkgs.writeText "default.pa" ''
-      load-module module-bluetooth-policy
-      load-module module-bluetooth-discover
-    '';
-
+    # A2DP sink
     extraConfig = "
-     [General]
-     Enable=Source,Sink,Media,Socket
+      [General]
+      Enable=Source,Sink,Media,Socket
     ";
   };
 }
