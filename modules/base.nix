@@ -182,6 +182,10 @@
     tmux.enable = true;
   };
 
+  environment.variables = {
+    EDITOR = "vim";
+  };
+
   virtualisation.docker.enable = true;
 
   services.btrfs = {

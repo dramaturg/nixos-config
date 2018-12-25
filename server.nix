@@ -43,6 +43,17 @@
 
   programs.mosh.enable = true;
 
+  firewall = {
+    allowedUDPPortRanges = [
+      { from = 60000; to = 61000; } # mosh
+      #{ from = 51820; to = 51820; } # wireguard
+    ];
+    allowedTCPPorts = [
+      22 # SSH
+    ];
+    #trustedInterfaces = [ "tun0" "tun1" ];
+  };
+
   services.samba = {
     enable = true;
     extraConfig = ''
@@ -69,6 +80,16 @@
         "force user" = "silvio";
         "force group" = "users";
       };
+    };
+  };
+
+   services = {
+    fail2ban = {
+      enable = true;
+    };
+    syncthing = {
+      enable = true;
+      openDefaultPorts = true;
     };
   };
 

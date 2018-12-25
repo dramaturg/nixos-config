@@ -19,7 +19,7 @@ in
     kernelModules = [
       "kvm-intel"
     ];
-    kernelPackages = pkgs.linuxPackages_4_18;
+    kernelPackages = pkgs.linuxPackages_latest;
 
     initrd = {
       kernelModules = [

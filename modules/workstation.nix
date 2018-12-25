@@ -66,6 +66,7 @@
     firefox
     thunderbird
     skypeforlinux
+    mattermost-desktop
 
     # desktop
     arandr
@@ -302,6 +303,14 @@
     dataDir = "/home/seb/.syncthing";
   };
 
+  networking.firewall = {
+    allowedTCPPorts = [ 22 ];
+    #trustedInterfaces = [ "tun0" "tun1" ];
+  };
+
+  networking.extraHosts = ''
+    77.244.254.19 static.soup.io
+  '';
 
   systemd.user.services."unclutter" = {
     enable = true;

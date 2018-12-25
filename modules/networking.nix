@@ -6,6 +6,7 @@
     };
     firewall = {
       enable = false;
+      allowPing = true;
     };
   };
   boot.kernel.sysctl = {
