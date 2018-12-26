@@ -16,7 +16,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+d exec dmenu_run
 
 # (g)oto named window
-bindsym $mod+g exec i3-winmenu.py
+bindsym $mod+g exec i3-winmenu
 
 # networkmanager
 bindsym $mod+n exec networkmanager_dmenu

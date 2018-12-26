@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
-#  let
-#    unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs/archive/2428f5dda13475afba2dee93f4beb2bd97086930.tar.gz;
-#  in
+  let
+    configName = lib.mkDefault "default";
+  in
 {
   imports = [
     ./networking.nix
@@ -172,6 +172,10 @@
         #disable config wizard
         zsh-newuser-install() { :; }
       '';
+      shellAliases = {
+        nix-search       = "nix-env -qaP";
+        nix-list         = "nix-env -qaP \"*\" --description";
+      };
     };
     ssh = {
       startAgent = true;
@@ -179,7 +183,12 @@
         AddKeysToAgent yes
         '';
     };
-    tmux.enable = true;
+    tmux = {
+      enable = true;
+      keyMode = "vi";
+      shortcut = "`";
+      terminal = "screen-256color";
+    };
   };
 
   virtualisation.docker.enable = true;

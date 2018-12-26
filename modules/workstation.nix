@@ -1,4 +1,38 @@
 { pkgs, lib, config, ... }:
+let
+  i3-winmenu = pkgs.stdenv.mkDerivation {
+    name = "i3-winmenu";
+    buildInputs = [
+      (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
+        i3-py
+      ]))
+    ];
+    unpackPhase = "true";
+    installPhase = ''
+      mkdir -p $out/bin
+      cp ${../scripts/i3-winmenu.py} $out/bin/i3-winmenu
+      chmod +x $out/bin/i3-winmenu
+    '';
+  };
+  vpaste = pkgs.writeScriptBin "vpaste" ''
+    #!${pkgs.bash}/bin/bash
+
+    uri="http://vpaste.net/"
+
+    if [ -f "$1" ]; then
+        out=$(curl -s -F "text=<$1" "$uri?$2")
+    else
+        out=$(curl -s -F 'text=<-' "$uri?$1")
+    fi
+
+    echo "$out"
+
+    if [ -x "`which xclip 2>/dev/null`" -a "$DISPLAY" ]; then
+        echo -n "$out" | xclip -i -selection primary
+        echo -n "$out" | xclip -i -selection clipboard
+    fi
+  '';
+in
 {
   environment.systemPackages = with pkgs; [
     shared_mime_info
@@ -40,6 +74,7 @@
     socat
     wireguard
     wireguard-tools
+    sshuttle
 
     # dev
     gdb gradle
@@ -62,15 +97,16 @@
 
     # web, chat & docs
     evince okular
-    #libreoffice
+    libreoffice
     firefox
     thunderbird
     skypeforlinux
     tor-browser-bundle-bin
+    mattermost-desktop
 
     # desktop
     arandr
-    i3 i3lock dmenu
+    i3 i3lock dmenu i3-winmenu
     feh scrot
     xautolock
     alacritty termite st
@@ -121,8 +157,6 @@
   nixpkgs.config.pulseaudio = true;
   hardware.pulseaudio = {
     enable = true;
-    support32Bit = true;
-    package = pkgs.pulseaudioFull;
   };
   
   services.udisks2.enable = true;
@@ -181,7 +215,9 @@
           dmenu
           i3lock
           i3status
+          i3-winmenu
         ];
+        #configFile = i3Config;
         configFile = "/etc/nixos/dotfiles/i3/config";
       };
     };
@@ -207,14 +243,6 @@
 
   services.dbus.socketActivated = true;
 
-#  systemd.services.dconf-update = {
-#    serviceConfig.Type = "oneshot";
-#    wantedBy = [ "multi-user.target" ];
-#    path = [ pkgs.gnome3.dconf ];
-#    script = ''
-#      dconf update
-#    '';
-#  }; 
 
   services.redshift = {
     enable = true;
@@ -262,22 +290,6 @@
   i18n.consoleFont = "latarcyrheb-sun32";
 
 
-#  pkgs = with <nixpkgs>; {
-#    iosevka = callPackage (<nixpkgs> + /pkgs/data/fonts/iosevka) {
-#      nodejs = pkgs.nodejs-8_x;
-#      design = [ "term"
-#        "v-i-zshaped" "v-l-zshaped"
-#        "v-g-singlestorey" "v-a-singlestorey"
-#        "v-q-taily"
-#        "v-asterisk-low"
-#        "v-at-long"
-#        "v-brace-straight"
-#        "v-dollar-open"
-#      ];
-#      set = "t184256";
-#    };
-#  };
-
   services.printing = {
     enable = true;
     drivers = [pkgs.gutenprint];
@@ -303,6 +315,14 @@
     dataDir = "/home/seb/.syncthing";
   };
 
+  networking.firewall = {
+    allowedTCPPorts = [ 22 ];
+    #trustedInterfaces = [ "tun0" "tun1" ];
+  };
+
+  networking.extraHosts = ''
+    77.244.254.19 static.soup.io
+  '';
 
   systemd.user.services."unclutter" = {
     enable = true;
@@ -334,21 +354,6 @@
     serviceConfig.ExecStart = "${pkgs.xautolock}/bin/xautolock -time 15 -locker \"i3lock -c b31051 -t\"";
     serviceConfig.Environment = "DISPLAY=:0 XAUTHORITY=/home/seb/.Xauthority";
   };
-
-#  stdenv.mkDerivation {
-#    name = "i3-winmenu";
-#    buildInputs = [
-#      (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
-#        i3
-#      ]))
-#    ];
-#    unpackPhase = "true";
-#    installPhase = ''
-#      mkdir -p $out/bin
-#      cp ${../scripts/i3-winmenu.py} $out/bin/i3-winmenu.py
-#      chmod +x $out/bin/i3-winmenu.py
-#    '';
-#  };
 
   home-manager.users.seb = import ./home-desktop.nix;
 }

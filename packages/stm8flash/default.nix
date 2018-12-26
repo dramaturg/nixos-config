@@ -4,6 +4,8 @@ with import <nixpkgs> {};
 
 stdenv.mkDerivation rec {
   name = "stm8flash";
+  isLibrary = false;
+  isExecutable = true;
   
   src = fetchFromGitHub {
     owner = "vdudouyt";

@@ -6,7 +6,6 @@
     enable = true;
     extraConfig = builtins.readFile ../dotfiles/vimrc;
     settings = {
-       relativenumber = true;
        number = true;
     };
     plugins = [

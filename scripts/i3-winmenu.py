@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # dmenu script to jump to windows in i3.
 #
 # using ziberna's i3-py library: https://github.com/ziberna/i3-py
@@ -40,7 +40,7 @@ def win_menu(clients, l=10):
     """
     Displays a window menu using dmenu. Returns window id.
     """
-    dmenu = subprocess.Popen(['/usr/bin/dmenu','-i','-l', str(l)],
+    dmenu = subprocess.Popen(['dmenu','-i','-l', str(l)],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE)
     menu_str = '\n'.join(sorted(clients.keys()))

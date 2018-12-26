@@ -90,26 +90,25 @@
     arduino ino
 
     # stm8
-    #stm8flash
+    (pkgs.callPackage "/etc/nixos/packages/stm8flash" { })
 
     # pic
 
     # avr
-    #avrbinutils
-    #avrgcc
-    #avrlibc
-    avrdude
+    avrbinutils
+    avrgcc
+    avrlibc
+    avrdude avrdudess
     avra
     avr8burnomat
-    avrdudess
     avro-c
     simavr
     uisp
 
     # stm32 / arm
     stm32flash
-    #blackmagic
-    #gcc-arm-embedded
+    blackmagic
+    gcc-arm-embedded-7
 
     # linx
     fwup
