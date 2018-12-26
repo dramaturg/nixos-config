@@ -35,8 +35,11 @@
   };
 
   boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+
     kernelParams = [
-      # "i915.enable_fbc=1"
+      "i915.enable_fbc=1"
       "gpd-pocket-fan.speed_on_ac=0"
     ];
     kernelModules = [
@@ -49,10 +52,7 @@
       kernelModules = [
         "pwm-lpss"
         "pwm-lpss-platform" # for brightness control
-        "g_serial" # be a serial device via OTG
-        "bq24190_charger"
         "i915"
-        "fusb302"
       ];
       availableKernelModules = [
         "xhci_pci"
@@ -75,8 +75,6 @@
       #];
     };
   };
-
-  networking.hostName = "zwerg";
 
   environment.variables = {
     GDK_SCALE = "2";
@@ -131,19 +129,4 @@
   environment.systemPackages = with pkgs; [
     beignet
   ];
-
-  hardware.pulseaudio = {
-    enable = true;
-    package = pkgs.pulseaudioFull;
-    # systemWide = true;
-    support32Bit = true;
-    extraConfig = ''
-    set-card-profile alsa_card.platform-cht-bsw-rt5645 HiFi
-    set-default-sink alsa_output.platform-cht-bsw-rt5645.HiFi__hw_chtrt5645_0__sink
-    set-sink-port alsa_output.platform-cht-bsw-rt5645.HiFi__hw_chtrt5645_0__sink [Out] Speaker
-    '';
-    daemon.config = {
-      realtime-scheduling = "no";
-    };
-  };
 }

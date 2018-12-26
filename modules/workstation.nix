@@ -66,6 +66,7 @@
     firefox
     thunderbird
     skypeforlinux
+    tor-browser-bundle-bin
 
     # desktop
     arandr
