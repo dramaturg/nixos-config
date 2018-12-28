@@ -89,6 +89,9 @@
     # arduino
     arduino ino
 
+    # FPGA
+    arachne-pnr yosys
+
     # stm8
     (pkgs.callPackage "/etc/nixos/packages/stm8flash" { })
 

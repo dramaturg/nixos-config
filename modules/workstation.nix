@@ -1,5 +1,10 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, configName,... }:
 let
+  i3Config = (if configName == "pocket" then
+    "/etc/nixos/dotfiles/i3/config.pocket"
+  else
+    "/etc/nixos/dotfiles/i3/config"
+  );
   i3-winmenu = pkgs.stdenv.mkDerivation {
     name = "i3-winmenu";
     buildInputs = [
@@ -48,6 +53,7 @@ in
     # shell
     mosh
     fdupes
+    vpaste
 
     # media
     vlc mpv
@@ -84,8 +90,9 @@ in
     binutils jq
     git-review
     rustup gcc stack nim
-    racket gambit chez chibi chicken
+    racket gambit chez chibi chicken gerbil
     guile guile-lib guile-fibers slibGuile guile-lint
+    julia
     valgrind
     ocl-icd
 
@@ -129,12 +136,6 @@ in
     cifs_utils
     enpass
   ];
-
-#  nixpkgs.config.packageOverrides = pkgs: rec {
-#    st = pkgs.st.override {
-#      conf = (builtins.readFile ../packages/st/config.h);
-#    };
-#  };
 
   nix.daemonIONiceLevel = 7;
   nix.daemonNiceLevel = 19;
@@ -280,7 +281,7 @@ in
       enable = true;
       useEmbeddedBitmaps = true;
       defaultFonts = {
-        monospace = [ "Iosevka" ];
+        monospace = [ "Iosevka Nerd Font Mono" ];
         sansSerif = [ "Roboto" ];
         serif     = [ "Roboto Slab" ];
       };

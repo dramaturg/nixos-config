@@ -165,7 +165,7 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
     #font pango:PragmataPro 11px
-    status_command i3status -c /etc/nixos/dotfiles/i3/i3status
+    status_command i3status -c /etc/nixos/dotfiles/i3/i3status-gpd-pocket
 
     colors {
         # Whole color settings

@@ -55,11 +55,5 @@
 
     # for bluetooth
     package = pkgs.pulseaudioFull;
-
-    # A2DP sink
-    extraConfig = "
-      [General]
-      Enable=Source,Sink,Media,Socket
-    ";
   };
 }
