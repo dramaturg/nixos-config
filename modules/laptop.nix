@@ -28,9 +28,8 @@
   services.upower.enable = true;
 
   services.logind.extraConfig = ''
-    IdleAction=suspend
+    IdleAction=lock
     IdleActionSec=30s
-    HandlePowerKey=suspend
   '';
   services.logind.lidSwitch = "suspend";
 
