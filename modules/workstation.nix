@@ -151,6 +151,8 @@ in
   programs.mosh.enable = true;
   programs.mtr.enable = true;
 
+  services.flatpak.enable = true;
+
   virtualisation.libvirtd.enable = true;
   documentation.man.enable = true;
 
@@ -314,6 +316,7 @@ in
     enable = true;
     user = "seb";
     dataDir = "/home/seb/.syncthing";
+    openDefaultPorts = true;
   };
 
   networking.firewall = {
