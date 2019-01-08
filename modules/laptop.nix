@@ -14,7 +14,6 @@
   powerManagement = {
     enable = true;
     #scsiLinkPolicy = "min_power";
-    cpuFreqGovernor = "powersave";
     powerUpCommands = ''
       echo 'min_power' > '/sys/class/scsi_host/host0/link_power_management_policy';
       echo '1500' > '/proc/sys/vm/dirty_writeback_centisecs';
