@@ -119,10 +119,6 @@ in
     alacritty termite st
     icedtea8_web
     pavucontrol pasystray
-    networkmanagerapplet
-    networkmanager_dmenu
-    networkmanager_iodine
-    networkmanager_openvpn
     blueman
     gnome3.eog gnome3.nautilus
     xorg.xbacklight xorg.xcursorthemes xorg.xdpyinfo
@@ -317,6 +313,17 @@ in
     user = "seb";
     dataDir = "/home/seb/.syncthing";
     openDefaultPorts = true;
+  };
+
+  networking = {
+    networkmanager = {
+      enable = true;
+      packages = [
+        pkgs.networkmanager-openvpn
+        pkgs.networkmanagerapplet
+        pkgs.networkmanager_dmenu
+      ];
+    };
   };
 
   networking.firewall = {

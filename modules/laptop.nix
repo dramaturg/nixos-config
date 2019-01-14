@@ -5,12 +5,6 @@
     "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
   ];
 
-  boot = {
-    kernelParams = [
-      "i915.enable_psr=1"
-    ];
-  };
-
   powerManagement = {
     enable = true;
     #scsiLinkPolicy = "min_power";
@@ -34,15 +28,8 @@
   services.logind.lidSwitch = "suspend";
 
   environment.systemPackages = with pkgs; [
-    networkmanager
     powertop
   ];
-
-  networking = {
-    networkmanager = {
-      enable = true;
-    };
-  };
 
   hardware.bluetooth = {
     enable = true;

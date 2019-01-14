@@ -21,7 +21,6 @@ in
     ];
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
-      "video.use_native_backlight=1"
       "pcie_aspm=force"
       "clocksource=acpi_pm"
       "pci=use_crs"
@@ -70,7 +69,11 @@ in
     "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
   ];
 
-  # networking.hostName = "woodstock";
+  environment.systemPackages = with pkgs; [
+    beignet
+    steam
+    calibre
+  ];
 
   services.xserver = {
     videoDrivers = [ "intel" ];
