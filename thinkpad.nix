@@ -77,6 +77,10 @@ in
 
   services.xserver = {
     videoDrivers = [ "intel" ];
+    displayManager.lightdm.autoLogin = {
+      enable = true;
+      user = "seb";
+    };
   };
 
   hardware = {

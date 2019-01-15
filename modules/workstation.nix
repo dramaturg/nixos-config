@@ -185,6 +185,10 @@ in
 #          enable = true;
 #          user = "seb";
 #        };
+        greeters.gtk = {
+          theme.package = pkgs.zuki-themes;
+          theme.name = "Zukitre";
+        };
       };
       sessionCommands = ''
         export TERMINAL=termite
