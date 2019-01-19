@@ -58,7 +58,6 @@
 
   environment.systemPackages = with pkgs; [
     # shell
-    ack
     lftp
     screen tmux
     rlwrap
@@ -74,7 +73,6 @@
     upower
     lshw
     acpi lm_sensors
-    #cryptsetup
     ltrace strace linuxPackages.perf
     cron
 
@@ -181,7 +179,7 @@
       startAgent = true;
       extraConfig = ''
         AddKeysToAgent yes
-        '';
+      '';
     };
     tmux = {
       enable = true;

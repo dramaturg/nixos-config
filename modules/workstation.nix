@@ -96,6 +96,9 @@ in
     valgrind
     ocl-icd
 
+    # databases
+    dbeaver
+
     microscheme
     sdcc
     nodejs
@@ -181,10 +184,6 @@ in
     displayManager = {
       lightdm = {
         enable = true;
-#        autoLogin = {
-#          enable = true;
-#          user = "seb";
-#        };
         greeters.gtk = {
           theme.package = pkgs.zuki-themes;
           theme.name = "Zukitre";
