@@ -12,16 +12,18 @@
       "idris-vim"
       "sensible"
       "vim-airline"
-      "The_NERD_tree" # file system explorer
-      "fugitive" "vim-gitgutter" # git 
-      "rust-vim"
+      "The_NERD_tree"
+      "fugitive"
+      "vim-gitgutter"
     ];
   };
 
   home.file = {
     ".zshrcfoo" = {
       source = ../dotfiles/zshrc;
-      #recursive = true;
+    };
+    ".zshrc.local" = {
+      source = ../dotfiles/zshrc.local;
     };
   };
 }

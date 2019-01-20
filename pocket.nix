@@ -129,6 +129,15 @@ in
     ];
   };
 
+  hardware = {
+    opengl = {
+      enable = true;
+      extraPackages = with pkgs; [ vaapiIntel vaapiVdpau ];
+      driSupport32Bit = true;
+      s3tcSupport = true;
+    };
+  };
+
   environment.systemPackages = with pkgs; [
     beignet
   ];

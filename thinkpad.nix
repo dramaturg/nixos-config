@@ -63,14 +63,15 @@ in
 
   # powerManagement.scsiLinkPolicy = "max_performance";
 
-  nix.binaryCaches = [ "https://hydra.mayflower.de/" "https://cache.nixos.org/" ];
+  nix.binaryCaches = [ "https://cache.nixos.org/" ];
   nix.binaryCachePublicKeys = [
-    "hydra.mayflower.de:9knPU2SJ2xyI0KTJjtUKOGUVdR2/3cOB4VNDQThcfaY=" 
     "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
   ];
 
   environment.systemPackages = with pkgs; [
     beignet
+    ocl-icd
+    intel-ocl
     steam
     calibre
   ];
@@ -85,6 +86,7 @@ in
 
   hardware = {
     opengl = {
+      enable = true;
       extraPackages = with pkgs; [ vaapiIntel vaapiVdpau ];
       driSupport32Bit = true;
       s3tcSupport = true;
