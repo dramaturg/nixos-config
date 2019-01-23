@@ -1,0 +1,116 @@
+
+*background:                      #002b36
+*foreground:                      #839496
+!*fading:                  40
+!*fadeColor:                      #002b36
+*cursorColor:                     #93a1a1
+*pointerColorBackground:          #586e75
+*pointerColorForeground:          #93a1a1
+
+*color0:                          #073642
+*color1:                          #dc322f
+*color2:                          #859900
+*color3:                          #b58900
+*color4:                          #268bd2
+*color5:                          #d33682
+*color6:                          #2aa198
+*color7:                          #eee8d5
+*color8:                          #002b36
+*color9:                          #cb4b16
+*color10:                         #586e75
+*color11:                         #657b83
+*color12:                         #839496
+*color13:                         #6c71c4
+*color14:                         #93a1a1
+*color15:                         #fdf6e3
+
+! Xft settings ---------------------------------------------------------------
+
+Xft.dpi:        96
+Xft.rgba:       rgb
+Xft.hinting:    true
+Xft.hintstyle:  hintfull
+!Xft.hintstyle:  hintslight
+Xft.antialias:  true
+Xft.lcdfilter: lcddefault
+!*font:          xft:Mensch:pixelsize=11:antialias=true:hinting=true
+
+
+! Xcursor --------------------------------------------------------------------
+
+!Xcursor.theme: Vanilla-DMZ-AA
+Xcursor*theme: Grounation
+Xcursor*size:  16
+
+
+! Terminal -------------------------------------------------------------------
+
+!URxvt.termName:       xterm
+URxvt.imlocale:        de_DE.UTF-8
+URxvt.font:            xft:Iosevka Nerd Font Mono:pixelsize=11:antialias=false
+
+URxvt.buffered:          True
+URxvt*scrollBar:         False
+URxvt*scrollTtyOutput:   False
+URxvt*scrollTtyKeypress: True
+URxvt*secondaryScroll:   True
+URxvt*scrollWithBuffer:  False
+URxvt.loginShell:        False
+!Rxvt.cursorColor:       Green
+!Rxvt.cursorColor1:      Pink
+!Rxvt.colorBD:           Red
+!Rxvt.colorUL:           Yellow
+URxvt.saveLines:         5000
+URxvt*perl-ext:          default,url-select,keyboard-select,clipboard
+!URxvt*perl-ext:         default,matcher,selection,url-select,keyboard-select
+!URxvt.keysym.M-u:       perl:url-select:select_next
+URxvt.colorUL:           #4682B4
+!URxvt.keysym.M-c:       perl:clipboard:copy
+!URxvt.keysym.M-v:       perl:clipboard:paste
+!URxvt.keysym.M-C-v:     perl:clipboard:paste_escaped
+!URxvt.keysym.M-Escape:  perl:keyboard-select:activate
+!URxvt.keysym.M-s:       perl:keyboard-select:search
+!URxvt.urlLauncher:    /usr/bin/xdg-open
+
+URxvt.urlLauncher:       /usr/bin/google-chrome
+URxvt.url-select.underline: true
+URxvt.keysym.M-u:        perl:url-select:select_next
+
+URxvt.clipboard.copycmd:  xclip -i -selection clipboard
+URxvt.clipboard.pastecmd: xclip -o -selection clipboard
+URxvt.keysym.M-c:   perl:clipboard:copy
+URxvt.keysym.M-v:   perl:clipboard:paste
+URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+
+URxvt.keysym.M-Escape: perl:keyboard-select:activate
+URxvt.keysym.M-s: perl:keyboard-select:search
+
+
+URxvt*cutchars:           "\"()*,<>[]{}|'"
+URxvt*print-pipe:         cat > /tmp/$(echo urxvt.dump.$(date +'%Y%M%d%H%m%S'))
+URxvt*mapAlert:           true
+URxvt.urgentOnBell:       true
+URxvt.depth:              32
+
+! xpdf -----------------------------------------------------------------------
+
+xpdf*enableFreetype:    yes
+xpdf*antialias:         yes
+xpdf*foreground:        white
+xpdf*background:        black
+!xpdf*urlCommand:        /home/seb/bin/vimprobable
+xpdf*urlCommand:        firefox
+
+
+! x11-ssh-askpass ------------------------------------------------------------
+
+x11-ssh-askpass*font:                   -*-dina-medium-r-*-*-12-*-*-*-*-*-*-*
+x11-ssh-askpass*background:             #000000
+x11-ssh-askpass*foreground:             #ffffff
+x11-ssh-askpass.Button*background:      #000000
+x11-ssh-askpass.Indicator*foreground:   #ff9900
+x11-ssh-askpass.Indicator*background:   #090909
+x11-ssh-askpass*topShadowColor:         #000000
+x11-ssh-askpass*bottomShadowColor:      #000000
+x11-ssh-askpass.*borderWidth:           1
+

@@ -119,13 +119,12 @@ in
     i3 i3lock dmenu i3-winmenu
     feh scrot
     xautolock
-    alacritty termite st
-    icedtea8_web
+    alacritty termite
+    (st.override { conf = builtins.readFile ../dotfiles/st-config.h; })
+
     pavucontrol pasystray
     blueman
     gnome3.eog gnome3.nautilus
-    xorg.xbacklight xorg.xcursorthemes xorg.xdpyinfo
-    xorg.xev xorg.xkill
     numix-sx-gtk-theme
     xclip
 

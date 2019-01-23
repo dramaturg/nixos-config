@@ -115,6 +115,8 @@
       esac
       nix-env -qaP --description \* | grep -i "$@"
     }
+
+    export TERM=xterm-256color
   '';
 
   programs = {

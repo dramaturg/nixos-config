@@ -62,5 +62,11 @@
       color21 = #eee8d5
     '';
   };
+
+  home.file = {
+    ".Xresources" = {
+      source = ../dotfiles/Xresources;
+    };
+  };
 }
 
