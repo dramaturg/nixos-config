@@ -41,23 +41,27 @@ set splitright
 set titlestring=vim\ %<%F%(\ %)%m%h%w%=%l/%L-%P
 set titlelen=70
 if &term == "screen"
-	set t_fs=k
-	set t_ts=\
+    set t_fs=k
+    set t_ts=\
 endif
 set title
 
 "Persistent undo
 try
-	if MySys() == "windows"
-		set undodir=C:\Windows\Temp
-	else
-		set undodir=~/.vim_undodir
-	endif
+    if MySys() == "windows"
+        set undodir=C:\Windows\Temp
+    else
+        set undodir=~/.vim_undodir
+    endif
 
-	if !isdirectory(&undodir)
-		exec "silent !mkdir -p " . &undodir
-	endif
-	set undofile
+    if !isdirectory(&undodir)
+        exec "silent !mkdir -p " . &undodir
+    endif
+    set undofile
+
+    let s:undos = split(globpath(&undodir, '*'), "\n")
+    call filter(s:undos, 'getftime(v:val) < localtime() - (60 * 60 * 24 * 90)')
+    call map(s:undos, 'delete(v:val)')
 catch
 endtry
 
@@ -69,26 +73,26 @@ set wildmenu
 set wildmode=list:longest,full
 
 if has("gui_running")
-	set guioptions-=T
-	set guioptions-=m
+    set guioptions-=T
+    set guioptions-=m
 
-	"set guifont=Mensch\ 10
-	set guifont=PragmataPro\ 9
+    "set guifont=Mensch\ 10
+    set guifont=PragmataPro\ 9
 endif
 
 " show a wrapper char at wrapped lines
 if has("linebreak")
-	let &sbr = nr2char(8618).' '
+    let &sbr = nr2char(8618).' '
 endif
 
 " highligh column 81
 "if v:version >= 703
-"	set colorcolumn=81
+"    set colorcolumn=81
 "endif
 
 " change directory to dirname(__file__)
 if has("autocmd")
-	autocmd bufenter * :lcd %:p:h
+    autocmd bufenter * :lcd %:p:h
 endif
 
 " status line
@@ -175,8 +179,8 @@ nnoremap k gk
 
 " windows resizing
 if bufwinnr(1)
-	map + <C-W>+
-	map - <C-W>-
+    map + <C-W>+
+    map - <C-W>-
 endif
 
 " Make the command-line completion better
@@ -248,14 +252,14 @@ vmap <C-c><C-c> <Plug>SendSelectionToTmux
 nmap <C-c><C-c> <Plug>NormalModeSendToTmux
 nmap <C-c>r <Plug>SetTmuxVars
 nmap <C-c>m :Tmux make
-nmap <C-c>t :Tmux 
+nmap <C-c>t :Tmux
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Strip all trailing whitespace in file
 
 function! StripWhitespace ()
-	exec ':%s/ \+$//gc'
+    exec ':%s/ \+$//gc'
 endfunction
 map ,s :call StripWhitespace ()<CR>
 
@@ -299,17 +303,17 @@ if has('cscope')
   " To do the first type of search, hit 'CTRL-\', followed by one of the
   " cscope search types above (s,g,c,t,e,f,i,d).  The result of your cscope
   " search will be displayed in the current window.  You can use CTRL-T to
-  " go back to where you were before the search.  
+  " go back to where you were before the search.
   "
 
-  nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+  nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
   nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-  nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
 
   " Using 'CTRL-spacebar' (intepreted as CTRL-@ by vim) then a search type
@@ -318,19 +322,19 @@ if has('cscope')
   "
   " (Note: earlier versions of vim may not have the :scs command, but it
   " can be simulated roughly via:
-  "    nmap <C-@>s <C-W><C-S> :cs find s <C-R>=expand("<cword>")<CR><CR>	
+  "    nmap <C-@>s <C-W><C-S> :cs find s <C-R>=expand("<cword>")<CR><CR>
 
-  nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>	
-  nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>	
-  nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
-  nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>	
+  nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>
+  nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>
+  nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+  nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>
 
 
-  " Hitting CTRL-space *twice* before the search type does a vertical 
+  " Hitting CTRL-space *twice* before the search type does a vertical
   " split instead of a horizontal one (vim 6 and up only)
   "
   " (Note: you may wish to put a 'set splitright' in your .vimrc
@@ -341,8 +345,8 @@ if has('cscope')
   nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
   nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
   nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
-  nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>	
-  nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
+  nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
+  nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
   nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
 endif
 
@@ -446,9 +450,9 @@ function! NumberToggle()
       setlocal relativenumber
     else
       if &relativenumber
-	setlocal norelativenumber
+    setlocal norelativenumber
       else
-	setlocal number
+    setlocal number
       endif
     endif
   else
