@@ -173,8 +173,10 @@
         zsh-newuser-install() { :; }
       '';
       shellAliases = {
-        nix-search       = "nix-env -qaP";
-        nix-list         = "nix-env -qaP \"*\" --description";
+        nix-search        = "nix-env -qaP";
+        nix-list          = "nix-env -qaP \"*\" --description";
+        wergwerf_firefox  = "firefox --new-instance --profile $(mktemp -d)";
+        wergwerf_chromium = "chromium --user-data-dir $(mktemp -d)";
       };
     };
     ssh = {

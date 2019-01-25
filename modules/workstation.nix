@@ -113,6 +113,7 @@ in
     skypeforlinux
     tor-browser-bundle-bin
     mattermost-desktop
+    (pkgs.writeScriptBin "wegwerf_firefox_clone" (builtins.readFile ../scripts/wegwerf_firefox_clone.sh ))
 
     # desktop
     arandr
