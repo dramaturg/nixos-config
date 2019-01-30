@@ -81,10 +81,15 @@
         SYMLINK+="stlinkv2_console"
   '';
 
+  boot.kernelModules = [
+    "ftdi_sio"
+  ];
+
   environment.systemPackages = with pkgs; [
     microscheme
     sdcc
     openocd
+    platformio
 
     # arduino
     arduino ino

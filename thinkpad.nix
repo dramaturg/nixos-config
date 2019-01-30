@@ -56,8 +56,6 @@ in
 
       # intel wifi
       options iwlwifi 11n_disable=8
-      iwlwifi.power_save=Y
-      iwldvm.force_cam=N
     '';
   };
 

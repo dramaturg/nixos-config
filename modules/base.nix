@@ -167,6 +167,18 @@
         if [ $USER = "seb" ]; then
           systemctl --user import-environment
         fi
+
+
+        typeset -U path cdpath fpath
+
+        setopt auto_cd
+        cdpath=($HOME /mnt)
+
+        zstyle ':completion:*' group-name \'\'
+        zstyle ':completion:*:descriptions' format %d
+        zstyle ':completion:*:descriptions' format %B%d%b
+        zstyle ':completion:*:complete:(cd|pushd):*' tag-order \
+               'local-directories named-directories'
       '';
       shellInit = ''
         #disable config wizard

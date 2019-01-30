@@ -1,4 +1,4 @@
-{ pkgs, lib, config, configName,... }:
+{ pkgs, lib, config, configName, ... }:
 let
   i3Config = (if configName == "pocket" then
     "/etc/nixos/dotfiles/i3/config.pocket"
@@ -17,6 +17,23 @@ let
       mkdir -p $out/bin
       cp ${../scripts/i3-winmenu.py} $out/bin/i3-winmenu
       chmod +x $out/bin/i3-winmenu
+    '';
+  };
+  rke = pkgs.stdenv.mkDerivation rec {
+    name = "rke-${version}";
+    version = "0.2.0-rc4";
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
+      sha256 = "1d92j3jlk0p0fpvznha68hkz6pw9v8yhkyqhkh5kvp35j71ln6jm";
+    };
+
+    phases = [ "installPhase" ];
+    installPhase = ''
+      mkdir -p $out/bin
+      cp ${src} $out/bin/rke
+      patchelf $out/bin/rke
+      chmod 755 $out/bin/rke
     '';
   };
   vpaste = pkgs.writeScriptBin "vpaste" ''
@@ -72,6 +89,7 @@ in
     docker-machine
     linuxPackages.virtualbox
     freeipmi
+    rke
 
     # network
     speedtest-cli
@@ -84,7 +102,6 @@ in
 
     # dev
     gdb gradle
-    python3Full python3Packages.virtualenv
     gitAndTools.gitflow gitAndTools.gitFull git-cola
     man stdman man-pages posix_man_pages
     binutils jq
@@ -95,6 +112,12 @@ in
     julia
     valgrind
     ocl-icd
+
+    python3Full python3Packages.virtualenv
+    (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
+      flask
+      pandas
+    ]))
 
     # databases
     dbeaver
