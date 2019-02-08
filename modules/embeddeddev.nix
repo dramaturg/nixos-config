@@ -1,9 +1,5 @@
 { pkgs, lib, config, ... }:
 
-#let
-#  mypkgs = with import <nixpkgs>; {
-#    stm8flash = callPackage ../packages/stm8flash { };
-#  };
 {
   services.udev.extraRules = ''
     # stlink
@@ -91,43 +87,11 @@
     openocd
     platformio
 
-    # arduino
-    arduino ino
-
     # FPGA
     arachne-pnr yosys nextpnr
-
-    # stm8
-    (pkgs.callPackage "/etc/nixos/packages/stm8flash" { })
-
-    # pic
-
-    # avr
-    avrbinutils
-    avrgcc
-    avrlibc
-    avrdude avrdudess
-    avra
-    avr8burnomat
-    avro-c
-    simavr
-    uisp
-
-    # stm32 / arm
-    stm32flash
-    blackmagic
-    gcc-arm-embedded-7
-
-    # linx
-    fwup
-
-    # IDEs
+    icestorm
 
     # electrical
     ngspice
-
-    # FPGA
-    nextpnr
-    icestorm
   ];
 }
