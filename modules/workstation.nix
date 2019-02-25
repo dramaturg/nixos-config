@@ -21,11 +21,11 @@ let
   };
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
-    version = "0.2.0-rc4";
+    version = "0.2.0-rc5";
 
     src = pkgs.fetchurl {
       url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "1d92j3jlk0p0fpvznha68hkz6pw9v8yhkyqhkh5kvp35j71ln6jm";
+      sha256 = "1fz46ms1i383mz8wlr705jdy0sbrv1c49rfyhqs4fyvkb5zd39gj";
     };
 
     phases = [ "installPhase" ];
@@ -89,7 +89,7 @@ in
     docker-machine
     linuxPackages.virtualbox
     freeipmi
-    rke
+    rke kail helm
 
     # network
     speedtest-cli

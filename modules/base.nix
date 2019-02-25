@@ -98,6 +98,7 @@
     tcpdump
     iptables
     inetutils
+    magic-wormhole
 
     # nix
     nix-prefetch-scripts
