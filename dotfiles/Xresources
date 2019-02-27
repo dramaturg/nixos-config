@@ -24,25 +24,6 @@
 *color14:                         #93a1a1
 *color15:                         #fdf6e3
 
-! Xft settings ---------------------------------------------------------------
-
-Xft.dpi:        96
-Xft.rgba:       rgb
-Xft.hinting:    true
-Xft.hintstyle:  hintfull
-!Xft.hintstyle:  hintslight
-Xft.antialias:  true
-Xft.lcdfilter: lcddefault
-!*font:          xft:Mensch:pixelsize=11:antialias=true:hinting=true
-
-
-! Xcursor --------------------------------------------------------------------
-
-!Xcursor.theme: Vanilla-DMZ-AA
-Xcursor*theme: Grounation
-Xcursor*size:  16
-
-
 ! Terminal -------------------------------------------------------------------
 
 !URxvt.termName:       xterm

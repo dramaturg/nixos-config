@@ -34,6 +34,14 @@
   nix.gc.dates = "Thu 03:15";
   nix.gc.options = "--delete-older-than 14d";
 
+  nix.binaryCaches = [
+    "https://cache.nixos.org/"
+    "https://hie-nix.cachix.org"
+  ];
+  nix.binaryCachePublicKeys = [
+    "hie-nix.cachix.org-1:EjBSHzF6VmDnzqlldGXbi0RM3HdjfTU3yDRi9Pd0jTY="
+  ];
+
   time.timeZone = "Europe/Berlin";
 
   i18n = {
@@ -205,6 +213,8 @@
       terminal = "screen-256color";
     };
   };
+
+  environment.etc."gitconfig".source = ../dotfiles/gitconfig;
 
   virtualisation.docker.enable = true;
 

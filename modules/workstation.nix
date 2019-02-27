@@ -54,6 +54,7 @@ let
         echo -n "$out" | xclip -i -selection clipboard
     fi
   '';
+  kdeconnect-ports = { from = 1714; to = 1764; };
 in
 {
   environment.systemPackages = with pkgs; [
@@ -151,6 +152,7 @@ in
     gnome3.eog gnome3.nautilus
     numix-sx-gtk-theme
     xclip
+    kdeconnect
 
     # misc
     fuse
@@ -225,7 +227,6 @@ in
       default = "xfce";
       xterm.enable = false;
 
-      #mate.enable = true;
       xfce = {
         enable = true;
         noDesktop = true;
@@ -267,7 +268,6 @@ in
   };
 
   services.dbus.socketActivated = true;
-
 
   services.redshift = {
     enable = true;
@@ -319,6 +319,7 @@ in
     enable = true;
     drivers = [pkgs.gutenprint];
   };
+  hardware.sane.enable = true;
 
   services.colord = {
     enable = true;
@@ -354,11 +355,21 @@ in
 
   networking.firewall = {
     allowedTCPPorts = [ 22 ];
-    #trustedInterfaces = [ "tun0" "tun1" ];
+    allowedTCPPortRanges = [ kdeconnect-ports ];
+    allowedUDPPortRanges = [ kdeconnect-ports ];
   };
 
-  networking.extraHosts = ''
-    77.244.254.19 static.soup.io
+  services.udev.packages = with pkgs; [
+      libu2f-host yubikey-personalization
+  ];
+  services.udev.extraRules = ''
+    # Access to /dev/bus/usb/* devices. Needed for virt-manager USB
+    # redirection.
+    SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", MODE="0664", GROUP="wheel"
+
+    # Allow users in group 'usbmon' to do USB tracing, e.g. in Wireshark
+    # (after 'modprobe usbmon').
+    SUBSYSTEM=="usbmon", GROUP="usbmon", MODE="640"
   '';
 
   systemd.user.services."unclutter" = {

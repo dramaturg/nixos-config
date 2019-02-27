@@ -61,11 +61,6 @@ in
 
   # powerManagement.scsiLinkPolicy = "max_performance";
 
-  nix.binaryCaches = [ "https://cache.nixos.org/" ];
-  nix.binaryCachePublicKeys = [
-    "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
-  ];
-
   environment.systemPackages = with pkgs; [
     beignet
     ocl-icd

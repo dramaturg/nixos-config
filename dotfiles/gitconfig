@@ -1,0 +1,291 @@
+[core]
+	mergeoptions = --no-edit
+
+[apply]
+	ignorewhitespace = change
+	whitespace = nowarn
+
+[push]
+	rebase = true
+	default = matching
+
+[color]
+	branch = auto
+	diff = auto
+	status = auto
+	ui = auto
+
+[alias]
+	tree = log --graph --decorate --pretty=oneline --abbrev-commit
+	treelong = log --graph --decorate --abbrev-commit
+	stashed = stash list --pretty=format:'%gd: %Cred%h%Creset %Cgreen[%ar]%Creset %s'
+
+	root = rev-parse --show-toplevel
+	#cdroot = !cd `git root`
+
+	upstream = !git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)
+	upstream-remote = !git upstream | sed -e 's/\\/.*$//g'
+
+	out = !git fetch `git upstream-remote` && git l `git upstream`..HEAD
+	in = pull --dry-run
+
+	co = checkout
+	coc = checkout .
+	cob = checkout -b
+	cobf = "!f() { git brd $1; git cob $1; }; f"
+	col = checkout HEAD~1
+	cotc = !git sttc | xargs git checkout
+	como = !git stmo | xargs git checkout
+
+	ours = checkout --ours
+	theirs = checkout --theirs
+	aours = "!f() { (git reset $* >/dev/null); git ours $* && git add $*; }; f"
+	atheirs = "!f() { (git reset $* >/dev/null); git theirs $* && git add $*; }; f"
+
+	ci = commit
+	cie = commit --allow-empty
+	cia = commit -a
+	cam = commit --amend
+	cama = commit --amend -a
+
+	cl = clean
+	cldf = clean -df
+
+	res = reset
+	resa = reset HEAD
+	resh = "!f() { git stash && git reset --hard $@; }; f"
+	reshu = !git resh `git upstream`
+	reshfu = !git fetch `git upstream-remote` && git resh `git upstream`
+	reshh = !git stash && git reset --hard HEAD
+	cundo = reset HEAD^1
+	cundoh = !git stash && git reset HEAD^1 --hard
+	unstage = reset HEAD
+
+	tags = tag -l
+
+	pg = diff
+	pgs = diff --staged
+	pa = apply
+
+	s = show --color
+	sw = show --color --color-words='[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+'
+	sf = show --color --name-only
+
+	d = diff --color
+	dw = diff --color --color-words='[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+'
+	du = !git d `git upstream`
+	ds = !git d --staged
+	dsw = !git d --staged --color-words='[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+'
+	dsf = !git d --staged --name-only
+	df = !git d --name-only
+	dc = "!f() { HASH=$1; shift 1; git diff --cc $HASH $HASH^1 $HASH^2 $@; }; f"
+
+	lp = log -m --no-merges --color -p
+	lf = log -m --no-merges --color -p --name-only
+	lg = log -m --simplify-merges --color --graph --pretty=format:'%Cred%h%Creset %s %Cgreen(%ar) %Cblue%an <%ae>%Creset' --abbrev-commit --date=relative
+	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+	ll = log --graph --oneline  --decorate --date=short --all --pretty=format:'%ad %h %Cgreen%an %Cred%d %Creset%s'
+	lgu = !git lg `git upstream`
+	lg2 = !source ~/.githelpers && pretty_git_log
+	lgp = !git lg --no-merges -p
+	lgpw = !git lg --no-merges -p --color-words='[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+'
+	lgf = !git lg --no-merges -p --name-only
+	l = log -m --simplify-merges --color --pretty=format:'%Cred%h%Creset %s %Cgreen(%cr) %Cblue%an <%ae>%Creset' --abbrev-commit --date=relative
+	lc = "!f() { git log $* | grep '^commit ' | cut -f 2 -d ' '; }; f"
+
+	lgu = !git lg --no-merges `git upstream`
+	lgup = !git lg --no-merges -p `git upstream`
+
+	f = fetch
+	fu = !git fetch `git upstream-remote`
+	fa = fetch --all
+	fo = fetch origin
+
+	m = merge --no-edit
+	unm = reset --merge
+
+	ps = push
+	psu = push -u
+	psn = "!f() { git ps $1 `git brc`; }; f"
+	psnf = "!f() { git psf $1 `git brc`; }; f"
+	psun = "!f() { git psu $1 `git brc`; }; f"
+	pso = push origin
+	psoun = !git psu origin `git brc`
+	psf = push -f
+	psuf = push -uf
+	pssm = push --recurse-submodules=on-demand
+	psremoveallbranches = "!f() { git push $1 `git brar $1 | grep -v master | xargs -I {} echo :{}`; }; f"
+	spush = push --recurse-submodules=on-demand
+
+	pl = pull
+	plo = pull origin
+	plom = pull origin master
+	plr = pull --rebase
+
+	st = status
+	sts = status -s
+	sttc = !git status | grep typechange | awk '{print $2}'
+	stmo = !git status | grep modified | awk '{print $2}'
+
+	a = add --all
+	af = add --all -f
+	ap = add -p
+	resolve-unmerged = !git add `git unmerged`
+	add-untracked = !git add `git untracked`
+	as = !git diff -w --no-color | git apply --cached
+	rs = !(git resa && git as && git co . && git resa) &>/dev/null
+
+	rmf = rm -rf
+	rmtheirs = !git rm `git removedbytheirs`
+	rmours = !git rm `git removedbyours`
+
+	unmerged = !git ls-files --unmerged | cut -f2 | uniq
+	theirsunmerged = !git ls-files --unmerged | grep \"\\\\s3\\\\s\" | cut -f2 | uniq
+	oursunmerged = !git ls-files --unmerged | grep \"\\\\s2\\\\s\" | cut -f2 | uniq
+	removedbyours = !bash -c 'source ~/.githelpers && diff_array \"`git theirsunmerged`\" \"`git oursunmerged`\"'
+	removedbytheirs = !bash -c 'source ~/.githelpers && diff_array \"`git oursunmerged`\" \"`git theirsunmerged`\"'
+
+	untracked = ls-files --other --exclude-standard
+	staged = ls-files --staged
+	modified = ls-files --modified
+	deleted = ls-files --deleted
+	gitignored = ls-files -o -i --exclude-standard
+	sig = !git ls-files -v | grep "^[[:lower:]]"
+
+	ig = update-index --assume-unchanged
+	uig = update-index --no-assume-unchanged
+	ignore = update-index --assume-unchanged
+	ignored = !git sig
+
+	gitignore-untracked = !git gitignore `git untracked`
+	ig-untracked = !git ignore `git untracked`
+	gitignore = !cd `git root` && touch .gitignore
+
+	head = !git l -1
+	h = !git head
+	hp = !source ~/.githelpers && show_git_head
+	r = !git l -20
+	ra = !git r --all
+
+	sh = stash
+	sha = stash apply
+	shl = stash list
+	shd = stash drop
+	shc = stash clear
+
+	chp = cherry-pick
+	chpc = cherry-pick --continue
+	chpq = cherry-pick --quit
+	chpa = cherry-pick --abort
+
+	rv = revert
+	rvc = revert --continue
+	rva = revert --abort
+
+	am3 = am -3
+	amr = am --resolved
+	amc = am --continue
+	ama = am --abort
+	ams = am --skip
+
+	fm = format-patch
+
+	rb = rebase
+	rbad = rebase --committer-date-is-author-date
+	rbi = rebase -i
+	rbtc = !git theirs `git unmerged` || git resolve-unmerged && (git rbc || git rbs)
+	rboc = !git ours `git unmerged` || git reset `git unmerged` && git a . && (git rbc || git rbs)
+	rbc = rebase --continue
+	rba = rebase --abort
+	rbs = rebase --skip
+
+	squash = !"f() { NL=$1; GIT_EDITOR=\"sed -i '2,$NL s/pick/squash/;/# This is the 2nd commit message:/,$ {d}'\"; git rebase -i HEAD~$NL; }; f"
+	sq = !git squash $1
+	sqpsf = !git squash $1 && git psf
+
+	bs = bisect
+	bsr = bisect reset
+	bsb = bisect bad
+	bsg = bisect good
+
+	mt = mergetool
+
+	vm = !vim `git unmerged`
+	vmo = !vim `git modified`
+	vt = !vim `git untracked`
+	vim-unmerged = !git vm # deprecated
+
+	current = rev-parse --abbrev-ref HEAD
+	br = branch
+	brc = rev-parse --abbrev-ref HEAD
+	brt = branch --track
+	brup = branch --set-upstream
+	bra = !git branch -a | less -FiRS
+	brrecent = !git for-each-ref --sort=-committerdate refs/heads/
+	brar = "!f() { git bra | grep remotes/$1/ | cut -f 3 -d '/'; }; f"
+	brd = branch -D
+	brco = branch --contains
+	brcommits = "!f() { git lc --branches=$1* }; f"
+	brdiff = !source ~/.githelpers && diff_branches
+	brfdiff = !source ~/.githelpers && diff_branches_show_files
+
+	rem = remote
+	rema = remote add
+	remr = remote rm
+	remv = remote -v
+	remotes = remote -v
+
+	sm = submodule
+	smst = submodule status
+	sma = submodule add
+	smu = submodule update
+	sme = submodule foreach
+	smepl = submodule foreach "(git checkout master; git pull)&"
+	smui = submodule update --init
+	smuir = submodule update --init --recursive
+	sms = submodule sync
+	spull = "__git_spull() { git pull \"$@\" && git submodule sync --recursive && git submodule update --init --recursive; }; __git_spull"
+
+	bl = blame
+
+	gcp = gc --prune=now
+	gca = gc --aggressive
+	gcap = gc --aggressive --prune=now
+
+	# git change-commits GIT_COMMITTER_NAME "old name" "new name"
+	# git change-commits GIT_AUTHOR_EMAIL "old@email.com" "new@email.com" -- -10
+	change-commits = "!f() { VAR=$1; OLD=$2; NEW=$3; shift 3; git filter-branch --env-filter \"if [[ $`echo $VAR` = \\\"$OLD\\\" ]]; then export $VAR=\\\"$NEW\\\"; fi\" $@; }; f "
+
+	# from https://help.github.com/articles/remove-sensitive-data
+	remove-file = "!f() { git filter-branch -f --index-filter \"git rm --cached --ignore-unmatch $1\" --prune-empty --tag-name-filter cat -- --all; }; f"
+
+	rf = reflog
+	rfe = reflog expire --expire=now --all
+
+	pr = prune
+	prm = !git rfe && git gcp
+
+	fsize = git ls-tree -r -t -l --full-name HEAD | sort -rn -k 4 | less
+
+	findemptydirs = !"find . -type d -empty ! -path ./tmp/\\*"
+	deleteemptydirs = !"find . -type d -empty ! -path ./tmp/\\* -exec rmdir {} \\;"
+	up = pull --rebase --autostash --recurse-submodules
+
+
+[diff]
+	tool = gvimdiff
+[difftool]
+    prompt = false
+
+[merge]
+	tool = vimdiff
+#	conflictstyle = diff3
+	prompt = false
+#	ff = only
+
+#[mergetool "vimdiff3"]
+#	cmd = vim -u ~/.vimrc -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+
+[status]
+	submodulesummary = true
+

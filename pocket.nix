@@ -86,6 +86,7 @@ in
   };
 
   fonts.fontconfig.dpi = 168;
+  services.xserver.displayManager.sddm.enableHidpi = true;
 
   services.xserver = {
     dpi = 168;
