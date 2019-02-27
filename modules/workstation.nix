@@ -57,6 +57,11 @@ let
   kdeconnect-ports = { from = 1714; to = 1764; };
 in
 {
+  imports = [
+    ./base.nix
+    "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
+  ];
+
   environment.systemPackages = with pkgs; [
     shared_mime_info
     wpa_supplicant

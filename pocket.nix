@@ -12,7 +12,6 @@ in
       ./modules/embeddeddev.nix
       ./modules/laptop.nix
       ./modules/pocket-kernel.nix
-      ./modules/base.nix
       ./firmware
     ];
 

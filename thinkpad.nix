@@ -10,8 +10,8 @@ in
       <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
       (hardwareTarball + "/lenovo/thinkpad/x250")
       ./modules/embeddeddev.nix
+      ./modules/cjdns.nix
       ./modules/laptop.nix
-      ./modules/base.nix
     ];
 
 
@@ -114,5 +114,16 @@ in
     sensitivity = 220;
     speed = 0;
     emulateWheel = true;
+  };
+
+  # clean up efi flash on shutdown
+  systemd.services."cleanup-efivars" = {
+    enable = true;
+    description = "clean up efi flash on shutdown";
+    after = [ "final.target" ];
+    wantedBy = [ "final.target" ];
+    serviceConfig.Type = "oneshot";
+    serviceConfig.ExecStart = "${pkgs.findutils}/bin/find /sys/firmware/efi/efivars -name dump-\* -ctime +7 -delete";
+    unitConfig.DefaultDependencies = "no";
   };
 }
