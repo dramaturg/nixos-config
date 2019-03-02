@@ -21,11 +21,11 @@ let
   };
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
-    version = "0.2.0-rc5";
+    version = "0.2.0-rc7";
 
     src = pkgs.fetchurl {
       url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "1fz46ms1i383mz8wlr705jdy0sbrv1c49rfyhqs4fyvkb5zd39gj";
+      sha256 = "0cs515jgn8n41ry1kpzn11v0879qrbqz49rp7g5vljg2gncvzgvg";
     };
 
     phases = [ "installPhase" ];
@@ -115,7 +115,6 @@ in
     rustup gcc stack nim
     racket gambit chez chibi chicken gerbil
     guile guile-lib guile-fibers slibGuile guile-lint
-    julia
     valgrind
     ocl-icd
 
