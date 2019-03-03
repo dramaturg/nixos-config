@@ -105,6 +105,7 @@ in
     wireguard
     wireguard-tools
     sshuttle
+    ipcalc
 
     # dev
     gdb gradle

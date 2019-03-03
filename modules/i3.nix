@@ -22,6 +22,7 @@
         enable = true;
         extraPackages = with pkgs; [
           dmenu
+          rofi
           i3lock
           i3status
           feh

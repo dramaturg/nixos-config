@@ -12,8 +12,8 @@ bindsym $mod+Return exec i3-sensible-terminal
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
+# start menu
+bindsym $mod+d exec rofi -show drun
 
 # (g)oto named window
 bindsym $mod+g exec i3-winmenu.py
