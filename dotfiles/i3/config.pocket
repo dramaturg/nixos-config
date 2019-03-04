@@ -14,6 +14,7 @@ bindsym $mod+Shift+q kill
 
 # start menu
 bindsym $mod+d exec rofi -show drun
+bindsym $mod+shift+d exec rofi -show run
 
 # (g)oto named window
 bindsym $mod+g exec i3-winmenu
