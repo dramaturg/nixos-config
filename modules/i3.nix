@@ -34,19 +34,4 @@
       };
     };
   };
-
-#  stdenv.mkDerivation {
-#    name = "i3-winmenu";
-#    buildInputs = [
-#      (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
-#        i3
-#      ]))
-#    ];
-#    unpackPhase = "true";
-#    installPhase = ''
-#      mkdir -p $out/bin
-#      cp ${../scripts/i3-winmenu.py} $out/bin/i3-winmenu.py
-#      chmod +x $out/bin/i3-winmenu.py
-#    '';
-#  };
 }

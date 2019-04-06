@@ -5,7 +5,6 @@
 {
   imports = [
     ./networking.nix
-    ./resolved.nix
     ./efi.nix
     "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
   ];
@@ -26,10 +25,6 @@
 
   nix.buildCores = lib.mkDefault 0;
   nix.autoOptimiseStore = true;
-  #nix.nixPath = [
-  #  "/nix"
-  #  "nixos-config=/etc/nixos/configuration.nix"
-  #];
   nix.gc.automatic = true;
   nix.gc.dates = "Thu 03:15";
   nix.gc.options = "--delete-older-than 14d";
@@ -147,7 +142,6 @@
           "git"
           "git-flow"
           "golang"
-          "helm"
           "kubectl"
           "nomad"
           "mosh"

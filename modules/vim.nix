@@ -12,10 +12,10 @@ vim_configurable.customize {
             # They are installed managed by `vam` (a vim plugin manager)
             "Syntastic"
             "ctrlp"
-			"rust"
-			"gitgutter"
-			"undotree"
-			"youcompleteme"
+            "rust"
+            "gitgutter"
+            "undotree"
+            "youcompleteme"
         ]; }
     ];
 	vimrcConfig.pathogen.pluginNames = [

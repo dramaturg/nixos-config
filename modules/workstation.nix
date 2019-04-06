@@ -122,7 +122,10 @@ in
     python3Full python3Packages.virtualenv
     (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
       flask
+      ipython
+      jupyter
       pandas
+      matplotlib
     ]))
 
     # databases
@@ -181,6 +184,7 @@ in
   programs.mtr.enable = true;
 
   services.flatpak.enable = true;
+  services.emacs.enable = true;
 
   virtualisation.libvirtd.enable = true;
   documentation.man.enable = true;
