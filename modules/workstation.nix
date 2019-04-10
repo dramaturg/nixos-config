@@ -55,12 +55,19 @@ let
     fi
   '';
   kdeconnect-ports = { from = 1714; to = 1764; };
+  unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
 in
 {
   imports = [
     ./base.nix
     "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
   ];
+
+  nixpkgs.config.packageOverrides = pkgs: {
+    unstable = import unstableTarball {
+      config = config.nixpkgs.config;
+    };
+  };
 
   environment.systemPackages = with pkgs; [
     shared_mime_info
@@ -101,7 +108,7 @@ in
     speedtest-cli
     wireshark tcpdump
     nmap 
-    socat
+    socat socat2pre
     wireguard
     wireguard-tools
     sshuttle
@@ -114,7 +121,8 @@ in
     binutils jq
     git-review
     rustup gcc stack nim
-    racket gambit chez chibi chicken gerbil
+    unstable.gambit unstable.gerbil
+    racket chez chibi chicken
     guile guile-lib guile-fibers slibGuile guile-lint
     valgrind
     ocl-icd
@@ -134,8 +142,7 @@ in
     microscheme
     sdcc
     nodejs
-    ctags
-    nim
+    ctags global
 
     # web, chat & docs
     evince okular
@@ -166,7 +173,7 @@ in
     fuse
     sshfsFuse
     cifs_utils
-    enpass
+    unstable.enpass
   ];
 
   nix.daemonIONiceLevel = 7;
