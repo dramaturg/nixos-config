@@ -1,18 +1,18 @@
-{ stdenv, fetchFromGitHub, cmake, gflags, glog, gtest, openssl }:
 
-{
-  pkgs ? import <nixpkgs> {},
-  stdenv ? pkgs.stdenv
-}:
+with import <nixpkgs> {};
+
+let
+  version = "0.9.0";
+in
 
 stdenv.mkDerivation rec {
-  name = "s2geometry";
-  
+  name = "s2geometry-${version}";
+
   src = fetchFromGitHub {
     owner = "google";
     repo = "s2geometry";
-    rev = "b8c45b5d739fe0263fec3b5fd182bcd1e1ea0fea";
-    sha256 = "0fjrgibdcsj71h88njxbdzrc2w1rd26qwbwazvzip2fxsifh8sz0";
+    rev = "4ad31e9b9d4b25f0ddffa2061ac5a7d14edf7195";
+    sha256 = "1mx61bnn2f6bd281qlhn667q6yfg1pxzd2js88l5wpkqlfzzhfaz";
   };
 
   nativeBuildInputs = [
@@ -23,6 +23,8 @@ stdenv.mkDerivation rec {
     gflags
     gtest
     openssl
+    swig
+    python3
   ];
   cmakeFlags = [
     "-DWITH_GFLAGS=ON"
