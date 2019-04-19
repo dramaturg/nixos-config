@@ -5,7 +5,7 @@
       extraConfig = "slaac private";
     };
     firewall = {
-      enable = false;
+      enable = true;
       allowPing = true;
     };
   };

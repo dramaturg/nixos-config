@@ -2,6 +2,7 @@
 
 let
   configName = "pocket";
+  unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
 in
 {
   imports =
@@ -11,9 +12,42 @@ in
       #./modules/mobiledev.nix
       ./modules/embeddeddev.nix
       ./modules/laptop.nix
-      ./modules/pocket-kernel.nix
       ./firmware
     ];
+
+  nixpkgs.config = {
+    packageOverrides = pkgs: {
+      unstable = import unstableTarball {
+        config = config.nixpkgs.config;
+      };
+      linux_latest = pkgs.unstable.linux_latest.override {
+        extraConfig = ''
+          B43_SDIO y
+          GPD_POCKET_FAN m
+
+          PMIC_OPREGION y
+          CHT_WC_PMIC_OPREGION y
+          ACPI_I2C_OPREGION y
+
+          I2C y
+          I2C_CHT_WC m
+
+          INTEL_SOC_PMIC_CHTWC y
+
+          EXTCON_INTEL_CHT_WC m
+
+          MATOM y
+          I2C_DESIGNWARE_BAYTRAIL y
+          POWER_RESET y
+          PWM y
+          PWM_LPSS m
+          PWM_LPSS_PCI m
+          PWM_LPSS_PLATFORM m
+          PWM_SYSFS y
+        '';
+      };
+    };
+  };
 
   powerManagement = lib.mkForce {
     enable = true;
@@ -24,6 +58,18 @@ in
       modorobe goodix
     '';
 
+  };
+
+  services.udev = {
+    extraRules = let
+      script = pkgs.writeShellScriptBin "enable-bluetooth" ''
+        modprobe btusb
+        echo "0000 0000" > /sys/bus/usb/drivers/btusb/new_id
+      '';
+     in
+       ''
+       SUBSYSTEM=="usb", ATTRS{idVendor}=="0000", ATTRS{idProduct}=="0000", RUN+="${script}/bin/enable-bluetooth"
+    '';
   };
 
   services.tlp = {
@@ -39,22 +85,21 @@ in
   boot = {
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
+    kernelPackages = pkgs.linuxPackages_latest;
 
     kernelParams = [
       "i915.enable_fbc=1"
       "gpd-pocket-fan.speed_on_ac=0"
     ];
-    kernelModules = [
-      "kvm-intel"
-      "btusb"
-    ];
-    kernelPackages = pkgs.linuxPackagesFor pkgs.linux_gpd_pocket;
 
     initrd = {
       kernelModules = [
+        "intel_agp"
         "pwm-lpss"
         "pwm-lpss-platform" # for brightness control
+        "gpd-pocket-fan"
         "i915"
+        "btusb"
       ];
       availableKernelModules = [
         "xhci_pci"
@@ -76,19 +121,20 @@ in
       #  }
       #];
     };
+    extraModprobeConfig = ''
+      options i915 enable_fbc=1 enable_rc6=1 modeset=1
+      options gpd-pocket-fan temp_limits=40000,40001,40002
+    '';
   };
 
   environment.variables = {
-    GDK_SCALE = "2";
-    GDK_DPI_SCALE = "0.5";
     MOZ_USE_XINPUT2 = "1";
   };
 
-  fonts.fontconfig.dpi = 168;
-  services.xserver.displayManager.sddm.enableHidpi = true;
+  fonts.fontconfig.dpi = 200;
 
-  services.xserver = {
-    dpi = 168;
+  services.xserver =  {
+    dpi = 200;
     displayManager.sessionCommands = ''
       xrdb -merge "${pkgs.writeText "xrdb.conf" ''
         Xcursor.theme: Vanilla-DMZ
