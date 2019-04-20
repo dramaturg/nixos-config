@@ -153,7 +153,9 @@ in
       }
     ];
     deviceSection = ''
-      Option "TearFree" "true"
+      Option "AccelMethod" "sna"
+      Option "TearFree"    "true"
+      Option "DRI"         "3"
     '';
     inputClassSections = [
       ''
@@ -187,12 +189,4 @@ in
   environment.systemPackages = with pkgs; [
     beignet
   ];
-
-  hardware.pulseaudio = {
-    extraConfig = ''
-    set-card-profile alsa_card.platform-cht-bsw-rt5645 HiFi
-    set-default-sink alsa_output.platform-cht-bsw-rt5645.HiFi__hw_chtrt5645_0__sink
-    set-sink-port alsa_output.platform-cht-bsw-rt5645.HiFi__hw_chtrt5645_0__sink [Out] Speaker
-    '';
-  };
 }

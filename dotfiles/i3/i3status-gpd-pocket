@@ -13,8 +13,6 @@ order += "ipv6"
 order += "wireless wlp1s0"
 order += "battery 0"
 order += "volume master"
-order += "tztime singapore"
-order += "tztime newyork"
 order += "time"
 
 wireless wlp1s0 {
@@ -23,9 +21,9 @@ wireless wlp1s0 {
 }
 
 battery 0 {
-        format = "%percentage"
+	format = "%percentage"
 	low_threshold = 15
-        path = "/sys/class/power_supply/max170xx_battery/uevent"	
+	path = "/sys/class/power_supply/max170xx_battery/uevent"	
 }
 
 run_watch DHCP {
@@ -39,16 +37,6 @@ run_watch DHCP {
 #path_exists VPN {
 #	path = "/proc/sys/net/ipv4/conf/vpn0"
 #}
-
-tztime newyork {
-	format = "%H:%M:%S %Z"
-	timezone = "America/New_York"
-}
-
-tztime singapore {
-	format = "%H:%M:%S %Z"
-	timezone = "Asia/Singapore"
-}
 
 volume master {
 	format = " Vol: %volume "
