@@ -200,6 +200,10 @@ in
   nixpkgs.config.pulseaudio = true;
   hardware.pulseaudio = {
     enable = true;
+    zeroconf = {
+        discovery.enable = false;
+        publish.enable = false;
+    };
   };
   
   services.udisks2.enable = true;

@@ -20,32 +20,7 @@ in
       unstable = import unstableTarball {
         config = config.nixpkgs.config;
       };
-      linux_latest = pkgs.unstable.linux_latest.override {
-        extraConfig = ''
-          B43_SDIO y
-          GPD_POCKET_FAN m
-
-          PMIC_OPREGION y
-          CHT_WC_PMIC_OPREGION y
-          ACPI_I2C_OPREGION y
-
-          I2C y
-          I2C_CHT_WC m
-
-          INTEL_SOC_PMIC_CHTWC y
-
-          EXTCON_INTEL_CHT_WC m
-
-          MATOM y
-          I2C_DESIGNWARE_BAYTRAIL y
-          POWER_RESET y
-          PWM y
-          PWM_LPSS m
-          PWM_LPSS_PCI m
-          PWM_LPSS_PLATFORM m
-          PWM_SYSFS y
-        '';
-      };
+      linux_latest = pkgs.unstable.linux_latest.override { };
     };
   };
 
@@ -85,18 +60,75 @@ in
   boot = {
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
+
     kernelPackages = pkgs.linuxPackages_latest;
+    kernelPatches =  [ {
+      name = "pocket";
+      patch = null;
+      extraConfig = ''
+        B43_SDIO y
+        GPD_POCKET_FAN m
+
+        MATOM y
+        GENERIC_CPU n
+
+        CHARGER_MAX14577 m
+        GPIO_WHISKEY_COVE m
+
+        CMA y
+        CMA_AREAS 7
+
+        PMIC_OPREGION y
+        CHT_WC_PMIC_OPREGION y
+        ACPI_I2C_OPREGION y
+
+        I2C y
+        I2C_CHT_WC m
+
+        INTEL_SOC_PMIC_CHTWC y
+
+        EXTCON_INTEL_CHT_WC m
+
+        I2C_DESIGNWARE_BAYTRAIL y
+        POWER_RESET y
+        PWM y
+        PWM_LPSS y
+        PWM_LPSS_PCI y
+        PWM_LPSS_PLATFORM y
+        PWM_SYSFS y
+        LEDS_PWM m
+
+        BACKLIGHT_LP855X m
+        BACKLIGHT_PWM m
+
+        6LOWPAN_DEBUGFS y
+        9P_FS_SECURITY y
+
+        BATMAN_ADV_MCAST y
+        BATMAN_ADV_NC y
+
+        BCMA_DRIVER_GPIO y
+        BCMA_DRIVER_GMAC_CMN y
+
+        BLK_CGROUP_IOLATENCY y
+        CGROUP_PERF y
+
+        BT_HCIBTUSB m
+        BT_LEDS y
+
+        BXT_WC_PMIC_OPREGION y
+      '';
+    } ];
 
     kernelParams = [
       "i915.enable_fbc=1"
+      "i915.enable_psr=1"
       "gpd-pocket-fan.speed_on_ac=0"
     ];
 
     initrd = {
       kernelModules = [
         "intel_agp"
-        "pwm-lpss"
-        "pwm-lpss-platform" # for brightness control
         "gpd-pocket-fan"
         "i915"
         "btusb"

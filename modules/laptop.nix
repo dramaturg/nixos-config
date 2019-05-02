@@ -18,8 +18,10 @@
   services.logind.extraConfig = ''
     IdleAction=lock
     IdleActionSec=30s
+    HandleLidSwitch=suspend
+    HandleLidSwitchExternalPower=lock
+    HandleLidSwitchDocked=ignore
   '';
-  services.logind.lidSwitch = "suspend";
 
   environment.systemPackages = with pkgs; [
     powertop

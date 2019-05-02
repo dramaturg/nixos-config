@@ -21,7 +21,7 @@ wireless wlp1s0 {
 }
 
 battery 0 {
-	format = "%percentage"
+	format = "%status %percentage"
 	low_threshold = 15
 	path = "/sys/class/power_supply/max170xx_battery/uevent"	
 }

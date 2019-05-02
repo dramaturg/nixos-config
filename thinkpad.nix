@@ -25,6 +25,7 @@ in
       "clocksource=acpi_pm"
       "pci=use_crs"
       "consoleblank=0"
+      "i915.enable_psr=1"
     ];
 
     initrd = {
