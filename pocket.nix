@@ -2,7 +2,6 @@
 
 let
   configName = "pocket";
-  unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
 in
 {
   imports =
@@ -14,15 +13,6 @@ in
       ./modules/laptop.nix
       ./firmware
     ];
-
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-      unstable = import unstableTarball {
-        config = config.nixpkgs.config;
-      };
-      linux_latest = pkgs.unstable.linux_latest.override { };
-    };
-  };
 
   powerManagement = lib.mkForce {
     enable = true;
@@ -61,7 +51,6 @@ in
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
 
-    kernelPackages = pkgs.linuxPackages_latest;
     kernelPatches =  [ {
       name = "pocket";
       patch = null;

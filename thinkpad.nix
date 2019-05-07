@@ -19,7 +19,6 @@ in
     kernelModules = [
       "kvm-intel"
     ];
-    kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       "pcie_aspm=force"
       "clocksource=acpi_pm"
