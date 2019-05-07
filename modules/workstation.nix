@@ -21,11 +21,11 @@ let
   };
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
-    version = "0.2.0-rc7";
+    version = "0.2.3-rc1";
 
     src = pkgs.fetchurl {
       url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "0cs515jgn8n41ry1kpzn11v0879qrbqz49rp7g5vljg2gncvzgvg";
+      sha256 = "0z9yqfrdwxbig1qix5ac83jnsvm98fmprbv9bfmzmlqmn5zdd01n";
     };
 
     phases = [ "installPhase" ];
@@ -123,7 +123,8 @@ in
     rustup gcc stack nim
     unstable.gambit unstable.gerbil
     racket chez chibi chicken
-    guile guile-lib guile-fibers slibGuile guile-lint
+    unstable.guile unstable.guile-lib unstable.guile-fibers unstable.slibGuile unstable.guile-lint
+    (import ../packages/guile-charting)
     valgrind
     ocl-icd
 
@@ -178,14 +179,6 @@ in
 
   nix.daemonIONiceLevel = 7;
   nix.daemonNiceLevel = 19;
-
-  # boot.initrd.kernelModules = [
-  #   "vboxdrv" "vboxnetadp" "vboxnetflt"
-  # ];
-
-  # boot.extraModulePackages = [
-  #   pkgs.linuxPackages.virtualbox
-  # ];
 
   programs.mosh.enable = true;
   programs.mtr.enable = true;
