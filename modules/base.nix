@@ -77,11 +77,7 @@
     lshw
     acpi lm_sensors
     ltrace strace linuxPackages.perf
-    cron
-
-    # backup
-    #dyno
-    #duplicity
+    mcron
 
     # base tools
     file
@@ -211,13 +207,6 @@
   environment.etc."gitconfig".source = ../dotfiles/gitconfig;
 
   virtualisation.docker.enable = true;
-
-  services.btrfs = {
-    autoScrub = {
-      enable = true;
-      fileSystems = [ "/" ];
-    };
-  };
 
   services.openssh = {
     enable = true;

@@ -126,4 +126,26 @@ in
     serviceConfig.ExecStart = "${pkgs.findutils}/bin/find /sys/firmware/efi/efivars -name dump-\* -ctime +7 -delete";
     unitConfig.DefaultDependencies = "no";
   };
+
+  services.restic.backups = {
+    remotebackup = {
+      paths = [
+        "/etc/nixos"
+        "/home/seb/code"
+        "/home/seb/logs"
+      ];
+      repository = "s3:ams3.digitaloceanspaces.com/restic-seb";
+      passwordFile = "/etc/nixos/secrets/restic_s3_pass";
+      s3CredentialsFile = "/etc/nixos/secrets/restic_s3_space";
+      timerConfig = {
+        OnCalendar = "21:15";
+      };
+      initialize = true;
+    };
+  };
+
+  networking.extraHosts =
+    ''
+      212.110.186.28		readscheme.org library.readscheme.org repository.readscheme.org www.readscheme.org
+    '';
 }

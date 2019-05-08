@@ -5,6 +5,7 @@ let
   else
     "/etc/nixos/dotfiles/i3/config"
   );
+
   i3-winmenu = pkgs.stdenv.mkDerivation {
     name = "i3-winmenu";
     buildInputs = [
@@ -19,6 +20,7 @@ let
       chmod +x $out/bin/i3-winmenu
     '';
   };
+
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
     version = "0.2.3-rc1";
@@ -36,6 +38,7 @@ let
       chmod 755 $out/bin/rke
     '';
   };
+
   vpaste = pkgs.writeScriptBin "vpaste" ''
     #!${pkgs.bash}/bin/bash
 
@@ -54,7 +57,6 @@ let
         echo -n "$out" | xclip -i -selection clipboard
     fi
   '';
-  kdeconnect-ports = { from = 1714; to = 1764; };
   unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
 in
 {
@@ -71,7 +73,6 @@ in
 
   environment.systemPackages = with pkgs; [
     shared_mime_info
-    wpa_supplicant
 
     mu
     rofi
@@ -107,7 +108,7 @@ in
     # network
     speedtest-cli
     wireshark tcpdump
-    nmap 
+    nmap
     socat socat2pre
     wireguard
     wireguard-tools
@@ -121,13 +122,16 @@ in
     binutils jq
     git-review
     rustup gcc stack nim
-    unstable.gambit unstable.gerbil
-    racket chez chibi chicken
-    unstable.guile unstable.guile-lib unstable.guile-fibers unstable.slibGuile unstable.guile-lint
-    (import ../packages/guile-charting)
     valgrind
     ocl-icd
 
+    # scheme
+    unstable.gambit unstable.gerbil chez 
+    unstable.guile unstable.guile-lib unstable.slibGuile
+    unstable.guile-fibers unstable.guile-lint gnutls
+    (import ../packages/guile-charting)
+
+    # python
     python3Full python3Packages.virtualenv
     (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
       flask
@@ -146,11 +150,10 @@ in
     ctags global
 
     # web, chat & docs
-    evince okular
+    okular
     libreoffice
     firefox
     thunderbird
-    skypeforlinux
     tor-browser-bundle-bin
     mattermost-desktop
     (pkgs.writeScriptBin "wegwerf_firefox_clone" (builtins.readFile ../scripts/wegwerf_firefox_clone.sh ))
@@ -160,7 +163,7 @@ in
     i3 i3lock dmenu i3-winmenu
     feh scrot
     xautolock
-    alacritty termite
+    termite
     (st.override { conf = builtins.readFile ../dotfiles/st-config.h; })
 
     pavucontrol pasystray
@@ -168,7 +171,6 @@ in
     gnome3.eog gnome3.nautilus
     numix-sx-gtk-theme
     xclip
-    kdeconnect
 
     # misc
     fuse
@@ -183,7 +185,6 @@ in
   programs.mosh.enable = true;
   programs.mtr.enable = true;
 
-  services.flatpak.enable = true;
   services.emacs.enable = true;
 
   virtualisation.libvirtd.enable = true;
@@ -198,7 +199,7 @@ in
         publish.enable = false;
     };
   };
-  
+
   services.udisks2.enable = true;
 
   services.avahi = {
@@ -264,24 +265,6 @@ in
     };
   };
 
-  # QT4/5 global theme
-  environment.etc."xdg/Trolltech.conf" = {
-    text = ''
-      [Qt]
-      style=Breeze
-    '';
-    mode = "444";
-  };
-
-  # GTK3 global theme (widget and icon theme)
-  environment.etc."xdg/gtk-3.0/settings.ini" = {
-    text = ''
-      [Settings]
-      gtk-theme-name=Numix-SX-FullDark
-    '';
-    mode = "444";
-  };
-
   services.dbus.socketActivated = true;
 
   services.redshift = {
@@ -329,7 +312,6 @@ in
 
   i18n.consoleFont = "latarcyrheb-sun32";
 
-
   services.printing = {
     enable = true;
     drivers = [pkgs.gutenprint];
@@ -370,8 +352,6 @@ in
 
   networking.firewall = {
     allowedTCPPorts = [ 22 ];
-    allowedTCPPortRanges = [ kdeconnect-ports ];
-    allowedUDPPortRanges = [ kdeconnect-ports ];
   };
 
   services.udev.packages = with pkgs; [
