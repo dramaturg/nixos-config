@@ -1,5 +1,8 @@
 { pkgs, lib, config, ... }:
 
+let
+  unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
+in
 {
   services.udev.extraRules = ''
     # stlink
@@ -81,11 +84,17 @@
     "ftdi_sio"
   ];
 
+  nixpkgs.config.packageOverrides = pkgs: {
+    unstable = import unstableTarball {
+      config = config.nixpkgs.config;
+    };
+  };
+
   environment.systemPackages = with pkgs; [
     microscheme
     sdcc
     openocd
-    platformio
+    unstable.platformio
 
     # FPGA
     arachne-pnr yosys nextpnr
