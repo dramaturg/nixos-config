@@ -1,11 +1,6 @@
 { pkgs, lib, config, configName, ... }:
 let
-  i3Config = (if configName == "pocket" then
-    "/etc/nixos/dotfiles/i3/config.pocket"
-  else
-    "/etc/nixos/dotfiles/i3/config"
-  );
-
+  i3Config = "/etc/nixos/dotfiles/i3/config.pocket";
   i3-winmenu = pkgs.stdenv.mkDerivation {
     name = "i3-winmenu";
     buildInputs = [
@@ -255,8 +250,8 @@ in
           i3status
           i3-winmenu
         ];
-        #configFile = i3Config;
-        configFile = "/etc/nixos/dotfiles/i3/config";
+        configFile = i3Config;
+        #configFile = "/etc/nixos/dotfiles/i3/config";
       };
     };
   };
@@ -395,5 +390,5 @@ in
     serviceConfig.Environment = "DISPLAY=:0 XAUTHORITY=/home/seb/.Xauthority";
   };
 
-  home-manager.users.seb = import ./home-desktop.nix;
+  #home-manager.users.seb = import ./home-desktop.nix;
 }

@@ -12,7 +12,7 @@
 
   programs.termite = {
     enable = true;
-    font = "Iosevka Nerd Font Mono, 9";
+    font = "Iosevka Nerd Font Mono, 14";
     colorsExtra = ''
       # Base16 Solarized Dark
       # Author: Ethan Schoonover (modified by aramisgithub)
