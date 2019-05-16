@@ -23,11 +23,11 @@ let
 
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
-    version = "0.2.3-rc1";
+    version = "0.2.3-rc3";
 
     src = pkgs.fetchurl {
       url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "0z9yqfrdwxbig1qix5ac83jnsvm98fmprbv9bfmzmlqmn5zdd01n";
+      sha256 = "cb97d7c7189b0057e62a009e61a9b894330eec93d27690ae02a19eca027f84b0";
     };
 
     phases = [ "installPhase" ];
@@ -101,7 +101,7 @@ in
     ansible
     docker_compose
     docker-machine
-    linuxPackages.virtualbox
+    unstable.linuxPackages_latest.virtualbox
     freeipmi
     rke kail helm
 
@@ -171,6 +171,7 @@ in
     gnome3.eog gnome3.nautilus
     numix-sx-gtk-theme
     xclip
+    pinentry_gnome
 
     # misc
     fuse
@@ -178,6 +179,7 @@ in
     cifs_utils
     unstable.enpass
   ];
+  services.flatpak.enable = true;
 
   nix.daemonIONiceLevel = 7;
   nix.daemonNiceLevel = 19;
@@ -208,8 +210,7 @@ in
     nssmdns = true;
   };
 
-  #boot.kernelPackages = pkgs.unstable.linuxPackages_latest;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.unstable.linuxPackages_latest;
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
   };
@@ -330,6 +331,7 @@ in
     enable = true;
     enableHardening = false;
     addNetworkInterface = true;
+    package = pkgs.unstable.virtualbox;
   };
 
   services.syncthing = {
