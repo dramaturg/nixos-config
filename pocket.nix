@@ -68,15 +68,9 @@ in
         CMA_AREAS 7
 
         PMIC_OPREGION y
-        CHT_WC_PMIC_OPREGION y
         ACPI_I2C_OPREGION y
 
         I2C y
-        I2C_CHT_WC m
-
-        INTEL_SOC_PMIC_CHTWC y
-
-        EXTCON_INTEL_CHT_WC m
 
         I2C_DESIGNWARE_BAYTRAIL y
         POWER_RESET y
