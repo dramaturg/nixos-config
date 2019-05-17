@@ -76,10 +76,10 @@ in
 
     mu
     rofi
-    virtmanager
     xiccd
     xsel
     xss-lock
+    man stdman man-pages posix_man_pages
 
     # shell
     mosh
@@ -102,11 +102,9 @@ in
     docker_compose
     docker-machine
     unstable.linuxPackages_latest.virtualbox
-    freeipmi
     rke kail helm
 
     # network
-    speedtest-cli
     wireshark tcpdump
     nmap
     socat socat2pre
@@ -116,24 +114,21 @@ in
     ipcalc
 
     # dev
-    gdb gradle
     gitAndTools.gitflow gitAndTools.gitFull git-cola
-    man stdman man-pages posix_man_pages
     binutils jq
     git-review
-    rustup gcc stack nim
-    valgrind
+    gcc nim
     ocl-icd
 
     # scheme
-    unstable.gambit unstable.gerbil chez 
+    unstable.gambit unstable.gerbil chez
     unstable.guile unstable.guile-lib unstable.slibGuile
     unstable.guile-fibers unstable.guile-lint gnutls
     (import ../packages/guile-charting)
 
     # python
     python3Full python3Packages.virtualenv
-    (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
+    (pkgs.python37.withPackages (pythonPackages: with pythonPackages; [
       flask
       ipython
       jupyter

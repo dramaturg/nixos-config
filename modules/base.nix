@@ -71,9 +71,7 @@
     patchelf
     pciutils usbutils
     psmisc
-    smartmontools
     sysstat
-    upower
     lshw
     acpi lm_sensors
     ltrace strace linuxPackages.perf
