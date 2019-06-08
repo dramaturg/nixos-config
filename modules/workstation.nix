@@ -331,6 +331,7 @@ in
     user = "seb";
     dataDir = "/home/seb/.syncthing";
     openDefaultPorts = true;
+    package = pkgs.unstable.syncthing;
   };
 
   networking = {
