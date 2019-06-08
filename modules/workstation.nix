@@ -66,6 +66,8 @@ in
     };
   };
 
+  #nixpkgs.config.gnutls.guile = true;
+
   environment.systemPackages = with pkgs; [
     shared_mime_info
 
@@ -97,7 +99,7 @@ in
     docker_compose
     docker-machine
     unstable.linuxPackages_latest.virtualbox
-    rke kail helm
+    rke kail unstable.kubernetes-helm
 
     # network
     wireshark tcpdump

@@ -64,6 +64,7 @@
     lftp
     screen tmux
     rlwrap
+    any-nix-shell
 
     # system, hardware & fs
     exfat gptfdisk hdparm nvme-cli
@@ -187,6 +188,9 @@
         wergwerf_firefox  = "firefox --new-instance --profile $(mktemp -d)";
         wergwerf_chromium = "chromium --user-data-dir $(mktemp -d)";
       };
+      promptInit = ''
+        any-nix-shell zsh --info-right | source /dev/stdin
+      '';
     };
     ssh = {
       startAgent = true;
