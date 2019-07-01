@@ -18,11 +18,11 @@ let
 
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
-    version = "0.2.3-rc3";
+    version = "0.2.5-rc1";
 
     src = pkgs.fetchurl {
       url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "cb97d7c7189b0057e62a009e61a9b894330eec93d27690ae02a19eca027f84b0";
+      sha256 = "15z82jlab1qizq0fd5fln6ql8cb9dqx04xdcxnbgrkjcsi9knag2";
     };
 
     phases = [ "installPhase" ];
