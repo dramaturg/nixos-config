@@ -8,10 +8,8 @@ in
     [
       <nixpkgs/nixos/modules/hardware/network/broadcom-43xx.nix>
       <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
-      #./modules/mobiledev.nix
       ./modules/embeddeddev.nix
       ./modules/laptop.nix
-      ./firmware
     ];
 
   powerManagement = lib.mkForce {
