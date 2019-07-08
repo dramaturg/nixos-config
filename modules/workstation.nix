@@ -194,6 +194,15 @@ in
     };
   };
 
+  # wireshark capturing
+  users.groups.wireshark.members = [ "seb" ];
+  security.wrappers.dumpcap = {
+    source = "${pkgs.wireshark}/bin/dumpcap";
+    permissions = "u+xs,g+x";
+    owner = "root";
+    group = "wireshark";
+  };
+
   services.udisks2.enable = true;
 
   services.avahi = {
@@ -393,5 +402,5 @@ in
     serviceConfig.Environment = "DISPLAY=:0 XAUTHORITY=/home/seb/.Xauthority";
   };
 
-  #home-manager.users.seb = import ./home-desktop.nix;
+  home-manager.users.seb = import ./home-desktop.nix;
 }

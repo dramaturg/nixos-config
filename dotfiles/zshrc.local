@@ -5,6 +5,9 @@ if [ -e "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]; then
 	. "${HOME}/.nix-profile/etc/profile.d/nix.sh"
 fi
 
+if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+	. "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
 
 rawurlencode() {
   local string="${1}"
@@ -95,3 +98,4 @@ export ANSIBLE_CONFIG=/home/seb/.ansible.cfg
 export ANSIBLE_INVENTORY=$HOME/ansible/hosts
 
 alias youtube-dl="/usr/local/bin/youtube-dl -t -i --no-mtime --prefer-free-formats -c --no-mtime"
+alias yaml2json="python -c 'import sys, yaml, json; y=yaml.load(sys.stdin.read()); print(json.dumps(y))'"

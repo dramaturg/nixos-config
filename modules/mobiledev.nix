@@ -19,8 +19,8 @@
     jmtpfs
 
     (myEnvFun {
-      name = "android43";
-      buildInputs = [ androidenv.androidsdk_4_3
+      name = "android90";
+      buildInputs = [ androidsdk_9_0
                       ant
                       openjdk
                     ];

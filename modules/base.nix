@@ -20,6 +20,7 @@
 #        };
 #      };
       allowUnfree = true;
+      sqlite.interactive = true;
     };
   };
 
