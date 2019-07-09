@@ -1,130 +1,23 @@
-
 { pkgs, lib, config, ... }:
 
-let
-  hardwareTarball = fetchTarball https://github.com/NixOS/nixos-hardware/archive/master.tar.gz;
-in
 {
-  imports =
-    [
-      <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
-      (hardwareTarball + "/lenovo/thinkpad/x250")
-      ./modules/embeddeddev.nix
-      ./modules/cjdns.nix
-      ./modules/laptop.nix
-    ];
-
-
-  boot = {
-    kernelModules = [
-      "kvm-intel"
-    ];
-    kernelParams = [
-      "pcie_aspm=force"
-      "clocksource=acpi_pm"
-      "pci=use_crs"
-      "consoleblank=0"
-      "i915.enable_psr=1"
-    ];
-
-    initrd = {
-      kernelModules = [
-        "libata"
-      ];
-      availableKernelModules = [
-        "xhci_pci"
-        "ehci_pci"
-        "ahci"
-        "usbhid"
-        "usb_storage"
-        "btrfs"
-        "crc23c"
-        "usbhid"
-      ];
-    };
-
-    extraModprobeConfig = ''
-      # thinkpad acpi
-      options thinkpad_acpi fan_control=1
-
-      # intel graphics
-      options i915 modeset=1 i915_enable_rc6=7 i915_enable_fbc=1 lvds_downclock=1 # powersave=0
-      options bbswitch use_acpi_to_detect_card_state=1
-
-      # sound
-      #options snd_hda_intel index=1,0
-
-      # intel wifi
-      options iwlwifi 11n_disable=8
-    '';
-  };
-
-  # powerManagement.scsiLinkPolicy = "max_performance";
+  imports = [
+    ./hardware/thinkpad_x250.nix
+    ./modules/embeddeddev.nix
+    ./modules/cjdns.nix
+    ./modules/laptop.nix
+  ];
 
   environment.systemPackages = with pkgs; [
-    beignet
-    ocl-icd
-    intel-ocl
     steam
     calibre
   ];
 
   services.xserver = {
-    videoDrivers = [ "intel" ];
     displayManager.lightdm.autoLogin = {
       enable = true;
       user = "seb";
     };
-  };
-
-  hardware = {
-    opengl = {
-      enable = true;
-      extraPackages = with pkgs; [ vaapiIntel vaapiVdpau ];
-      driSupport32Bit = true;
-      s3tcSupport = true;
-    };
-  };
-
-  services.thermald.enable = true;
-  #services.thinkfan.enable = true;
-
-  services.acpid = {
-    enable = true;
-#    lidEventCommands = ''
-#      if grep -q closed /proc/acpi/button/lid/LID/state; then
-#        date >> /tmp/i3lock.log
-#        DISPLAY=":0.0" XAUTHORITY=/home/seb/.Xauthority ${pkgs.i3lock}/bin/i3lock &>> /tmp/i3lock.log
-#      fi
-#    '';
-  };
-
-  services.tlp = {
-    enable = true;
-    extraConfig = ''
-      START_CHARGE_THRESH_BAT0=75
-      STOP_CHARGE_THRESH_BAT0=90
-      START_CHARGE_THRESH_BAT1=75
-      STOP_CHARGE_THRESH_BAT1=90
-    '';
-  };
-
-  hardware.trackpoint = {
-    enable = true;
-    sensitivity = 220;
-    speed = 0;
-    emulateWheel = true;
-  };
-
-  # clean up efi flash on shutdown
-  systemd.services."cleanup-efivars" = {
-    enable = true;
-    description = "clean up efi flash on shutdown";
-    after = [ "final.target" ];
-    wantedBy = [ "final.target" ];
-    serviceConfig.Type = "oneshot";
-    serviceConfig.ExecStart = "${pkgs.findutils}/bin/find /sys/firmware/efi/efivars -name dump-\* -ctime +7 -delete";
-    unitConfig.DefaultDependencies = "no";
   };
 
   services.restic.backups = {
@@ -143,9 +36,4 @@ in
       initialize = true;
     };
   };
-
-  networking.extraHosts =
-    ''
-      212.110.186.28		readscheme.org library.readscheme.org repository.readscheme.org www.readscheme.org
-    '';
 }
