@@ -1,11 +1,11 @@
 { pkgs, lib, config, ... }:
 
 {
-  imports =
-    [
-      <nixpkgs/nixos/modules/hardware/network/broadcom-43xx.nix>
-      <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
-    ];
+  imports = [
+    ./intel-generic.nix
+    <nixpkgs/nixos/modules/hardware/network/broadcom-43xx.nix>
+    <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
+  ];
 
   powerManagement = lib.mkForce {
     enable = true;

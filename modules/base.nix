@@ -5,7 +5,6 @@
 {
   imports = [
     ./networking.nix
-    ./efi.nix
     "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
   ];
 
@@ -36,14 +35,6 @@
       min-free = ${toString (1024*1024*1024*3)}
       max-free = ${toString (1024*1024*1024*6)}
     '';
-
-    binaryCaches = [
-      "https://cache.nixos.org/"
-      "https://hie-nix.cachix.org"
-    ];
-    binaryCachePublicKeys = [
-      "hie-nix.cachix.org-1:EjBSHzF6VmDnzqlldGXbi0RM3HdjfTU3yDRi9Pd0jTY="
-    ];
   };
 
   time.timeZone = "Europe/Berlin";
@@ -53,14 +44,6 @@
     defaultLocale = "en_US.UTF-8";
   };
 
-  hardware = {
-    enableAllFirmware = true;
-    enableKSM = true;
-    cpu = {
-      amd.updateMicrocode = true;
-      intel.updateMicrocode = true;
-    };
-  };
   # zramSwap.enable = true;
   boot.cleanTmpDir = false;
   boot.kernel.sysctl = {
@@ -216,8 +199,6 @@
   };
 
   environment.etc."gitconfig".source = ../dotfiles/gitconfig;
-
-  virtualisation.docker.enable = true;
 
   services.openssh = {
     enable = true;

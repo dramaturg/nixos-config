@@ -1,6 +1,6 @@
 { pkgs, lib, config, configName, ... }:
 let
-  i3Config = "/etc/nixos/dotfiles/i3/config.pocket";
+  i3Config = "/etc/nixos/dotfiles/i3/config";
   i3-winmenu = pkgs.stdenv.mkDerivation {
     name = "i3-winmenu";
     buildInputs = [
@@ -67,6 +67,7 @@ in
   };
 
   #nixpkgs.config.gnutls.guile = true;
+  nixpkgs.config.allowBroken = true;
 
   environment.systemPackages = with pkgs; [
     shared_mime_info
@@ -98,6 +99,7 @@ in
     ansible
     docker_compose
     docker-machine
+    vagrant
     unstable.linuxPackages_latest.virtualbox
     rke kail unstable.kubernetes-helm
 
@@ -181,6 +183,7 @@ in
 
   services.emacs.enable = true;
 
+  virtualisation.docker.enable = true;
   virtualisation.libvirtd.enable = true;
   documentation.man.enable = true;
 
@@ -210,6 +213,7 @@ in
     ipv6 = true;
     nssmdns = true;
   };
+  services.gnunet.enable = true;
 
   boot.kernelPackages = pkgs.unstable.linuxPackages_latest;
   boot.kernel.sysctl = {

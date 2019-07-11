@@ -5,6 +5,7 @@ let
 in
 {
   imports = [
+    ./intel-generic.nix
     <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     (hardwareTarball + "/lenovo/thinkpad/x250")
   ];
