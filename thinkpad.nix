@@ -4,7 +4,8 @@
   imports = [
     ./hardware/thinkpad_x250.nix
     ./modules/embeddeddev.nix
-    ./modules/cjdns.nix
+    ./modules/mobiledev.nix
+    ./modules/wireguard.nix
     ./modules/laptop.nix
   ];
 

@@ -1,4 +1,6 @@
 result
+secrets/
+others/
 .*
 /configuration.nix
 /hardware-configuration.nix

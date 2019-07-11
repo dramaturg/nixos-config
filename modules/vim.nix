@@ -16,6 +16,7 @@ vim_configurable.customize {
             "gitgutter"
             "undotree"
             "youcompleteme"
+            "vim-nix"
         ]; }
     ];
 	vimrcConfig.pathogen.pluginNames = [

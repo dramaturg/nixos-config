@@ -21,22 +21,30 @@
 #      };
       allowUnfree = true;
       sqlite.interactive = true;
+      vim.ruby = false;
     };
   };
 
-  nix.buildCores = lib.mkDefault 0;
-  nix.autoOptimiseStore = true;
-  nix.gc.automatic = true;
-  nix.gc.dates = "Thu 03:15";
-  nix.gc.options = "--delete-older-than 14d";
+  nix = {
+    buildCores = lib.mkDefault 0;
+    autoOptimiseStore = true;
+    gc.automatic = true;
+    gc.dates = "Thu 03:15";
+    gc.options = "--delete-older-than 14d";
 
-  nix.binaryCaches = [
-    "https://cache.nixos.org/"
-    "https://hie-nix.cachix.org"
-  ];
-  nix.binaryCachePublicKeys = [
-    "hie-nix.cachix.org-1:EjBSHzF6VmDnzqlldGXbi0RM3HdjfTU3yDRi9Pd0jTY="
-  ];
+    extraOptions = ''
+      min-free = ${toString (1024*1024*1024*3)}
+      max-free = ${toString (1024*1024*1024*6)}
+    '';
+
+    binaryCaches = [
+      "https://cache.nixos.org/"
+      "https://hie-nix.cachix.org"
+    ];
+    binaryCachePublicKeys = [
+      "hie-nix.cachix.org-1:EjBSHzF6VmDnzqlldGXbi0RM3HdjfTU3yDRi9Pd0jTY="
+    ];
+  };
 
   time.timeZone = "Europe/Berlin";
 
@@ -81,7 +89,7 @@
 
     # base tools
     file
-    git
+    (if config.services.xserver.enable then gitAndTools.gitFull else git)
     gnupg
     vim
     stow
