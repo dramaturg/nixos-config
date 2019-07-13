@@ -18,11 +18,11 @@ let
 
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
-    version = "0.2.5-rc1";
+    version = "0.2.5-rc3";
 
     src = pkgs.fetchurl {
       url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "15z82jlab1qizq0fd5fln6ql8cb9dqx04xdcxnbgrkjcsi9knag2";
+      sha256 = "14028qvmigp7ip53y561iaq8hkjg2h6gl7dn20qvqd9gx679hb79";
     };
 
     phases = [ "installPhase" ];
@@ -183,7 +183,13 @@ in
 
   services.emacs.enable = true;
 
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    autoPrune = {
+      enable = true;
+      dates = "daily";
+    };
+  };
   virtualisation.libvirtd.enable = true;
   documentation.man.enable = true;
 
@@ -272,6 +278,7 @@ in
   };
 
   services.dbus.socketActivated = true;
+  programs.plotinus.enable = true;
 
   services.redshift = {
     enable = true;
@@ -345,17 +352,6 @@ in
     dataDir = "/home/seb/.syncthing";
     openDefaultPorts = true;
     package = pkgs.unstable.syncthing;
-  };
-
-  networking = {
-    networkmanager = {
-      enable = true;
-      packages = [
-        pkgs.networkmanager-openvpn
-        pkgs.networkmanagerapplet
-        pkgs.networkmanager_dmenu
-      ];
-    };
   };
 
   networking.firewall = {

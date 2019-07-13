@@ -2,6 +2,7 @@
 {
   imports = [
     ./workstation.nix
+    ./wifi.nix
   ];
 
   powerManagement = {
