@@ -47,6 +47,7 @@
 
   # zramSwap.enable = true;
   boot.cleanTmpDir = false;
+  boot.kernelModules = [ "tcp_bbr" ];
   boot.kernel.sysctl = {
     "fs.inotify.max_user_watches" = 1048576;
     "net.ipv4.tcp_congestion_control" = "bbr";
