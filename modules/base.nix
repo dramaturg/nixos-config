@@ -51,6 +51,8 @@
   boot.kernel.sysctl = {
     "fs.inotify.max_user_watches" = 1048576;
     "net.ipv4.tcp_congestion_control" = "bbr";
+    # see https://news.ycombinator.com/item?id=14814530
+    "net.core.default_qdisc" = "fq";
   };
 
   environment.systemPackages = with pkgs; [
