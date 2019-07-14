@@ -14,6 +14,8 @@
     calibre
   ];
 
+  i3statusConfigFile = "i3status-thinkpad-x250";
+
   services.xserver = {
     displayManager.lightdm.autoLogin = {
       enable = true;

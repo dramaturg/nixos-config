@@ -10,4 +10,6 @@ in
       ./modules/embeddeddev.nix
       ./modules/laptop.nix
     ];
+
+  i3statusConfigFile = "i3status-gpd-pocket";
 }

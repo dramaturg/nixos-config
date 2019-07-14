@@ -1,21 +1,5 @@
-{ pkgs, lib, config, configName, ... }:
+{ pkgs, lib, config, ... }:
 let
-  i3Config = "/etc/nixos/dotfiles/i3/config";
-  i3-winmenu = pkgs.stdenv.mkDerivation {
-    name = "i3-winmenu";
-    buildInputs = [
-      (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
-        i3-py
-      ]))
-    ];
-    unpackPhase = "true";
-    installPhase = ''
-      mkdir -p $out/bin
-      cp ${../scripts/i3-winmenu.py} $out/bin/i3-winmenu
-      chmod +x $out/bin/i3-winmenu
-    '';
-  };
-
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
     version = "0.2.5-rc3";
@@ -57,6 +41,7 @@ in
 {
   imports = [
     ./base.nix
+    ./i3.nix
     "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
   ];
 
@@ -154,7 +139,6 @@ in
 
     # desktop
     arandr
-    i3 i3lock dmenu i3-winmenu
     feh scrot
     xautolock
     termite
@@ -234,51 +218,9 @@ in
       enable = true;
       naturalScrolling = true;
     };
-    displayManager = {
-      lightdm = {
-        enable = true;
-        greeters.gtk = {
-          theme.package = pkgs.zuki-themes;
-          theme.name = "Zukitre";
-        };
-      };
-      sessionCommands = ''
-        export TERMINAL=termite
-
-        xset s 600 0
-        xset r rate 440 50
-        xss-lock -l -- i3lock -c b31051 -n &
-        ${pkgs.networkmanagerapplet}/bin/nm-applet &
-      '';
-    };
-    desktopManager = {
-      default = "xfce";
-      xterm.enable = false;
-
-      xfce = {
-        enable = true;
-        noDesktop = true;
-        enableXfwm = false;
-      };
-    };
-    windowManager = {
-      default = "i3";
-      i3 = {
-        enable = true;
-        extraPackages = with pkgs; [
-          dmenu
-          i3lock
-          i3status
-          i3-winmenu
-        ];
-        configFile = i3Config;
-        #configFile = "/etc/nixos/dotfiles/i3/config";
-      };
-    };
   };
 
   services.dbus.socketActivated = true;
-  programs.plotinus.enable = true;
 
   services.redshift = {
     enable = true;
