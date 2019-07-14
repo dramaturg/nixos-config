@@ -32,6 +32,7 @@
     gc.options = "--delete-older-than 14d";
 
     extraOptions = ''
+      binary-caches-parallel-connections = 10
       min-free = ${toString (1024*1024*1024*3)}
       max-free = ${toString (1024*1024*1024*6)}
     '';

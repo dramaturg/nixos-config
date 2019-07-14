@@ -22,7 +22,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "14028qvmigp7ip53y561iaq8hkjg2h6gl7dn20qvqd9gx679hb79";
+      sha256 = "09hlrhvlbh1va6h3sww66lki4cxi8w3xqzwhy9x0zm5fpfvyjmp8";
     };
 
     phases = [ "installPhase" ];
