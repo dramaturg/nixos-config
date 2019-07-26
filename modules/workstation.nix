@@ -49,10 +49,8 @@ in
     unstable = import unstableTarball {
       config = config.nixpkgs.config;
     };
+    allowBroken = true;
   };
-
-  #nixpkgs.config.gnutls.guile = true;
-  nixpkgs.config.allowBroken = true;
 
   environment.systemPackages = with pkgs; [
     shared_mime_info
@@ -105,9 +103,9 @@ in
     ocl-icd
 
     # scheme
-    unstable.gambit unstable.gerbil chez
+    unstable.gambit unstable.gerbil unstable.chez
     unstable.guile unstable.guile-lib unstable.slibGuile
-    unstable.guile-fibers unstable.guile-lint gnutls
+    unstable.guile-fibers unstable.guile-lint
     (import ../packages/guile-charting)
 
     # python
@@ -119,9 +117,6 @@ in
       pandas
       matplotlib
     ]))
-
-    # databases
-    dbeaver
 
     microscheme
     sdcc
@@ -203,7 +198,6 @@ in
     ipv6 = true;
     nssmdns = true;
   };
-  services.gnunet.enable = true;
 
   boot.kernelPackages = pkgs.unstable.linuxPackages_latest;
   boot.kernel.sysctl = {

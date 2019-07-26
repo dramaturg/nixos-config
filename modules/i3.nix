@@ -3,7 +3,7 @@ let
   i3-winmenu = pkgs.stdenv.mkDerivation {
     name = "i3-winmenu";
     buildInputs = [
-      (pkgs.python36.withPackages (pythonPackages: with pythonPackages; [
+      (pkgs.python37.withPackages (pythonPackages: with pythonPackages; [
         i3-py
       ]))
     ];

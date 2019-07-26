@@ -205,7 +205,8 @@
   environment.etc."gitconfig".source = ../dotfiles/gitconfig;
 
   services.openssh = {
-    enable = true;
+    enable = lib.mkDefault true;
+    useDns = lib.mkDefault false;
     passwordAuthentication = false;
   };
 

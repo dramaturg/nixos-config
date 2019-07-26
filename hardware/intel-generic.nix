@@ -2,6 +2,10 @@
 { pkgs, lib, config, ... }:
 
 {
+  imports = [
+    <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
+  ];
+
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
