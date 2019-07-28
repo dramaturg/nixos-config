@@ -275,6 +275,7 @@ in
     user_allow_other
   '';
 
+  users.groups.vboxusers.members = [ "seb" ];
   virtualisation.virtualbox.host = {
     enable = true;
     enableHardening = false;
