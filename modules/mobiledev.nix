@@ -17,6 +17,7 @@
     android-studio
     android-file-transfer
     jmtpfs
+    androidenv.platformTools
 
     (myEnvFun {
       name = "android90";

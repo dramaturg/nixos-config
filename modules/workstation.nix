@@ -340,4 +340,8 @@ in
   };
 
   home-manager.users.seb = import ./home-desktop.nix;
+
+  environment.variables = {
+    QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+  };
 }
