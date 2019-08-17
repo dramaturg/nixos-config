@@ -13,7 +13,7 @@
       rmmod goodix
     '';
     powerUpCommands = ''
-      modorobe goodix
+      modprobe goodix
     '';
   };
 
