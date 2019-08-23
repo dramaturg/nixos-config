@@ -145,6 +145,7 @@ in
     numix-sx-gtk-theme
     xclip
     pinentry_gnome
+    lxqt.lxqt-policykit
 
     # misc
     fuse
@@ -215,6 +216,7 @@ in
   };
 
   services.dbus.socketActivated = true;
+  services.gnome3.gvfs.enable = true;
 
   services.redshift = {
     enable = true;
@@ -343,5 +345,6 @@ in
 
   environment.variables = {
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+    GIO_EXTRA_MODULES = [ "${pkgs.gvfs}/lib/gio/modules" ];
   };
 }

@@ -21,22 +21,27 @@
       allowUnfree = true;
       sqlite.interactive = true;
       vim.ruby = false;
+      vim.defaultEditor = true;
     };
   };
 
   nix = {
     buildCores = lib.mkDefault 0;
     autoOptimiseStore = true;
+    useSandbox = true;
+
     gc.automatic = true;
     gc.dates = "Thu 03:15";
     gc.options = "--delete-older-than 14d";
 
     extraOptions = ''
+      auto-optimise-store = true
       binary-caches-parallel-connections = 10
       min-free = ${toString (1024*1024*1024*3)}
       max-free = ${toString (1024*1024*1024*6)}
     '';
   };
+  system.autoUpgrade.enable = lib.mkDefault true;
 
   time.timeZone = "Europe/Berlin";
 
@@ -63,7 +68,7 @@
     any-nix-shell
 
     # system, hardware & fs
-    exfat gptfdisk hdparm nvme-cli
+    exfat gptfdisk hdparm
     lsof
     patchelf
     pciutils usbutils
@@ -208,6 +213,28 @@
     enable = lib.mkDefault true;
     useDns = lib.mkDefault false;
     passwordAuthentication = false;
+    forwardX11 = lib.mkDefault true;
+    allowSFTP = lib.mkDefault true;
+
+    # https://infosec.mozilla.org/guidelines/openssh
+    kexAlgorithms = [
+      "curve25519-sha256@libssh.org"
+      "ecdh-sha2-nistp521"
+      "ecdh-sha2-nistp384"
+      "ecdh-sha2-nistp256"
+      "diffie-hellman-group-exchange-sha256"
+    ];
+    ciphers = [
+      "chacha20-poly1305@openssh.com"
+      "aes256-gcm@openssh.com"
+      "aes256-ctr"
+    ];
+    macs = [
+      "hmac-sha2-512-etm@openssh.com"
+      "hmac-sha2-256-etm@openssh.com"
+      "hmac-sha2-512"
+      "hmac-sha2-256"
+    ];
   };
 
   services.fstrim.enable = true;

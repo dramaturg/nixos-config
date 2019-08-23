@@ -2,5 +2,7 @@
 with import ~/nixpkgs {};
 pkgsCross.arm-embedded.stdenv.mkDerivation {
   name = "env";
-  buildPackages = [];
+  buildPackages = [
+    gcc-arm-embedded
+  ];
 }
