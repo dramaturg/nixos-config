@@ -78,6 +78,12 @@ in
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", \
         KERNEL=="tty*", MODE:="0666", \
         SYMLINK+="stlinkv2_console"
+
+    SUBSYSTEM=="tty", ATTRS{idVendor}=="0d28", ATTRS{idProduct}=="0204", \
+        MODE="0664", GROUP="users", SYMLINK+="ttyACM-card10-hdk", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+    SUBSYSTEM=="tty", ATTRS{idVendor}=="0b6a", ATTRS{idProduct}=="003c", \
+        MODE="0664", GROUP="users", SYMLINK+="ttyACM-card10-dev", ENV{ID_MM_DEVICE_IGNORE}="1"
   '';
 
   boot.kernelModules = [
