@@ -1,7 +1,10 @@
 { config, pkgs, lib, ... }:
-  let
-    configName = lib.mkDefault "default";
-  in
+let
+  configName = lib.mkDefault "default";
+  ssh-moduli-file = pkgs.runCommand "ssh-moduli-file" {} ''
+    awk '$5 >= 2048' ${pkgs.openssh}/etc/ssh/moduli > $out
+  '';
+in
 {
   imports = [
     ./networking.nix
@@ -212,9 +215,14 @@
   services.openssh = {
     enable = lib.mkDefault true;
     useDns = lib.mkDefault false;
-    passwordAuthentication = false;
-    forwardX11 = lib.mkDefault true;
+    passwordAuthentication = lib.mkDefault false;
+
+    forwardX11 = lib.mkDefault false;
+
     allowSFTP = lib.mkDefault true;
+    sftpFlags = lib.mkDefault [ "-f AUTHPRIV" "-l INFO" ];
+    moduliFile = ssh-moduli-file;
+    logLevel = lib.mkDefault "INFO";
 
     # https://infosec.mozilla.org/guidelines/openssh
     kexAlgorithms = [
@@ -235,6 +243,16 @@
       "hmac-sha2-512"
       "hmac-sha2-256"
     ];
+    extraConfig = ''
+      ClientAliveInterval 30
+      ClientAliveCountMax 3
+
+      AllowGroups root,wheel,users,ssh
+
+      LoginGraceTime 30
+      MaxAuthTries 5
+      AllowTcpForwarding no
+    '';
   };
 
   services.fstrim.enable = true;
