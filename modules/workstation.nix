@@ -36,7 +36,11 @@ let
         echo -n "$out" | xclip -i -selection clipboard
     fi
   '';
-  unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
+
+  wallpaper_sh = pkgs.writeScriptBin "wallpaper.sh"
+    (builtins.readFile ../scripts/wallpaper.sh );
+  unstableTarball = fetchTarball
+    https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
 in
 {
   imports = [
@@ -240,17 +244,18 @@ in
     enableDefaultFonts = true;
 
     fonts = with pkgs; [
-      comic-relief
-      fira
-      fira-code
-      nerdfonts
       carlito
+      comic-relief
       corefonts
       dejavu_fonts
+      fira
+      fira-code
       google-fonts
       inconsolata
       iosevka
       liberation_ttf
+      nerdfonts
+      noto-fonts-cjk
       source-code-pro
       terminus_font
     ];
@@ -318,31 +323,57 @@ in
     enable = true;
     description = "hide cursor after X seconds idle";
     wantedBy = [ "default.target" ];
-    serviceConfig.Restart = "always";
-    serviceConfig.RestartSec = 2;
-    serviceConfig.ExecStart = "${pkgs.unclutter}/bin/unclutter";
+    serviceConfig = {
+      Restart = "always";
+      RestartSec = 2;
+      ExecStart = "${pkgs.unclutter}/bin/unclutter";
+    };
   };
 
   systemd.user.services."autocutsel" = {
     enable = true;
     description = "AutoCutSel";
     wantedBy = [ "default.target" ];
-    serviceConfig.Type = "forking";
-    serviceConfig.Restart = "always";
-    serviceConfig.RestartSec = 2;
-    serviceConfig.ExecStartPre = "${pkgs.autocutsel}/bin/autocutsel -fork";
-    serviceConfig.ExecStart = "${pkgs.autocutsel}/bin/autocutsel -selection PRIMARY -fork";
+    serviceConfig = {
+      Type = "forking";
+      Restart = "always";
+      RestartSec = 2;
+      ExecStartPre = "${pkgs.autocutsel}/bin/autocutsel -fork";
+      ExecStart = "${pkgs.autocutsel}/bin/autocutsel -selection PRIMARY -fork";
+    };
+  };
+
+  systemd.user.services."wallpaper" = {
+    enable = true;
+    path = with pkgs; [ nix ];
+    description = "Rotate Wallpapers";
+    wantedBy = [ "default.target" ];
+    environment = {
+      DISPLAY = ":0";
+      XAUTHORITY = "/home/seb/.Xauthority";
+    };
+    serviceConfig = {
+      Type = "simple";
+      Restart = "always";
+      RestartSec = 10;
+      ExecStart = "${wallpaper_sh}/bin/wallpaper.sh";
+    };
   };
 
   systemd.user.services."xautolock" = {
     enable = true;
     description = "Automatically lock X screen";
     wantedBy = [ "default.target" ];
-    serviceConfig.Type = "simple";
-    serviceConfig.Restart = "always";
-    serviceConfig.RestartSec = 10;
-    serviceConfig.ExecStart = "${pkgs.xautolock}/bin/xautolock -time 15 -locker \"i3lock -c b31051 -t\"";
-    serviceConfig.Environment = "DISPLAY=:0 XAUTHORITY=/home/seb/.Xauthority";
+    environment = {
+      DISPLAY = ":0";
+      XAUTHORITY = "/home/seb/.Xauthority";
+    };
+    serviceConfig = {
+      Type = "simple";
+      Restart = "always";
+      RestartSec = 10;
+      ExecStart = "${pkgs.xautolock}/bin/xautolock -time 15 -locker \"i3lock -c b31051 -t\"";
+    };
   };
 
   home-manager.users.seb = import ./home-desktop.nix;
