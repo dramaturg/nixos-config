@@ -29,15 +29,19 @@
     powertop
   ];
 
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = false;
-  };
+  hardware = {
+    acpilight.enable = true;
 
-  hardware.pulseaudio = lib.mkForce {
-    enable = true;
+    bluetooth = {
+      enable = true;
+      powerOnBoot = false;
+    };
 
-    # for bluetooth
-    package = pkgs.pulseaudioFull;
+    pulseaudio = lib.mkForce {
+      enable = true;
+
+      # for bluetooth
+      package = pkgs.pulseaudioFull;
+    };
   };
 }

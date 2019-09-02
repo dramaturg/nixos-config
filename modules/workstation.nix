@@ -130,14 +130,14 @@ in
     thunderbird
     tor-browser-bundle-bin
     mattermost-desktop
-    (pkgs.writeScriptBin "wegwerf_firefox_clone" (builtins.readFile ../scripts/wegwerf_firefox_clone.sh ))
+    (pkgs.writeScriptBin "wegwerf_firefox_clone"
+      (builtins.readFile ../scripts/wegwerf_firefox_clone.sh ))
 
     # desktop
     arandr
     feh scrot
     xautolock
     termite
-    (st.override { conf = builtins.readFile ../dotfiles/st-config.h; })
 
     pavucontrol pasystray
     blueman
@@ -198,6 +198,10 @@ in
     enable = true;
     ipv6 = true;
     nssmdns = true;
+    publish = {
+      enable = false;
+      userServices = true;
+    };
   };
 
   boot.kernelPackages = pkgs.unstable.linuxPackages_latest;
