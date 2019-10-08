@@ -103,7 +103,7 @@ in
     gitAndTools.gitflow gitAndTools.gitFull git-cola
     binutils jq
     git-review
-    gcc nim
+    gcc
     ocl-icd
 
     # scheme
@@ -146,10 +146,12 @@ in
     pavucontrol pasystray
     blueman
     gnome3.eog gnome3.nautilus
-    numix-sx-gtk-theme
+    arc-theme
+    lxappearance
     xclip
     pinentry_gnome
     lxqt.lxqt-policykit
+    qt5ct
 
     # misc
     fuse
@@ -380,6 +382,8 @@ in
 
   environment.variables = {
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+    QT_QPA_PLATFORMTHEME = "qt5ct";
+    QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase}/lib/qt-5.12.0/plugins/platforms";
     GIO_EXTRA_MODULES = [ "${pkgs.gvfs}/lib/gio/modules" ];
   };
 }

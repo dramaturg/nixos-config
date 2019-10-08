@@ -103,6 +103,14 @@ in
     '';
   };
 
+  powerManagement = {
+    powerUpCommands = ''
+      echo 'min_power' > '/sys/class/scsi_host/host0/link_power_management_policy';
+      echo 'min_power' > '/sys/class/scsi_host/host1/link_power_management_policy';
+      echo 'min_power' > '/sys/class/scsi_host/host2/link_power_management_policy';
+    '';
+  };
+
   hardware.trackpoint = {
     enable = true;
     sensitivity = 220;

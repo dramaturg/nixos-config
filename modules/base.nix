@@ -133,20 +133,16 @@ in
           "rsync"
           "stack"
           "history-substring-search"
-          "aws"
-          "cargo"
           "docker"
           "docker-compose"
           "docker-machine"
           "git"
           "git-flow"
-          "golang"
           "kubectl"
           "nomad"
           "mosh"
           "perl"
           "python"
-          "rust"
           "sudo"
           "systemd"
           "terraform"
@@ -247,7 +243,7 @@ in
       ClientAliveInterval 30
       ClientAliveCountMax 3
 
-      AllowGroups root,wheel,users,ssh
+      AllowGroups root wheel users ssh
 
       LoginGraceTime 30
       MaxAuthTries 5
