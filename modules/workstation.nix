@@ -70,11 +70,11 @@ in
     mosh
     fdupes
     vpaste
+    nnn
 
     # media
     vlc mpv
-    glxinfo vdpauinfo libva
-    imagemagick7
+    vdpauinfo libva
     geeqie
 
     # nix
@@ -82,7 +82,7 @@ in
     nixpkgs-lint
 
     # ops
-    aws kubectl terraform
+    aws kubectl
     ansible
     docker_compose
     docker-machine
@@ -93,17 +93,16 @@ in
     # network
     wireshark tcpdump
     nmap
-    socat socat2pre
+    socat
     wireguard
     wireguard-tools
     sshuttle
     ipcalc
 
     # dev
-    gitAndTools.gitflow gitAndTools.gitFull git-cola
+    gitAndTools.gitflow
     binutils jq
     git-review
-    gcc
     ocl-icd
 
     # scheme
@@ -111,6 +110,7 @@ in
     unstable.guile unstable.guile-lib unstable.slibGuile
     unstable.guile-fibers unstable.guile-lint
     (import ../packages/guile-charting)
+    microscheme
 
     # python
     python3Full python3Packages.virtualenv
@@ -121,11 +121,6 @@ in
       pandas
       matplotlib
     ]))
-
-    microscheme
-    sdcc
-    nodejs
-    ctags global
 
     # web, chat & docs
     okular
@@ -140,12 +135,10 @@ in
     # desktop
     arandr
     feh scrot
-    xautolock
     termite
 
     pavucontrol pasystray
     blueman
-    gnome3.eog gnome3.nautilus
     arc-theme
     lxappearance
     xclip
@@ -159,13 +152,9 @@ in
     cifs_utils
     unstable.enpass
   ];
-  services.flatpak.enable = true;
 
   nix.daemonIONiceLevel = 7;
   nix.daemonNiceLevel = 19;
-
-  programs.mosh.enable = true;
-  programs.mtr.enable = true;
 
   services.emacs.enable = true;
 
@@ -226,7 +215,7 @@ in
   };
 
   services.dbus.socketActivated = true;
-  services.gnome3.gvfs.enable = true;
+  services.gvfs.enable = true;
 
   services.redshift = {
     enable = true;
@@ -235,10 +224,12 @@ in
     temperature.day = 5500;
     temperature.night = 3400;
 
-    provider = "manual";
-    latitude = "54.515";
-    longitude = "9.569";
     extraOptions = ["-v"];
+  };
+  location = {
+    provider = "manual";
+    latitude = 54.515;
+    longitude = 9.569;
   };
 
   fonts = {
@@ -289,6 +280,7 @@ in
   '';
 
   users.groups.vboxusers.members = [ "seb" ];
+  boot.kernelModules = [ "vboxdrv" ];
   virtualisation.virtualbox.host = {
     enable = true;
     enableHardening = false;
@@ -305,7 +297,10 @@ in
   };
 
   networking.firewall = {
-    allowedTCPPorts = [ 22 ];
+    allowedTCPPorts = [
+      22
+      8010 # chromecast with VLC
+    ];
   };
 
   services.udev.packages = with pkgs; [

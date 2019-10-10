@@ -24,8 +24,7 @@
 
   hardware = {
     enableAllFirmware = true;
-    #ksm.enable = true;
-    enableKSM = true;
+    ksm.enable = true;
     cpu = {
       amd.updateMicrocode = true;
       intel.updateMicrocode = true;

@@ -30,7 +30,6 @@ in
     ];
 
     environment.etc = {
-      "i3/config".source = /etc/nixos/dotfiles/i3/config;
       "i3/i3status".source = builtins.toPath ("/etc/nixos/dotfiles/i3/" + (cfg.i3statusConfigFile));
     };
 
@@ -72,7 +71,7 @@ in
             i3status
             i3-winmenu
           ];
-          configFile = "/etc/i3/config";
+          configFile = "/etc/nixos/dotfiles/i3/config";
         };
       };
     };

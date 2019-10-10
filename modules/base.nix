@@ -76,18 +76,14 @@ in
     patchelf
     pciutils usbutils
     psmisc
-    sysstat
     lshw
     acpi lm_sensors
-    ltrace strace linuxPackages.perf
     mcron
 
     # base tools
     file
     (if config.services.xserver.enable then gitAndTools.gitFull else git)
-    gnupg
     vim
-    stow
     parallel
     moreutils
     patchutils
@@ -100,7 +96,6 @@ in
     tcpdump
     iptables
     inetutils
-    magic-wormhole
 
     # nix
     nix-prefetch-scripts
@@ -134,19 +129,13 @@ in
           "stack"
           "history-substring-search"
           "docker"
-          "docker-compose"
-          "docker-machine"
           "git"
           "git-flow"
           "kubectl"
-          "nomad"
           "mosh"
-          "perl"
           "python"
           "sudo"
           "systemd"
-          "terraform"
-          "vagrant"
         ];
       };
       interactiveShellInit = ''

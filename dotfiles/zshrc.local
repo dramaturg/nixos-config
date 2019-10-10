@@ -64,6 +64,8 @@ if [ -d "${HOME}/.local/bin" ]; then export PATH="${HOME}/.local/bin:${PATH}"; f
 if [ -d "${HOME}/.nimble/bin" ]; then export PATH="${HOME}/.nimble/bin:${PATH}"; fi
 
 export MTR_OPTIONS="--aslookup --curses --report -w --report-cycles 2"
+export NNN_USE_EDITOR=1
+export NNN_BMS="h:~;D:~/Downloads"
 
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'

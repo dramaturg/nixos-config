@@ -108,6 +108,7 @@ in
       echo 'min_power' > '/sys/class/scsi_host/host0/link_power_management_policy';
       echo 'min_power' > '/sys/class/scsi_host/host1/link_power_management_policy';
       echo 'min_power' > '/sys/class/scsi_host/host2/link_power_management_policy';
+      echo 'auto' > '/sys/bus/usb/devices/2-4/power/control';
     '';
   };
 
