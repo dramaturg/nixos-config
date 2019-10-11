@@ -2,11 +2,11 @@
 let
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
-    version = "0.2.6";
+    version = "0.3.0";
 
     src = pkgs.fetchurl {
       url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "06anmvfcbb9dh6291pjvgwqq40fs65lmcp1rhcb7rhr86kyy16bn";
+      sha256 = "1fmklrgx8x70l6j6nvwl9rmk04hf03bgzb3zbz4nxlc9b12yxg2w";
     };
 
     phases = [ "installPhase" ];
@@ -54,6 +54,36 @@ in
       config = config.nixpkgs.config;
     };
     allowBroken = true;
+    stSolarized = lib.overrideDerivation pkgs.st (attrs: rec {
+      version = "0.8.2";
+      src = (pkgs.fetchgit {
+        url = "http://git.suckless.org/st";
+        rev = "2b8333f553c14c15398e810353e192eb05938580";
+        sha256 = "1awn56cri0x60m4wisaj9kd8qn0ggdqf62232q435p54rm43dwvv";
+      });
+      patches = [
+        (pkgs.fetchurl {
+          url = "https://st.suckless.org/patches/scrollback/st-scrollback-20190331-21367a0.diff";
+          sha256 = "0hqb04vqiarggw2addh725jpxjg4pn5d4afmssk0kadx247bqx7r";
+        })
+        (pkgs.fetchurl {
+          url = "https://st.suckless.org/patches/scrollback/st-scrollback-mouse-0.8.2.diff";
+          sha256 = "1fm1b3yxk9ww2cz0dfm67l42a986ykih37pf5rkhfp9byr8ac0v1";
+        })
+        (pkgs.fetchurl {
+          url = "https://st.suckless.org/patches/solarized/st-no_bold_colors-20170623-b331da5.diff";
+          sha256 = "0iaq3wbazpcisys8px71sgy6k12zkhvqi4z47slivqfri48j3qbi";
+        })
+        (pkgs.fetchurl {
+          url = "https://st.suckless.org/patches/solarized/st-solarized-dark-20180411-041912a.diff";
+          sha256 = "137q8hs9bhb9kw7z97il77w7378grgp67yzyna1gpshn4s5fimdj";
+        })
+      ];
+      postPatch = ''
+        substituteInPlace config.def.h \
+          --replace "histsize = 2000" "histsize = 99999"
+      '';
+    });
   };
 
   environment.systemPackages = with pkgs; [
@@ -76,10 +106,6 @@ in
     vlc mpv
     vdpauinfo libva
     geeqie
-
-    # nix
-    nixops
-    nixpkgs-lint
 
     # ops
     aws kubectl
@@ -136,6 +162,7 @@ in
     arandr
     feh scrot
     termite
+    stSolarized
 
     pavucontrol pasystray
     blueman
