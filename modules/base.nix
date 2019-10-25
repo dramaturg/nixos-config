@@ -45,7 +45,7 @@ in
   };
   system.autoUpgrade.enable = lib.mkDefault true;
 
-  time.timeZone = "Europe/Berlin";
+  time.timeZone = lib.mkDefault "Europe/Berlin";
 
   i18n = {
     consoleKeyMap = "us";
