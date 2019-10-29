@@ -278,6 +278,7 @@ in
       noto-fonts-cjk
       source-code-pro
       terminus_font
+      victor-mono
     ];
     fontconfig = {
       enable = true;
