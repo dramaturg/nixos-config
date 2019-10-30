@@ -6,7 +6,6 @@
   [ 
     ./default.nix
     ../iso.nix
-    <nixpkgs/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix>
   ];
 
   isoImage.makeEfiBootable = false;
