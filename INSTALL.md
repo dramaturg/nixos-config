@@ -15,18 +15,20 @@ Number  Start (sector)    End (sector)  Size       Code  Name
 [...]
 
 # cryptsetup luksFormat /dev/sda2
-# cryptsetup luksOpen /dev/sda2
+# cryptsetup luksOpen /dev/sda2 root-pv
 
 # pvcreate /dev/mapper/root-pv 
-# vgcreate root-vg /dev/mapper/root-pv /dev/mapper/root-pv 
+# vgcreate root-vg /dev/mapper/root-pv
 # lvcreate -L 4G -n swap root-vg
 # lvcreate -l 90% -n root root-vg
 
+# mkswap /dev/mapper/root--vg-swap
+# swapon /dev/mapper/root--vg-swap
+
 # mkfs.vfat -n BOOT /dev/sda1
 # mkfs.btrfs -L root /dev/mapper/root--vg-root
-
 # mount /dev/mapper/root--vg-root /mnt
-# swapon /dev/mapper/root--vg-swap 
+
 # mkdir /mnt/boot
 # mount /dev/sda1 /mnt/boot
 ```
