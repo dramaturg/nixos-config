@@ -52,6 +52,8 @@ in
     gc.dates = "Thu 03:15";
     gc.options = "--delete-older-than 7d";
 
+    optimise.automatic = true;
+
     extraOptions = ''
       auto-optimise-store = true
       binary-caches-parallel-connections = 10
@@ -248,7 +250,6 @@ in
 
       LoginGraceTime 30
       MaxAuthTries 5
-      AllowTcpForwarding no
     '';
   };
 
