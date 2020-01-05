@@ -112,7 +112,7 @@ in
     docker_compose
     docker-machine
     vagrant
-    unstable.linuxPackages_latest.virtualbox
+    unstable.linuxPackages_5_4.virtualbox
     rke kail unstable.kubernetes-helm
 
     # network
@@ -226,7 +226,7 @@ in
     };
   };
 
-  boot.kernelPackages = pkgs.unstable.linuxPackages_latest;
+  boot.kernelPackages = pkgs.unstable.linuxPackages_5_4;
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
   };
@@ -243,6 +243,10 @@ in
 
   services.dbus.socketActivated = true;
   services.gvfs.enable = true;
+
+  services.gnome3 = {
+    sushi.enable = true;
+  };
 
   services.redshift = {
     enable = true;
@@ -311,8 +315,6 @@ in
   boot.kernelModules = [ "vboxdrv" ];
   virtualisation.virtualbox.host = {
     enable = true;
-    enableHardening = false;
-    addNetworkInterface = true;
     package = pkgs.unstable.virtualbox;
   };
 
