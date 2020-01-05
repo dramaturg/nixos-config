@@ -4,17 +4,26 @@ let
   unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
 in
 {
+  # usefull udev rules for embedded stuff:
+  # https://raw.githubusercontent.com/platformio/platformio-core/master/scripts/99-platformio-udev.rules
   services.udev.extraRules = ''
+    # Digispark
+    SUBSYSTEMS=="usb", ATTRS{idVendor}=="16d0", ATTRS{idProduct}=="0753", \
+        GROUP="users", MODE="0660"
+    KERNEL=="ttyACM*", ATTRS{idVendor}=="16d0", ATTRS{idProduct}=="0753", ENV{ID_MM_DEVICE_IGNORE}="1", \
+        GROUP="users", MODE="0660", SYMLINK+="arduino arduino_$attr{serial}"
+
     # stlink
-    ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", SYMLINK+="stlink", MODE="0666"
+    ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", SYMLINK+="stlink", \
+        GROUP="users", MODE="0660"
 
     # rule for NXP LPC134X-Flash
     SUBSYSTEM=="block", ATTRS{idVendor}=="04cc", ATTRS{idProduct}=="0003", \
-        SYMLINK+="lpcflash", MODE="0666"
+        GROUP="users", MODE="0660", SYMLINK+="lpcflash"
 
     # r0cket
     SUBSYSTEM=="block", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="08ac", \
-        SYMLINK+="r0ketflash", MODE="0666"
+        GROUP="users", MODE="0660", SYMLINK+="r0ketflash"
 
     # stellaris
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="1cbe", ATTRS{idProduct}=="00fd", \
@@ -24,20 +33,20 @@ in
 
     # rad1o
     SUBSYSTEM=="usb", ATTR{idVendor}=="1d50", ATTR{idProduct}=="cc15", \
-        MODE="0600", OWNER="seb", GROUP="seb", SYMLINK+="rad1o rad1o_$attr{serial}"
+        MODE="0660", GROUP="users", SYMLINK+="rad1o rad1o_$attr{serial}"
     SUBSYSTEM=="usb", ATTR{idVendor}=="1d50", ATTR{idProduct}=="6089", \
-        MODE="0600", OWNER="seb", GROUP="seb", SYMLINK+="rad1o rad1o_$attr{serial}"
+        MODE="0660", GROUP="users", SYMLINK+="rad1o rad1o_$attr{serial}"
 
     # arduino
     SUBSYSTEM=="tty", ATTRS{manufacturer}=="Arduino (www.arduino.cc)", \
         GROUP="users", MODE="0660", SYMLINK+="arduino arduino_$attr{serial}"
 
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="22b8", ATTRS{idProduct}=="41db", \
-        MODE="0666", OWNER="seb"
+        GROUP="users", MODE="0660"
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="22b8", ATTRS{idProduct}=="41de", \
-        MODE="0666", OWNER="seb"
+        GROUP="users", MODE="0660"
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="22b8", ATTRS{idProduct}=="428c", \
-        MODE="0666", OWNER="seb"
+        GROUP="users", MODE="0660"
 
     # buspirate
     # % udevadm info --attribute-walk -n /dev/ttyUSB0  | sed -n '/FTDI/,/serial/p'
@@ -46,38 +55,32 @@ in
     #   ATTRS{serial}=="A800F315"
     # % udevadm trigger
     # % ./usbreset /dev/bus/usb/00x/00y
-    
+
     SUBSYSTEM=="tty", ATTRS{serial}=="A800F315", GROUP="users", \
         MODE="0660", SYMLINK+="buspirate buspirate_$attr{serial}"
 
     # stm32 discovery boards, with onboard st/linkv2
     # ie, STM32L, STM32F4.
     # STM32VL has st/linkv1, which is quite different
-    
+
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", \
-        MODE:="0666", \
-        SYMLINK+="stlinkv2_%n"
-    
+        MODE="0660", GROUP="users", SYMLINK+="stlinkv2_%n"
+
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", \
         KERNEL!="sd*", KERNEL!="sg*", KERNEL!="tty*", SUBSYSTEM!="bsg", \
-        MODE:="0666", \
-        SYMLINK+="stlinkv2_%n"
-    
+        MODE="0660", GROUP="users", SYMLINK+="stlinkv2_%n"
+
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", \
-        KERNEL=="sd*", MODE:="0666", \
-        SYMLINK+="stlinkv2_disk"
-    
+        KERNEL=="sd*", MODE="0660", GROUP=="users", SYMLINK+="stlinkv2_disk"
+
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", \
-        KERNEL=="sg*", MODE:="0666", \
-        SYMLINK+="stlinkv2_raw_scsi"
-    
+        KERNEL=="sg*", MODE:="0660", GROUP="users", SYMLINK+="stlinkv2_raw_scsi"
+
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", \
-        SUBSYSTEM=="bsg", MODE:="0666", \
-        SYMLINK+="stlinkv2_block_scsi"
-    
+        SUBSYSTEM=="bsg", MODE:="0660", GROUP="users", SYMLINK+="stlinkv2_block_scsi"
+
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", \
-        KERNEL=="tty*", MODE:="0666", \
-        SYMLINK+="stlinkv2_console"
+        KERNEL=="tty*", MODE:="0660", GROUP="users", SYMLINK+="stlinkv2_console"
 
     SUBSYSTEM=="tty", ATTRS{idVendor}=="0d28", ATTRS{idProduct}=="0204", \
         MODE="0664", GROUP="users", SYMLINK+="ttyACM-card10-hdk", ENV{ID_MM_DEVICE_IGNORE}="1"
@@ -97,16 +100,16 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    microscheme
+    #microscheme
     sdcc
     openocd
-    unstable.platformio
+    #unstable.platformio
 
     # FPGA
-    arachne-pnr yosys nextpnr
-    icestorm
+    #arachne-pnr yosys nextpnr
+    #icestorm
 
     # electrical
-    ngspice
+    #ngspice
   ];
 }
