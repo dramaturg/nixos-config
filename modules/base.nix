@@ -8,7 +8,6 @@ in
 {
   imports = [
     ./networking.nix
-    "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
   ];
 
   nixpkgs = {
@@ -35,7 +34,7 @@ in
 
     gc.automatic = true;
     gc.dates = "Thu 03:15";
-    gc.options = "--delete-older-than 14d";
+    gc.options = "--delete-older-than 7d";
 
     extraOptions = ''
       auto-optimise-store = true

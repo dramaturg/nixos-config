@@ -2,11 +2,11 @@
 let
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
-    version = "0.3.0";
+    version = "1.0.0";
 
     src = pkgs.fetchurl {
       url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "1fmklrgx8x70l6j6nvwl9rmk04hf03bgzb3zbz4nxlc9b12yxg2w";
+      sha256 = "1g0qc69di85xdym45vv2asblli3vii2jx1qap7z1hzhf03wk2xy7";
     };
 
     phases = [ "installPhase" ];
@@ -46,10 +46,9 @@ in
   imports = [
     ./base.nix
     ./i3.nix
-    "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos"
   ];
 
-  nixpkgs.config.packageOverrides = pkgs: {
+  nixpkgs.config.packageOverrides = super: let self = super.pkgs; in {
     unstable = import unstableTarball {
       config = config.nixpkgs.config;
     };
@@ -184,6 +183,7 @@ in
   nix.daemonNiceLevel = 19;
 
   services.emacs.enable = true;
+  services.openssh.forwardX11 = true;
 
   virtualisation.docker = {
     enable = true;
@@ -401,12 +401,11 @@ in
     };
   };
 
-  home-manager.users.seb = import ./home-desktop.nix;
-
   environment.variables = {
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
     QT_QPA_PLATFORMTHEME = "qt5ct";
     QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase}/lib/qt-5.12.0/plugins/platforms";
     GIO_EXTRA_MODULES = [ "${pkgs.gvfs}/lib/gio/modules" ];
+    _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
   };
 }
