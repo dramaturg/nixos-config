@@ -4,6 +4,22 @@ let
   ssh-moduli-file = pkgs.runCommand "ssh-moduli-file" {} ''
     awk '$5 >= 2048' ${pkgs.openssh}/etc/ssh/moduli > $out
   '';
+  optimize-nix = pkgs.writeScriptBin "optimize-nix" ''
+    #!${pkgs.bash}/bin/bash
+
+    set -eu
+
+    # Delete everything from this profile that isn't currently needed
+    nix-env --delete-generations old
+
+    # Delete generations older than a week
+    nix-collect-garbage
+    nix-collect-garbage --delete-older-than 7d
+
+    # Optimize
+    nix-store --gc --print-dead
+    nix-store --optimise
+  '';
 in
 {
   imports = [
@@ -30,7 +46,7 @@ in
   nix = {
     buildCores = lib.mkDefault 0;
     autoOptimiseStore = true;
-    useSandbox = true;
+    #useSandbox = true;
 
     gc.automatic = true;
     gc.dates = "Thu 03:15";
@@ -193,8 +209,6 @@ in
       terminal = "screen-256color";
     };
   };
-
-  environment.etc."gitconfig".source = ../dotfiles/gitconfig;
 
   services.openssh = {
     enable = lib.mkDefault true;
