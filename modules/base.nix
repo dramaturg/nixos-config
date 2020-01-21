@@ -114,6 +114,7 @@ in
 
     # nix
     nix-prefetch-scripts
+    nix-prefetch-github
   ];
 
   environment.interactiveShellInit = ''

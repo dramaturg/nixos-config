@@ -1,12 +1,12 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, fetchFromGitHub, fetchPypi, ... }:
 let
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
-    version = "1.0.0";
+    version = "1.0.2";
 
     src = pkgs.fetchurl {
       url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "1g0qc69di85xdym45vv2asblli3vii2jx1qap7z1hzhf03wk2xy7";
+      sha256 = "0vy89p2hrxr4rba1ijb0xmc99s3avc5hivw27gjxzy48q7s1yj4c";
     };
 
     phases = [ "installPhase" ];
@@ -52,7 +52,9 @@ in
     unstable = import unstableTarball {
       config = config.nixpkgs.config;
     };
+
     allowBroken = true;
+
     stSolarized = lib.overrideDerivation pkgs.st (attrs: rec {
       version = "0.8.2";
       src = (pkgs.fetchgit {
@@ -107,20 +109,22 @@ in
     geeqie
 
     # ops
-    aws kubectl
+    kubectl
     ansible
+    terraform
+    nixops
     docker_compose
-    docker-machine
     vagrant
     unstable.linuxPackages_5_4.virtualbox
     rke kail unstable.kubernetes-helm
+    #awscli
+    #google-cloud-sdk
+    #azure-cli
 
     # network
     wireshark tcpdump
     nmap
     socat
-    wireguard
-    wireguard-tools
     sshuttle
     ipcalc
 
@@ -168,7 +172,6 @@ in
     arc-theme
     lxappearance
     xclip
-    pinentry_gnome
     lxqt.lxqt-policykit
     qt5ct
 
@@ -176,6 +179,7 @@ in
     fuse
     sshfsFuse
     cifs_utils
+    google-drive-ocamlfuse
     unstable.enpass
   ];
 
@@ -227,6 +231,7 @@ in
   };
 
   boot.kernelPackages = pkgs.unstable.linuxPackages_5_4;
+  boot.supportedFilesystems = [ "cifs" ];
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
   };
@@ -241,11 +246,15 @@ in
     };
   };
 
-  services.dbus.socketActivated = true;
+  services.dbus = {
+    socketActivated = true;
+    packages = [ pkgs.gnome3.gnome-keyring pkgs.gnome3.gcr ];
+  };
   services.gvfs.enable = true;
 
   services.gnome3 = {
     sushi.enable = true;
+    gnome-keyring.enable = true;
   };
 
   services.redshift = {
@@ -403,11 +412,19 @@ in
     };
   };
 
+  programs.nm-applet.enable = true;
+
+  qt5 = {
+    enable = true;
+    platformTheme = "gnome";
+    style = "adwaita";
+  };
+
   environment.variables = {
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-    QT_QPA_PLATFORMTHEME = "qt5ct";
     QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase}/lib/qt-5.12.0/plugins/platforms";
     GIO_EXTRA_MODULES = [ "${pkgs.gvfs}/lib/gio/modules" ];
+    GTK_USE_PORTAL = "0";
     _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
   };
 }

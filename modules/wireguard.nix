@@ -1,17 +1,6 @@
 { config, pkgs, lib, ... }:
 let
   wireguardIsServer = lib.mkDefault false;
-  wireguardHosts = {
-    "felsenberg" = {
-      publicKey = "9ok3iCwsXAY05UvL7qzf3uDj3rb8NC/HMhvPNN2S9Hs=";
-      ips = [ "172.18.55.1/24" ];
-      endpoint = "felsenberg.ds.ag:51555";
-    };
-    "woodstock" = {
-      publicKey = "fFvx441OJ99/vJ1v3tcFc5kxw3EzBwrRSrzCPvw8NS4=";
-      ips = [ "172.18.55.2/24" ];
-    };
-  };
 in
 {
   # wg genkey > /etc/nixos/secrets/wireguard_private
@@ -49,5 +38,6 @@ in
   networking.extraHosts = ''
     172.18.55.1 felsenberg.wireg
     172.18.55.2 woodstock.wireg
+    172.18.55.57 sandkasten.wireg
   '';
 }
