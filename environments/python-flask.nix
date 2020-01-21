@@ -3,7 +3,12 @@ with import <nixpkgs> {};
 stdenv.mkDerivation rec {
   name = "python-environment";
 
-  buildInputs = [ pkgs.python36 pkgs.python36Packages.flask ];
+  buildInputs = with pkgs; [
+    (python3Full.withPackages (ps: with ps; [
+      flask
+    ]))
+    pypi2nix
+  ];
 
   shellHook = ''
     export FLASK_DEBUG=1
