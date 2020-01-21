@@ -18,6 +18,44 @@ let
     '';
   };
 
+  matterhorn = pkgs.stdenv.mkDerivation rec {
+    pname = "matterhorn";
+    version = "50200.5.0";
+
+    src = fetchFromGitHub {
+      owner = "matterhorn-chat";
+      repo = "matterhorn";
+      rev = version;
+      sha256 = "0x9hniq7b1qdf0375cld2d7pk74pj7k1n4h05pmrzalwg7a2487n";
+    };
+
+    isLibrary = false;
+    isExecutable = true;
+    enableSeparateDataOutput = true;
+
+    executableHaskellDepends = with pkgs.haskellPackages; [
+      aeson aspell-pipe async base base-compat brick brick-skylighting
+      bytestring cheapskate config-ini connection containers data-clist
+      directory filepath gitrev hashable Hclip mattermost-api
+      microlens-platform mtl process random semigroups skylighting-core
+      stm stm-delay strict temporary text text-zipper time timezone-olson
+      timezone-series transformers unix unordered-containers utf8-string
+      uuid vector vty word-wrap xdg-basedir
+    ];
+    testHaskellDepends = with pkgs.haskellPackages; [
+      base base-compat brick bytestring cheapskate checkers config-ini
+      connection containers directory filepath hashable Hclip
+      mattermost-api mattermost-api-qc microlens-platform mtl process
+      quickcheck-text semigroups stm strict string-conversions tasty
+      tasty-hunit tasty-quickcheck text text-zipper time timezone-olson
+      timezone-series transformers Unique unordered-containers uuid
+      vector vty xdg-basedir
+    ];
+
+    description = "Terminal client for the Mattermost chat system";
+    license = lib.licenses.bsd3;
+  };
+
   vpaste = pkgs.writeScriptBin "vpaste" ''
     #!${pkgs.bash}/bin/bash
 
@@ -37,6 +75,21 @@ let
     fi
   '';
 
+  zettelkasten = pkgs.stdenv.mkDerivation rec {
+    name = "zettelksten-${version}";
+    version = "3.2.7";
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/sjPlot/Zettelkasten/releases/download/${version}/Zettelkasten3_linux.zip";
+      sha256 = "0mbrg5gr84ijmhpwchgg9xzjc3mh74ap9fsv4s516ark0np670aw";
+    };
+
+    buildInputs = with pkgs; [
+      unzip
+      adoptopenjdk-bin
+    ];
+  };
+ 
   wallpaper_sh = pkgs.writeScriptBin "wallpaper.sh"
     (builtins.readFile ../scripts/wallpaper.sh );
   unstableTarball = fetchTarball
@@ -85,6 +138,16 @@ in
           --replace "histsize = 2000" "histsize = 99999"
       '';
     });
+
+   #python3Packages.importlib-metadata = super.python3Packages.importlib-metadata.override {
+   #  version = "1.3.0";
+   #  
+   #  src = fetchPypi {
+   #    pname = "importlib_metadata";
+   #    version = "1.3.0";
+   #    sha256 = "0ibvvqajphwdclbr236gikvyja0ynvqjlix38kvsabgrf0jqafh7";
+   #  };
+   #};
   };
 
   environment.systemPackages = with pkgs; [
@@ -135,21 +198,21 @@ in
     ocl-icd
 
     # scheme
-    unstable.gambit unstable.gerbil unstable.chez
-    unstable.guile unstable.guile-lib unstable.slibGuile
-    unstable.guile-fibers unstable.guile-lint
-    (import ../packages/guile-charting)
-    microscheme
+    #unstable.gambit unstable.gerbil unstable.chez
+    #unstable.guile unstable.guile-lib unstable.slibGuile
+    #unstable.guile-fibers unstable.guile-lint
+    #(import ../packages/guile-charting)
+    #microscheme
 
     # python
-    python3Full python3Packages.virtualenv
-    (pkgs.python37.withPackages (pythonPackages: with pythonPackages; [
-      flask
-      ipython
-      jupyter
-      pandas
-      matplotlib
-    ]))
+    #python3Full python3Packages.virtualenv
+    #(pkgs.python37.withPackages (pythonPackages: with pythonPackages; [
+    #  flask
+    #  ipython
+    #  jupyter
+    #  pandas
+    #  matplotlib
+    #]))
 
     # web, chat & docs
     okular
@@ -157,7 +220,8 @@ in
     firefox
     thunderbird
     tor-browser-bundle-bin
-    mattermost-desktop
+    mattermost-desktop #matterhorn
+
     (pkgs.writeScriptBin "wegwerf_firefox_clone"
       (builtins.readFile ../scripts/wegwerf_firefox_clone.sh ))
 
@@ -181,6 +245,7 @@ in
     cifs_utils
     google-drive-ocamlfuse
     unstable.enpass
+    #zettelkasten
   ];
 
   nix.daemonIONiceLevel = 7;
@@ -207,6 +272,9 @@ in
         discovery.enable = false;
         publish.enable = false;
     };
+    extraConfig = ''
+      load-module module-switch-on-connect
+    '';
   };
 
   # wireshark capturing
@@ -310,7 +378,12 @@ in
     enable = true;
     drivers = [pkgs.gutenprint];
   };
-  hardware.sane.enable = true;
+  hardware.sane = {
+    enable = true;
+    #netConf = ''
+    #  192.168.190.11
+    #'';
+  };
 
   services.colord = {
     enable = true;
@@ -413,6 +486,8 @@ in
   };
 
   programs.nm-applet.enable = true;
+  programs.dconf.enable = true;
+  services.earlyoom.enable = lib.mkDefault true;
 
   qt5 = {
     enable = true;

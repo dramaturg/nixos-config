@@ -20,16 +20,23 @@ in
 
   networking.wireguard.interfaces = {
     wg0 = {
-      ips = [ "172.18.55.2/24" ];
+      ips = [ "172.18.55.57/24" ];
       privateKeyFile = "/etc/nixos/secrets/wireguard_private";
 
       peers = [
-        {
+        { # felsenberg
           publicKey = "9ok3iCwsXAY05UvL7qzf3uDj3rb8NC/HMhvPNN2S9Hs=";
-          #allowedIPs = [ "0.0.0.0/0" ];
-          allowedIPs = [ "172.18.55.0/24" ];
+          allowedIPs = [ "172.18.55.1/32" ];
           endpoint = "felsenberg.ds.ag:51555";
           persistentKeepalive = 25;
+        }
+        { # woodstock
+          publicKey = "fFvx441OJ99/vJ1v3tcFc5kxw3EzBwrRSrzCPvw8NS4=";
+          allowedIPs = [ "172.18.55.2/32" ];
+        }
+        { # sandkasten
+          publicKey = "n/PJilqd0LplHSNVLgSSyH6s4PVE5cMCmK8uvoUwcAY=";
+          allowedIPs = [ "172.18.55.57/32" ];
         }
       ];
     };

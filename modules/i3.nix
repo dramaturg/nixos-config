@@ -130,13 +130,15 @@ in
       "i3/i3status".source = builtins.toPath ("/etc/nixos/dotfiles/i3/" + (cfg.i3statusConfigFile));
     };
 
+    security.pam.services.lightdm.enableGnomeKeyring = true;
+
     services.xserver = {
       displayManager = {
         lightdm = {
           enable = true;
-          greeters.gtk = {
-            theme.package = pkgs.zuki-themes;
-            theme.name = "Zukitre";
+          greeters.enso = {
+            enable = true;
+            blur = true;
           };
         };
         sessionCommands = ''
@@ -145,7 +147,6 @@ in
           xset s 600 0
           xset r rate 440 50
           xss-lock -l -- i3lock -c b31051 -n &
-          ${pkgs.networkmanagerapplet}/bin/nm-applet &
         '';
       };
       desktopManager = {

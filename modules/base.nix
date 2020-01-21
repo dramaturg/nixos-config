@@ -63,10 +63,8 @@ in
 
   time.timeZone = lib.mkDefault "Europe/Berlin";
 
-  i18n = {
-    consoleKeyMap = "us";
-    defaultLocale = "en_US.UTF-8";
-  };
+  i18n.defaultLocale = "en_US.UTF-8";
+  #console.keyMap = "us";
 
   # zramSwap.enable = true;
   boot.cleanTmpDir = false;
@@ -291,6 +289,7 @@ in
   };
 
   services.journald.extraConfig = ''
+    SystemMaxUse=128M
     MaxRetentionSec=3day
   '';
 }
