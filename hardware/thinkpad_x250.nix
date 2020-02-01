@@ -104,10 +104,12 @@ in
 
   powerManagement = {
     powerUpCommands = ''
-      echo 'min_power' > '/sys/class/scsi_host/host0/link_power_management_policy';
-      echo 'min_power' > '/sys/class/scsi_host/host1/link_power_management_policy';
-      echo 'min_power' > '/sys/class/scsi_host/host2/link_power_management_policy';
-      echo 'auto' > '/sys/bus/usb/devices/2-4/power/control';
+      echo min_power > /sys/class/scsi_host/host0/link_power_management_policy
+      echo min_power > /sys/class/scsi_host/host1/link_power_management_policy
+      echo min_power > /sys/class/scsi_host/host2/link_power_management_policy
+      echo auto > /sys/bus/usb/devices/2-4/power/control
+      echo auto > /sys/bus/pci/devices/0000:00:16.0/power/control
+      echo 1500 > /proc/sys/vm/dirty_writeback_centisecs
     '';
   };
 

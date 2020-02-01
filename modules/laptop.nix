@@ -47,4 +47,6 @@
       package = pkgs.pulseaudioFull;
     };
   };
+
+  services.blueman.enable = true;
 }
