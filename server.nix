@@ -19,10 +19,6 @@
       ./modules/bios.nix
     ];
 
-  # Use the GRUB 2 boot loader.
-  # boot.vesa = true;
-  networking.hostName = "server";
-
   i18n.consoleFont = "Lat2-Terminus16";
 
   boot = {

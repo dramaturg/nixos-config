@@ -6,6 +6,8 @@ in
   # wg genkey > /etc/nixos/secrets/wireguard_private
   # wg pubkey < /etc/nixos/secrets/wireguard_private > /etc/nixos/secrets/wireguard_public
   # chmod 600 /etc/nixos/secrets/wireguard_*
+  #
+  # ssh felsenberg "wg set wg0 peer <pubkey> allowed-ips 172.18.55.2/32"
 
   imports = [
     ./base.nix

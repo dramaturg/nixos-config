@@ -6,7 +6,6 @@
     };
     firewall = {
       enable = true;
-      allowPing = true;
     };
   };
 
