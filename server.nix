@@ -48,10 +48,11 @@
       22 # SSH
     ];
     #trustedInterfaces = [ "tun0" "tun1" ];
+    allowPing = true;
   };
 
   services.samba = {
-    enable = true;
+    #enable = true;
     extraConfig = ''
       workgroup = WORKGROUP
       server string = server

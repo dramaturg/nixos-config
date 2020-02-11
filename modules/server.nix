@@ -22,6 +22,7 @@ in
   ];
 
   security.allowUserNamespaces = lib.mkForce true;
+  # security.lockKernelModules = lib.mkForce true;
 
   services.fail2ban = {
     enable = true;
@@ -30,9 +31,11 @@ in
     '';
   };
 
-  #networking.firewall.allowedTCPPorts = [ 9100 ];
-  #networking.firewall.extraCommands = {
-  #};
+  networking.firewall = {
+    #allowedTCPPorts = [ 9100 ];
+    allowPing = true;
+  };
+
   services.prometheus.exporters.node = {
       enable = true;
       enabledCollectors = [
@@ -89,8 +92,6 @@ in
     resolver.valid = lib.mkDefault "300s";
 
     commonHttpConfig = ''
-      server_tokens off;
-
       ssl_session_tickets off;
 
       add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";
@@ -98,6 +99,33 @@ in
       add_header X-Content-Type-Options nosniff;
       add_header X-XSS-Protection "1; mode=block";
     '';
+    eventsConfig = ''
+      use epoll;
+    '';
+    appendHttpConfig = ''
+      # directio for larger files
+      # sendfile for smaller ones
+      #directio 16M;
+      #output_buffers 2 1M;
+      #sendfile on;
+      #sendfile_max_chunk 512k;
+
+      # send headers in one piece instead of one by one
+      #tcp_nopush on;
+    '';
+    appendConfig = lib.mkBefore ''
+      worker_processes auto;
+      worker_rlimit_nofile 10000; # Max # of open FDs
+    '';
+
+    virtualHosts."default" = {
+      enableACME = false;
+      serverName = null;
+      default = true;
+      globalRedirect = "duckduckgo.com";
+    };
   };
-  services.prometheus.exporters.nginx.enable = (if cfg.services.nginx.enable then true else false);
+  services.prometheus.exporters.nginx = {
+    enable = (if cfg.services.nginx.enable then true else false);
+  };
 }

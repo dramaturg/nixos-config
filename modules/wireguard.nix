@@ -20,9 +20,24 @@ in
     wireguard-tools
   ];
 
+  # config.networking.nat = {
+  #   enable = true;
+  #   externalInterface = "eth0";
+  #   internalInterfaces = [ "wg0" ];
+  # };
+  # 
+  networking.firewall = {
+    allowedUDPPorts = [ 51820 ];
+  # 
+  #   extraCommands = ''
+  #     iptables -t nat -A POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
+  #   '';
+  };
+
   networking.wireguard.interfaces = {
     wg0 = {
       ips = [ "172.18.55.57/24" ];
+      listenPort = 51820;
       privateKeyFile = "/etc/nixos/secrets/wireguard_private";
 
       peers = [

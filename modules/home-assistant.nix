@@ -4,6 +4,46 @@
 let
   unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
 
+  xbee = pkgs.python37.pkgs.buildPythonPackage rec {
+    pname = "XBee";
+    version = "2.3.2";
+
+    buildInputs = [
+      (pkgs.unstable.python37.withPackages (pythonPackages: with pythonPackages; [
+        pyserial
+        tornado
+      ]))
+    ];
+
+    src = pkgs.python37Packages.fetchPypi {
+      inherit pname version;
+      sha256 = "0mxn9phypb5pzxk160ynl19gzywryh2mnc52diz9lh036kk6vh3p";
+    };
+  };  
+
+  xbee-helper = pkgs.python37.pkgs.buildPythonPackage rec {
+    pname = "xbee-helper";
+    version = "0.0.7";
+
+    doCheck = false;
+    #checkInputs = [
+    #  (pkgs.unstable.python37.withPackages (pythonPackages: with pythonPackages; [
+    #    pytest
+    #    pytest-runner
+    #  ]))];
+    buildInputs = [
+      (pkgs.unstable.python37.withPackages (pythonPackages: with pythonPackages; [
+        pyserial
+      ]))
+      xbee
+    ];
+
+    src = pkgs.python37Packages.fetchPypi {
+      inherit pname version;
+      sha256 = "0rzg06x27shcmgsbq2jchrmy2a303jghhpywnymk8gfcjm9hcyq6";
+    };
+  };  
+
   click-datetime = pkgs.python37.pkgs.buildPythonPackage rec {
     pname = "click-datetime";
     version = "0.2";
@@ -144,7 +184,44 @@ in
       #groups = {};
       history = {};
       logbook = {};
-      #automations = {};
+
+      speedtestdotnet = {
+        scan_interval = { minutes = 30; };
+        monitored_conditions = [
+          "ping"
+          "download"
+          "upload"
+        ];
+      };
+
+      automations = [
+        {
+          trigger = { platform = "time"; at = "08:00:00"; };
+          action = [
+            {
+              service = "climate.set_temperature";
+              data = {
+                entity_id = "climate.Buero";
+                temperature = 20;
+                hvac_mode = "heat";
+              };
+            }
+          ];
+        }
+        {
+          trigger = { platform = "time"; at = "18:00:00"; };
+          action = [
+            {
+              service = "climate.set_temperature";
+              data = {
+                entity_id = "climate.Buero";
+                temperature = 16;
+                hvac_mode = "heat";
+              };
+            }
+          ];
+        }
+      ];
     };
     configWritable = true;
     lovelaceConfigWritable = true;
