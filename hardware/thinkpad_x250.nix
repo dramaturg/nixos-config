@@ -6,14 +6,9 @@ in
 {
   imports = [
     ./intel-generic.nix
+    ./intel-graphics.nix
     <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     (hardwareTarball + "/lenovo/thinkpad/x250")
-  ];
-
-  environment.systemPackages = with pkgs; [
-    beignet
-    ocl-icd
-    intel-ocl
   ];
 
   boot = {
@@ -47,36 +42,12 @@ in
       # thinkpad acpi
       options thinkpad_acpi fan_control=1
 
-      # intel graphics
-      options i915 modeset=1 i915_enable_rc6=7 i915_enable_fbc=1 lvds_downclock=1 # powersave=0
-      options bbswitch use_acpi_to_detect_card_state=1
-
       # sound
       #options snd_hda_intel index=1,0
 
       # intel wifi
       options iwlwifi 11n_disable=8
     '';
-  };
-
-  services.xserver.videoDrivers = [ "intel" ];
-
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
-  };
-
-  hardware = {
-    opengl = {
-      enable = true;
-      extraPackages = with pkgs; [
-        vaapiIntel
-        vaapiVdpau
-        libvdpau-va-gl
-        intel-media-driver
-      ];
-      driSupport32Bit = true;
-      s3tcSupport = true;
-    };
   };
 
   services.thermald.enable = true;
@@ -96,9 +67,9 @@ in
     enable = true;
     extraConfig = ''
       START_CHARGE_THRESH_BAT0=75
-      STOP_CHARGE_THRESH_BAT0=90
+      STOP_CHARGE_THRESH_BAT0=95
       START_CHARGE_THRESH_BAT1=75
-      STOP_CHARGE_THRESH_BAT1=90
+      STOP_CHARGE_THRESH_BAT1=95
     '';
   };
 

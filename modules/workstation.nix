@@ -426,6 +426,9 @@ in
     # Allow users in group 'usbmon' to do USB tracing, e.g. in Wireshark
     # (after 'modprobe usbmon').
     SUBSYSTEM=="usbmon", GROUP="usbmon", MODE="640"
+
+    # Webcam settings
+    SUBSYSTEM=="video4linux", KERNEL=="video[0-9]*", RUN="${pkgs.v4l-utils}/bin/v4l2-ctl -d $devnode --set-ctrl=power_line_frequency=1
   '';
 
   systemd.user.services."unclutter" = {
