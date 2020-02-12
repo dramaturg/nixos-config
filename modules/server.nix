@@ -94,10 +94,10 @@ in
     commonHttpConfig = ''
       ssl_session_tickets off;
 
-      add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";
-      add_header X-Frame-Options DENY;
-      add_header X-Content-Type-Options nosniff;
-      add_header X-XSS-Protection "1; mode=block";
+      #add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";
+      #add_header X-Frame-Options DENY;
+      #add_header X-Content-Type-Options nosniff;
+      #add_header X-XSS-Protection "1; mode=block";
     '';
     eventsConfig = ''
       use epoll;
@@ -105,13 +105,9 @@ in
     appendHttpConfig = ''
       # directio for larger files
       # sendfile for smaller ones
-      #directio 16M;
-      #output_buffers 2 1M;
-      #sendfile on;
-      #sendfile_max_chunk 512k;
-
-      # send headers in one piece instead of one by one
-      #tcp_nopush on;
+      directio 16M;
+      output_buffers 2 1M;
+      sendfile_max_chunk 512k;
     '';
     appendConfig = lib.mkBefore ''
       worker_processes auto;
@@ -125,7 +121,7 @@ in
       globalRedirect = "duckduckgo.com";
     };
   };
-  services.prometheus.exporters.nginx = {
-    enable = (if cfg.services.nginx.enable then true else false);
-  };
+  #services.prometheus.exporters.nginx = {
+  #  enable = (if cfg.services.nginx.enable then true else false);
+  #};
 }
