@@ -137,21 +137,27 @@ in
     zsh = {
       enable = true;
       enableCompletion = true;
+      autosuggestions.enable = true;
+      syntaxHighlighting.enable = true;
       ohMyZsh = {
         enable = true;
-        theme = "agnoster";
+        #theme = "agnoster";
+        theme = "gianu";
         plugins = [
-          "rsync"
-          "stack"
-          "history-substring-search"
+          "aws"
           "docker"
-          "git"
+          "git-extras"
           "git-flow"
+          "gitfast"
+          "history-substring-search"
           "kubectl"
           "mosh"
           "python"
+          "rsync"
+          "stack"
           "sudo"
           "systemd"
+          "tmux"
         ];
       };
       interactiveShellInit = ''
@@ -198,7 +204,7 @@ in
       '';
     };
     ssh = {
-      startAgent = true;
+      startAgent = lib.mkDefault true;
       extraConfig = ''
         AddKeysToAgent yes
       '';
@@ -206,7 +212,7 @@ in
     tmux = {
       enable = true;
       keyMode = "vi";
-      shortcut = "`";
+      shortcut = "a";
       terminal = "screen-256color";
     };
   };

@@ -2,11 +2,11 @@
 let
   rke = pkgs.stdenv.mkDerivation rec {
     name = "rke-${version}";
-    version = "1.0.2";
+    version = "1.1.0-rc5";
 
     src = pkgs.fetchurl {
       url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "0vy89p2hrxr4rba1ijb0xmc99s3avc5hivw27gjxzy48q7s1yj4c";
+      sha256 = "1k8dlvkhvgqcdkjj67z8zfzz517cmwihdmm4h9kl0wgpx5bqz8v6";
     };
 
     phases = [ "installPhase" ];
@@ -264,7 +264,11 @@ in
   virtualisation.libvirtd.enable = true;
   documentation.man.enable = true;
 
-  sound.enable = true;
+  sound = {
+    enable = true;
+    mediaKeys.enable = true;
+    mediaKeys.volumeStep = "5";
+  };
   nixpkgs.config.pulseaudio = true;
   hardware.pulseaudio = {
     enable = true;
@@ -488,8 +492,13 @@ in
     };
   };
 
-  programs.nm-applet.enable = true;
-  programs.dconf.enable = true;
+  programs = {
+    nm-applet.enable = true;
+    dconf.enable = true;
+    ssh.startAgent = false;
+    gnupg.agent.enable = true;
+    gnupg.agent.enableSSHSupport = true;
+  };
   services.earlyoom.enable = lib.mkDefault true;
 
   qt5 = {
