@@ -5,25 +5,6 @@ let
   unstable = import unstableTarball {
     config = removeAttrs config.nixpkgs.config [ "packageOverrides" ];
   };
-
-  plex-plugin-mediaccc = pkgs.fetchFromGitHub {
-    owner = "cccc";
-    repo = "MediaCCC.bundle";
-    rev = "6922c868dcef6e3125c8297af56b8b401cb11485";
-    sha256 = "0fsp1qlj02l3p1kfcxa0k3m4jmpj6ijbna6aad2bnpskfr1r13xy";
-  };
-  plex-plugin-youtube = pkgs.fetchFromGitHub {
-    owner = "kolsys";
-    repo = "YouTubeTV.bundle";
-    rev = "f4ac7121c6525dc5b7599509dd5033479a52842b";
-    sha256 = "1c59rmkfda9bs64cj11kbwpzi8gvykspddvqby9im5hz3vki8xnx";
-  };
-  plex-plugin-mediathek = pkgs.fetchFromGitHub {
-    owner = "rols1";
-    repo = "Plex-Plugin-ARDMediathek2016";
-    rev = "01c000b14bfc794913fc6bdba09a84ffd319438a";
-    sha256 = "1vddlp1pbb56j7asb5qky9fcm6fjk8kkxmpv5g9v0xrx4zq2m8q2";
-  };
 in
 {
   imports = [
@@ -31,18 +12,14 @@ in
   ];
 
   environment.systemPackages = with pkgs; [
+    libva-utils
     libva
   ];
 
   services.plex = {
     enable = true;
-    openFirewall = true;
+    #openFirewall = true;
     package = pkgs.unstable.plex;
-    extraPlugins = [
-      plex-plugin-mediaccc
-      plex-plugin-mediathek
-      plex-plugin-youtube
-    ];
   };
 
   users.users."plex".extraGroups = [
@@ -85,30 +62,21 @@ in
     '';
   };
 
+  networking.firewall = {
+    allowedTCPPorts = [ 80 443 32400 ];
 
-	#add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+    extraCommands = lib.mkMerge [ (lib.mkAfter ''
+      #iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p tcp --dport 32400 -j nixos-fw-accept
+      iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p tcp --dport 3005 -j nixos-fw-accept
+      iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p tcp --dport 8324 -j nixos-fw-accept
+      iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p tcp --dport 32469 -j nixos-fw-accept
 
-	# #Forward real ip and host to Plex
-	# proxy_set_header Host $host;
-	# proxy_set_header X-Real-IP $remote_addr;
-	# proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-	# proxy_set_header X-Forwarded-Proto $scheme;
-        # # Plex headers
-        # proxy_set_header X-Plex-Client-Identifier $http_x_plex_client_identifier;
-        # proxy_set_header X-Plex-Device $http_x_plex_device;
-        # proxy_set_header X-Plex-Device-Name $http_x_plex_device_name;
-        # proxy_set_header X-Plex-Platform $http_x_plex_platform;
-        # proxy_set_header X-Plex-Platform-Version $http_x_plex_platform_version;
-        # proxy_set_header X-Plex-Product $http_x_plex_product;
-        # proxy_set_header X-Plex-Token $http_x_plex_token;
-        # proxy_set_header X-Plex-Version $http_x_plex_version;
-        # proxy_set_header X-Plex-Nocache $http_x_plex_nocache;
-        # proxy_set_header X-Plex-Provides $http_x_plex_provides;
-        # proxy_set_header X-Plex-Device-Vendor $http_x_plex_device_vendor;
-        # proxy_set_header X-Plex-Model $http_x_plex_model;
-
-        #     proxy_set_header        Host                      $server_addr;
-        #     proxy_set_header        Referer                   $server_addr;
-        #     proxy_set_header        Origin                    $server_addr;
-
+      iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p udp --dport 1900 -j nixos-fw-accept
+      iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p udp --dport 5353 -j nixos-fw-accept
+      iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p udp --dport 32410 -j nixos-fw-accept
+      iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p udp --dport 32412 -j nixos-fw-accept
+      iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p udp --dport 32413 -j nixos-fw-accept
+      iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p udp --dport 32414 -j nixos-fw-accept
+    '') ];
+  };
 }

@@ -22,7 +22,10 @@ in
   ];
 
   security.allowUserNamespaces = lib.mkForce true;
-  # security.lockKernelModules = lib.mkForce true;
+  security.lockKernelModules = lib.mkForce true;
+  boot.kernelModules = [
+    "veth" # for containers
+  ];
 
   services.fail2ban = {
     enable = true;
