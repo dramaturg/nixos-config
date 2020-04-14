@@ -11,19 +11,16 @@ in
     ./server.nix
     #<unstable/nixos/modules/services/misc/radarr.nix>
     #<unstable/nixos/modules/services/misc/sonarr.nix>
-    #<unstable/nixos/modules/services/misc/headphones.nix>
   ];
 
   #disabledModules = [
   #  "services/misc/radarr.nix"
   #  "services/misc/sonarr.nix"
-  #  "services/misc/headphones.nix"
   #];
 
   nixpkgs.config.packageOverrides = super: let self = super.pkgs; in {
     radarr = unstable.radarr;
     sonarr = unstable.sonarr;
-    headphones = unstable.headphones;
   };
 
   services.nzbget = {
@@ -73,18 +70,18 @@ in
     '';
   };
 
-  services.headphones = {
+  services.lidarr = {
     enable = true;
     group = "musik";
-    host = "127.0.0.1";
+    package = unstable.lidarr;
   };
 
-  services.nginx.virtualHosts."headphones.sandkasten.ds.ag" = {
+  services.nginx.virtualHosts."lidarr.sandkasten.ds.ag" = {
     forceSSL = true;
     enableACME = true;
 
     locations."/" = {
-      proxyPass = "http://127.0.0.1:8181";
+      proxyPass = "http://127.0.0.1:8686";
 
       extraConfig = ''
         proxy_set_header Host $host;
