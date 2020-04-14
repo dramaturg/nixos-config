@@ -20,7 +20,7 @@ Number  Start (sector)    End (sector)  Size       Code  Name
 # pvcreate /dev/mapper/root-pv 
 # vgcreate root-vg /dev/mapper/root-pv
 # lvcreate -L 4G -n swap root-vg
-# lvcreate -l 90% -n root root-vg
+# lvcreate -l 90%FREE -n root root-vg
 
 # mkswap /dev/mapper/root--vg-swap
 # swapon /dev/mapper/root--vg-swap
@@ -31,6 +31,13 @@ Number  Start (sector)    End (sector)  Size       Code  Name
 
 # mkdir /mnt/boot
 # mount /dev/sda1 /mnt/boot
+```
+
+## Connect to Wifi
+
+```
+wpa_passphrase ESSID > /etc/wpa_suuplicant.conf
+systemctl restart wpa_supplicant
 ```
 
 ## Installing

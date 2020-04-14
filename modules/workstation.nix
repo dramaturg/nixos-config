@@ -172,7 +172,7 @@ in
     geeqie
 
     # ops
-    kubectl
+    kubectl kubectx
     ansible
     terraform
     nixops
@@ -251,7 +251,10 @@ in
   nix.daemonIONiceLevel = 7;
   nix.daemonNiceLevel = 19;
 
-  services.emacs.enable = true;
+  services.emacs = {
+    enable = true;
+    install = true;
+  };
   services.openssh.forwardX11 = true;
 
   virtualisation.docker = {
@@ -349,6 +352,7 @@ in
     enableDefaultFonts = true;
 
     fonts = with pkgs; [
+      anonymousPro
       carlito
       comic-relief
       corefonts
