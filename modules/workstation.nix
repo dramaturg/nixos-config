@@ -107,47 +107,6 @@ in
     };
 
     allowBroken = true;
-
-    stSolarized = lib.overrideDerivation pkgs.st (attrs: rec {
-      version = "0.8.2";
-      src = (pkgs.fetchgit {
-        url = "http://git.suckless.org/st";
-        rev = "2b8333f553c14c15398e810353e192eb05938580";
-        sha256 = "1awn56cri0x60m4wisaj9kd8qn0ggdqf62232q435p54rm43dwvv";
-      });
-      patches = [
-        (pkgs.fetchurl {
-          url = "https://st.suckless.org/patches/scrollback/st-scrollback-20190331-21367a0.diff";
-          sha256 = "0hqb04vqiarggw2addh725jpxjg4pn5d4afmssk0kadx247bqx7r";
-        })
-        (pkgs.fetchurl {
-          url = "https://st.suckless.org/patches/scrollback/st-scrollback-mouse-0.8.2.diff";
-          sha256 = "1fm1b3yxk9ww2cz0dfm67l42a986ykih37pf5rkhfp9byr8ac0v1";
-        })
-        (pkgs.fetchurl {
-          url = "https://st.suckless.org/patches/solarized/st-no_bold_colors-20170623-b331da5.diff";
-          sha256 = "0iaq3wbazpcisys8px71sgy6k12zkhvqi4z47slivqfri48j3qbi";
-        })
-        (pkgs.fetchurl {
-          url = "https://st.suckless.org/patches/solarized/st-solarized-dark-20180411-041912a.diff";
-          sha256 = "137q8hs9bhb9kw7z97il77w7378grgp67yzyna1gpshn4s5fimdj";
-        })
-      ];
-      postPatch = ''
-        substituteInPlace config.def.h \
-          --replace "histsize = 2000" "histsize = 99999"
-      '';
-    });
-
-   #python3Packages.importlib-metadata = super.python3Packages.importlib-metadata.override {
-   #  version = "1.3.0";
-   #  
-   #  src = fetchPypi {
-   #    pname = "importlib_metadata";
-   #    version = "1.3.0";
-   #    sha256 = "0ibvvqajphwdclbr236gikvyja0ynvqjlix38kvsabgrf0jqafh7";
-   #  };
-   #};
   };
 
   environment.systemPackages = with pkgs; [
@@ -178,7 +137,7 @@ in
     nixops
     docker_compose
     vagrant
-    unstable.linuxPackages_5_4.virtualbox
+    unstable.linuxPackages_5_5.virtualbox
     rke kail unstable.kubernetes-helm
     #awscli
     #google-cloud-sdk
@@ -229,7 +188,6 @@ in
     arandr
     feh scrot
     termite
-    stSolarized
 
     pavucontrol pasystray
     blueman
@@ -305,7 +263,7 @@ in
     };
   };
 
-  boot.kernelPackages = pkgs.unstable.linuxPackages_5_4;
+  boot.kernelPackages = pkgs.unstable.linuxPackages_5_5;
   boot.supportedFilesystems = [ "cifs" ];
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
@@ -380,7 +338,7 @@ in
     };
   };
 
-  i18n.consoleFont = "latarcyrheb-sun32";
+  console.font = "latarcyrheb-sun32";
 
   services.printing = {
     enable = true;

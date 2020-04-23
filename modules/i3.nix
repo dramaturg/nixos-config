@@ -111,6 +111,10 @@ let
   '';
 
   cfg = config;
+  unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
+  unstable = import unstableTarball {
+    config = removeAttrs config.nixpkgs.config [ "packageOverrides" ];
+  };
 in
 {
   options = {
@@ -134,13 +138,7 @@ in
 
     services.xserver = {
       displayManager = {
-        lightdm = {
-          enable = true;
-          greeters.enso = {
-            enable = true;
-            blur = true;
-          };
-        };
+        defaultSession = "xfce+i3";
         sessionCommands = ''
           export TERMINAL=termite
 
@@ -150,7 +148,6 @@ in
         '';
       };
       desktopManager = {
-        default = "xfce";
         xterm.enable = false;
 
         xfce = {
@@ -160,7 +157,6 @@ in
         };
       };
       windowManager = {
-        default = "i3";
         i3 = {
           enable = true;
           extraPackages = with pkgs; [
