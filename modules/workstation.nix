@@ -137,7 +137,7 @@ in
     nixops
     docker_compose
     vagrant
-    unstable.linuxPackages_5_5.virtualbox
+    unstable.linuxPackages_5_6.virtualbox
     rke kail unstable.kubernetes-helm
     #awscli
     #google-cloud-sdk
@@ -269,7 +269,7 @@ in
     };
   };
 
-  boot.kernelPackages = pkgs.unstable.linuxPackages_5_5;
+  boot.kernelPackages = pkgs.unstable.linuxPackages_5_6;
   boot.supportedFilesystems = [ "cifs" ];
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
