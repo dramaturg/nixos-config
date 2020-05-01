@@ -1,5 +1,59 @@
 { pkgs, lib, config, options, modulesPath, stdenv, fetchurl }:
 let
+  py-plexapi = pkgs.pythonPackages.buildPythonApplication rec {
+    pname = "PlexAPI";
+    version = "3.1.0";
+
+    src = pkgs.pythonPackages.fetchPypi {
+      inherit pname version;
+      sha256 = "0kffx74ppvadkg3lv7dd03h3fmas1j8l2kkhgxrr6ssb6mpqfi20";
+    };
+
+    doCheck = false;
+    buildInputs = with pkgs.pythonPackages; [
+      requests
+      websocket_client
+      tqdm
+    ];
+
+    meta = with stdenv.lib; {
+      license = licenses.bsd;
+    };
+  };
+  py-sonic = pkgs.pythonPackages.buildPythonApplication rec {
+    pname = "py-sonic";
+    version = "0.6.2";
+
+    src = pkgs.pythonPackages.fetchPypi {
+      inherit pname version;
+      sha256 = "1pwbpvf3qm32m1d26m8c3m3qnlahsxkdpk90lf24f9f0prlldn58";
+    };
+
+    doCheck = false;
+
+    meta = with stdenv.lib; {
+      license = licenses.gpl3;
+    };
+  };
+  mopidy-plex = pkgs.pythonPackages.buildPythonApplication rec {
+    pname = "Mopidy-Plex";
+    version = "0.1.0b";
+
+    src = pkgs.pythonPackages.fetchPypi {
+      inherit pname version;
+      sha256 = "15xmib4ynh33afjyqdmqxvj3blc68d97n5vp7xk8zx3yw6jk88zd";
+    };
+
+    propagatedBuildInputs = with pkgs; [ mopidy py-plexapi ];
+
+    doCheck = false;
+
+    meta = with stdenv.lib; {
+      homepage = https://www.mopidy.com/;
+      description = "Mopidy extension for playing music from Plex";
+      license = licenses.apl2;
+    };
+  };
   mopidy-subsonic = pkgs.pythonPackages.buildPythonApplication rec {
     pname = "Mopidy-Subsonic";
     version = "1.0.0";
@@ -9,7 +63,7 @@ let
       sha256 = "0wmf0a7aynvn32pf8p02d53a8vg3l33yvwfwdy4gcx93pm3psgp2";
     };
 
-    propagatedBuildInputs = with pkgs; [ mopidy ];
+    propagatedBuildInputs = with pkgs; [ mopidy py-sonic ];
 
     doCheck = false;
 
@@ -19,31 +73,12 @@ let
       license = licenses.mit;
     };
   };
-  duckdnsToken = builtins.readFile ../secrets/duckdnstoken;
-  updateduckdns = pkgs.writeScriptBin "updateduckdns" ''
-    #!${pkgs.bash}/bin/bash
-
-    echo url="https://www.duckdns.org/update?domains=campmpd&token='' + duckdnsToken + ''&ip=" \
-      | curl -s -K -
-  '';
 in
 {
   imports =
   [
-    ./hardware/gpd_pocket.nix
-    #./modules/embeddeddev.nix
-    ./modules/laptop.nix
-    #<nixpkgs/nixos/modules/profiles/hardened.nix>
+    #./server.nix
   ];
-
-  i3statusConfigFile = "i3status-gpd-pocket";
-
-  services.cron = {
-    enable = true;
-    systemCronJobs = [
-      "*/5 * * * *      root    ${updateduckdns}/bin/updateduckdns"
-    ];
-  };
 
   hardware.pulseaudio = {
     enable = true;
@@ -58,9 +93,9 @@ in
     enable = true;
     extensionPackages = with pkgs; [
       mopidy-local-sqlite
-      mopidy-mopify
-      mopidy-subsonic
-      mopidy-soundcloud
+      mopidy-iris
+      mopidy-musicbox-webclient
+      mopidy-plex
       mopidy-youtube
     ];
     configuration = ''
@@ -70,8 +105,9 @@ in
 
       [mpd]
       enabled = true
+      hostname = ::
       port = 6600
-      password = 72b6ad896a871d0f04e6d2b4d420d7bb
+      password = xxx
       max_connections = 40
       connection_timeout = 60
       command_blacklist =
@@ -101,24 +137,9 @@ in
       [softwaremixer]
       enabled = true
 
-      #[local]
-      #enabled = true
-      #media_dir = /shtick
-
-      [file]
+      [local]
       enabled = true
-      media_dirs =
-        /shtick|Shtick
-      show_dotfiles = false
-      follow_symlinks = false
-      metadata_timeout = 1000
-
-      [subsonic]
-      hostname = sound.ds.ag
-      port = 443
-      username = camp
-      password = 81b31f293d4ff53aaeddda128511381b
-      ssl = yes
+      media_dir = /shtick
     '';
   };
 
@@ -130,19 +151,4 @@ in
     mpc_cli
     ncmpcpp
   ];
-
-  users = {
-    extraUsers = {
-      nerds = {
-        home = "/home/nerds";
-        description = "Nerd";
-        isNormalUser = true;
-        extraGroups = ["audio"];
-        uid = 11000;
-        openssh.authorizedKeys.keyFiles = [
-          (builtins.fetchurl "https://darksystem.gitlab.io/ssh_pubkey_collection/authorized_keys.txt")
-        ];
-      };
-    };
-  };
 }

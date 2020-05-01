@@ -95,6 +95,8 @@
         "gpd-pocket-fan"
         "i915"
         "btusb"
+        "fusb302"
+        "bq24190_charger"
       ];
       availableKernelModules = [
         "xhci_pci"

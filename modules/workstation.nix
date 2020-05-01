@@ -334,7 +334,7 @@ in
       victor-mono
     ];
     fontconfig = {
-      enable = true;
+      enable = lib.mkDefault true;
       useEmbeddedBitmaps = true;
       defaultFonts = {
         monospace = [ "Iosevka Nerd Font Mono" ];
