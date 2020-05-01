@@ -103,7 +103,7 @@ in
     #microscheme
     sdcc
     openocd
-    #unstable.platformio
+    unstable.platformio
 
     # FPGA
     #arachne-pnr yosys nextpnr

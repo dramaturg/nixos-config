@@ -47,6 +47,9 @@ in
 
       # intel wifi
       options iwlwifi 11n_disable=8
+
+      # intel graphics
+      options i915 modeset=1 i915_enable_rc6=7 i915_enable_fbc=1 lvds_downclock=1 # powersave=0
     '';
   };
 

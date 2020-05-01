@@ -142,6 +142,7 @@ in
     #awscli
     #google-cloud-sdk
     #azure-cli
+    puppet-lint
 
     # network
     wireshark tcpdump
@@ -178,7 +179,7 @@ in
     libreoffice
     firefox
     thunderbird
-    tor-browser-bundle-bin
+    #tor-browser-bundle-bin
     mattermost-desktop #matterhorn
 
     (pkgs.writeScriptBin "wegwerf_firefox_clone"
