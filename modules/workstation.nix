@@ -239,6 +239,11 @@ in
     };
     extraConfig = ''
       load-module module-switch-on-connect
+
+      load-module module-echo-cancel aec_method=webrtc
+      #load-module module-echo-cancel source_name=noechosource sink_name=noechosink
+      #set-default-source noechosource
+      #set-default-sink noechosink
     '';
   };
 

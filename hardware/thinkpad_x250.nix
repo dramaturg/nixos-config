@@ -50,6 +50,10 @@ in
     '';
   };
 
+  nixpkgs.config.packageOverrides = pkgs: {
+    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+  };
+
   services.thermald.enable = true;
   #services.thinkfan.enable = true;
 
