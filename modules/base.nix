@@ -69,7 +69,7 @@ in
   #console.keyMap = "us";
 
   # zramSwap.enable = true;
-  boot.cleanTmpDir = false;
+  boot.cleanTmpDir = lib.mkDefault false;
   boot.kernelModules = [ "tcp_bbr" ];
   boot.kernel.sysctl = {
     "fs.inotify.max_user_watches" = 1048576;
@@ -137,8 +137,6 @@ in
     zsh = {
       enable = true;
       enableCompletion = true;
-      #autosuggestions.enable = true;
-      #syntaxHighlighting.enable = true;
       ohMyZsh = {
         enable = true;
         #theme = "agnoster";
@@ -154,7 +152,6 @@ in
           "mosh"
           "python"
           "rsync"
-          "stack"
           "sudo"
           "systemd"
           "tmux"

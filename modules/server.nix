@@ -70,10 +70,15 @@ in
 
   services.mysql = {
     bind = lib.mkDefault "::1";
-    package = lib.mkDefault pkgs.mysql57;
+    package = lib.mkDefault pkgs.mysql80;
   };
   services.mysqlBackup = {
     enable = (if cfg.services.mysql.enable then true else false);
+  };
+
+  security.acme = {
+    email = "seb@ds.ag";
+    acceptTerms = true;
   };
 
   services.nginx = {
@@ -86,22 +91,10 @@ in
     #sslDhparam = dhparam-file;
     sslCiphers = "EECDH+AESGCM:EDH+AESGCM";
 
-    proxyResolveWhileRunning = true;
-    resolver.addresses = lib.mkDefault [
-      "8.8.8.8"
-      "9.9.9.9"
-      "1.1.1.1"
-    ];
+    resolver.addresses = lib.mkDefault [ "127.0.0.53" ];
     resolver.valid = lib.mkDefault "300s";
+    proxyResolveWhileRunning = true;
 
-    commonHttpConfig = ''
-      ssl_session_tickets off;
-
-      #add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";
-      #add_header X-Frame-Options DENY;
-      #add_header X-Content-Type-Options nosniff;
-      #add_header X-XSS-Protection "1; mode=block";
-    '';
     eventsConfig = ''
       use epoll;
     '';
