@@ -1,24 +1,19 @@
-
-with import <nixpkgs> {};
-
-let
-  version = "2.4.3";
-  rev = "1607";
-in
+{ stdenv, pkgs, fetchsvn }:
 
 stdenv.mkDerivation rec {
-  name = "mathgl-${version}";
+  pname = "mathgl";
+  version = "2.4.5";
   isLibrary = true;
   isExecutable = false;
 
   src = fetchsvn {
     url = "https://svn.code.sf.net/p/mathgl/code/mathgl-2x";
-    rev = "${rev}";
-    sha256 = "108wxvfddig60hsjxvn2f7r00rxa5gzmhs51zyzhjgay6isgh7qr";
+    rev = "1644";
+    sha256 = "1caf92v02gjdx6p4ssza898a12pavzih8z9xxjhli32idcgz01gz";
   };
 
-  nativeBuildInputs = [ cmake ];
-  buildInputs = [
+  nativeBuildInputs = with pkgs; [ cmake ];
+  buildInputs = with pkgs; [
     fltk
     freeglut
     libGL
@@ -39,7 +34,7 @@ stdenv.mkDerivation rec {
   meta = {
     description = "a library for making high-quality scientific graphics";
     homepage = http://mathgl.sourceforge.net/doc_en/Main.html;
-    license = stdenv.lib.licenses.lgpl;
+    license = stdenv.lib.licenses.gpl2;
     maintainers = [ "Sebastian Krohn <seb@ds.ag>" ];
   };
 }
