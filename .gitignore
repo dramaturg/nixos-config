@@ -4,3 +4,4 @@ others/
 .*
 /configuration.nix
 /hardware-configuration.nix
+/packages/exoscale-*
