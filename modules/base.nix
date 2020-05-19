@@ -60,6 +60,10 @@ in
       min-free = ${toString (1024*1024*1024*3)}
       max-free = ${toString (1024*1024*1024*6)}
     '';
+
+    #nixPath =
+    #  options.nix.nixPath.default ++
+    #  [ "nixpkgs-overlays=/etc/nixos/overlays/" ];
   };
   system.autoUpgrade.enable = lib.mkDefault true;
 
