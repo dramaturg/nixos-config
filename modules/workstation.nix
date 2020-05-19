@@ -89,7 +89,7 @@ let
       adoptopenjdk-bin
     ];
   };
- 
+
   wallpaper_sh = pkgs.writeScriptBin "wallpaper.sh"
     (builtins.readFile ../scripts/wallpaper.sh );
   unstableTarball = fetchTarball
@@ -466,6 +466,12 @@ in
     ssh.startAgent = false;
     gnupg.agent.enable = true;
     gnupg.agent.enableSSHSupport = true;
+    zsh = {
+      shellAliases = {
+        wergwerf_firefox  = "firefox --new-instance --profile $(mktemp -d)";
+        wergwerf_chromium = "chromium --user-data-dir $(mktemp -d)";
+      };
+    };
   };
   services.earlyoom.enable = lib.mkDefault true;
 

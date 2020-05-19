@@ -193,8 +193,9 @@ in
       shellAliases = {
         nix-search        = "nix-env -qaP";
         nix-list          = "nix-env -qaP \"*\" --description";
-        wergwerf_firefox  = "firefox --new-instance --profile $(mktemp -d)";
-        wergwerf_chromium = "chromium --user-data-dir $(mktemp -d)";
+        dkr               = "docker run -ti --rm";
+        repo_root         = "git rev-parse --show-toplevel";
+        rr                = "cd $(repo_root)";
       };
       promptInit = ''
         any-nix-shell zsh --info-right | source /dev/stdin

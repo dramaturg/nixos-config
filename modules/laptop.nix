@@ -44,6 +44,7 @@
       enable = true;
 
       # for bluetooth
+      extraModules = [ pkgs.pulseaudio-modules-bt ];
       package = pkgs.pulseaudioFull;
     };
   };
