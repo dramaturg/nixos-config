@@ -133,7 +133,6 @@ in
     # ops
     kubectl kubectx
     ansible
-    terraform
     nixops
     docker_compose
     vagrant
@@ -156,23 +155,7 @@ in
     binutils jq
     git-review
     ocl-icd
-
-    # scheme
-    #unstable.gambit unstable.gerbil unstable.chez
-    #unstable.guile unstable.guile-lib unstable.slibGuile
-    #unstable.guile-fibers unstable.guile-lint
-    #(import ../packages/guile-charting)
-    #microscheme
-
-    # python
-    #python3Full python3Packages.virtualenv
-    #(pkgs.python37.withPackages (pythonPackages: with pythonPackages; [
-    #  flask
-    #  ipython
-    #  jupyter
-    #  pandas
-    #  matplotlib
-    #]))
+    meld
 
     # web, chat & docs
     okular
