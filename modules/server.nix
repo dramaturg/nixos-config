@@ -26,6 +26,7 @@ in
   boot.kernelModules = [
     "veth" # for containers
   ];
+  boot.cleanTmpDir = true;
 
   services.fail2ban = {
     enable = true;

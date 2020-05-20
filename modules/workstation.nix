@@ -321,6 +321,7 @@ in
       comic-relief
       corefonts
       dejavu_fonts
+      fantasque-sans-mono
       fira
       fira-code
       google-fonts
@@ -329,6 +330,7 @@ in
       liberation_ttf
       nerdfonts
       noto-fonts-cjk
+      recursive
       source-code-pro
       terminus_font
       victor-mono
@@ -477,8 +479,8 @@ in
 
   qt5 = {
     enable = true;
-    platformTheme = "gnome";
-    style = "adwaita";
+    platformTheme = "gtk2";
+    style = "cleanlooks";
   };
 
   environment.variables = {
