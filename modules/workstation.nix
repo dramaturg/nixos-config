@@ -153,7 +153,6 @@ in
     kubectl kubectx
     ansible
     nixops
-    docker_compose
     vagrant
     unstable.linuxPackages_5_6.virtualbox
     rke kail unstable.kubernetes-helm
@@ -217,15 +216,6 @@ in
     install = true;
   };
   services.openssh.forwardX11 = true;
-
-  virtualisation.docker = {
-    enable = true;
-    autoPrune = {
-      enable = true;
-      dates = "daily";
-    };
-  };
-  virtualisation.libvirtd.enable = true;
   documentation.man.enable = true;
 
   sound = {
@@ -248,6 +238,18 @@ in
       #set-default-source noechosource
       #set-default-sink noechosink
     '';
+  };
+
+  systemd.services.audio-off = {
+    description = "Mute audio before suspend";
+    wantedBy = [ "sleep.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      Environment = "XDG_RUNTIME_DIR=/run/user/1000";
+      User = "seb";
+      RemainAfterExit = "yes";
+      ExecStart = "${pkgs.pamixer}/bin/pamixer --mute";
+    };
   };
 
   # wireshark capturing
@@ -352,6 +354,7 @@ in
 
   services.printing = {
     enable = true;
+    startWhenNeeded = true;
     drivers = [pkgs.gutenprint];
   };
   hardware.sane = {
@@ -371,9 +374,20 @@ in
 
   users.groups.vboxusers.members = [ "seb" ];
   boot.kernelModules = [ "vboxdrv" ];
-  virtualisation.virtualbox.host = {
-    enable = true;
-    package = pkgs.unstable.virtualbox;
+  virtualisation = {
+    virtualbox.host = {
+      enable = lib.mkDefault true;
+      package = pkgs.unstable.virtualbox;
+    };
+    #lxd.enable = lib.mkDefault true;
+    docker = {
+      enable = lib.mkDefault true;
+      autoPrune = {
+        enable = true;
+        dates = "daily";
+      };
+    };
+    libvirtd.enable = true;
   };
 
   services.syncthing = {
