@@ -90,6 +90,21 @@ let
     ];
   };
 
+  myxclip = pkgs.writeScriptBin "xclip" ''
+    #!${pkgs.bash}/bin/bash
+
+    # if stdin is not a terminal, strip out all the escape code crud
+    if [ \! -t 0 ] ; then
+        sed 's/\x1b\[[0-9;]*m//g'        |\
+        sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |\
+        sed 's/\x1b\[[0-9;]*[mGKFH]//g'  |\
+        ${pkgs.xclip}/bin/xclip $@
+        exit $?
+    fi
+
+    exec ${pkgs.xclip}/bin/xclip $@
+  '';
+
   wallpaper_sh = pkgs.writeScriptBin "wallpaper.sh"
     (builtins.readFile ../scripts/wallpaper.sh );
   unstableTarball = fetchTarball
@@ -101,12 +116,16 @@ in
     ./i3.nix
   ];
 
-  nixpkgs.config.packageOverrides = super: let self = super.pkgs; in {
-    unstable = import unstableTarball {
-      config = config.nixpkgs.config;
-    };
+  nixpkgs = {
+    overlays = [
+    ];
+    config.packageOverrides = super: let self = super.pkgs; in {
+      unstable = import unstableTarball {
+        config = config.nixpkgs.config;
+      };
 
-    allowBroken = true;
+      allowBroken = true;
+    };
   };
 
   environment.systemPackages = with pkgs; [
@@ -177,7 +196,7 @@ in
     blueman
     arc-theme
     lxappearance
-    xclip
+    myxclip
     lxqt.lxqt-policykit
     qt5ct
 
