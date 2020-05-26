@@ -382,6 +382,7 @@ in
     #lxd.enable = lib.mkDefault true;
     docker = {
       enable = lib.mkDefault true;
+      extraOptions = lib.mkForce "";
       autoPrune = {
         enable = true;
         dates = "daily";
