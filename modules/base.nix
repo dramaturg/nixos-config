@@ -106,13 +106,11 @@ in
     parallel
     moreutils
     patchutils
-    p7zip zip
     gnumake
 
     # net
     wget curl rclone rsync
-    mtr
-    tcpdump
+    mtr tcpdump
     iptables
     inetutils
 
@@ -143,7 +141,6 @@ in
       enableCompletion = true;
       ohMyZsh = {
         enable = true;
-        #theme = "agnoster";
         theme = "gianu";
         plugins = [
           "aws"
