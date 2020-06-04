@@ -2,9 +2,7 @@
 
 let
   unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
-  unstable = import unstableTarball {
-    config = removeAttrs config.nixpkgs.config [ "packageOverrides" ];
-  };
+  unstable = import unstableTarball { config = removeAttrs config.nixpkgs.config [ "packageOverrides" ]; };
 in
 {
   imports = [
@@ -19,7 +17,7 @@ in
   services.plex = {
     enable = true;
     #openFirewall = true;
-    package = pkgs.unstable.plex;
+    package = unstable.plex;
   };
 
   users.users."plex".extraGroups = [

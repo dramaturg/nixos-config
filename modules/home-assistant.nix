@@ -3,13 +3,14 @@
 
 let
   unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
+  unstable = import unstableTarball { config = removeAttrs config.nixpkgs.config [ "packageOverrides" ]; };
 
   xbee = pkgs.python37.pkgs.buildPythonPackage rec {
     pname = "XBee";
     version = "2.3.2";
 
     buildInputs = [
-      (pkgs.unstable.python37.withPackages (pythonPackages: with pythonPackages; [
+      (pkgs.python37.withPackages (pythonPackages: with pythonPackages; [
         pyserial
         tornado
       ]))
@@ -27,12 +28,12 @@ let
 
     doCheck = false;
     #checkInputs = [
-    #  (pkgs.unstable.python37.withPackages (pythonPackages: with pythonPackages; [
+    #  (python37.withPackages (pythonPackages: with pythonPackages; [
     #    pytest
     #    pytest-runner
     #  ]))];
     buildInputs = [
-      (pkgs.unstable.python37.withPackages (pythonPackages: with pythonPackages; [
+      (pkgs.python37.withPackages (pythonPackages: with pythonPackages; [
         pyserial
       ]))
       xbee
@@ -49,7 +50,7 @@ let
     version = "0.2";
 
     buildInputs = [
-      (pkgs.unstable.python37.withPackages (pythonPackages: with pythonPackages; [
+      (pkgs.python37.withPackages (pythonPackages: with pythonPackages; [
         click
       ]))
     ];
@@ -70,7 +71,7 @@ let
 
     buildInputs = [
       click-datetime
-      (pkgs.unstable.python37.withPackages (pythonPackages: with pythonPackages; [
+      (pkgs.python37.withPackages (pythonPackages: with pythonPackages; [
         click
         typing
       ]))
@@ -92,14 +93,9 @@ in
   ];
 
   #nixpkgs.config.packageOverrides = pkgs: with pkgs; rec {
-  nixpkgs.config.packageOverrides = super: let self = super.pkgs; in {
-    unstable = import unstableTarball {
-      config = config.nixpkgs.config;
-    };
-  };
 
   environment.systemPackages = with pkgs; [
-    unstable.home-assistant-cli
+    home-assistant-cli
   ];
 
   users.groups.dialout.members = [ "hass" ];
@@ -118,12 +114,11 @@ in
     enable = true;
     port = 8123;
 
-    package = pkgs.unstable.home-assistant.override {
+    package = pkgs.home-assistant.override {
       extraPackages = ps: with ps; [
         hbmqtt
         homeassistant-pyozw
-        pkgs.unstable.openzwave
-        PyChromecast
+        unstable.openzwave
         #pyHS100
         pyserial
         speedtest-cli
