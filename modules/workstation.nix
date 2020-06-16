@@ -105,6 +105,15 @@ let
     exec ${pkgs.xclip}/bin/xclip $@
   '';
 
+  stripescapecodes = pkgs.writeScriptBin "stripescapecodes" ''
+    #!${pkgs.bash}/bin/bash
+
+    # strip out all the escape code crud
+    sed 's/\x1b\[[0-9;]*m//g'        |\
+    sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' |\
+    sed 's/\x1b\[[0-9;]*[mGKFH]//g'
+  '';
+
   wallpaper_sh = pkgs.writeScriptBin "wallpaper.sh"
     (builtins.readFile ../scripts/wallpaper.sh );
   unstableTarball = fetchTarball
@@ -155,11 +164,7 @@ in
     nixops
     vagrant
     unstable.linuxPackages_5_6.virtualbox
-    rke kail unstable.kubernetes-helm
-    #awscli
-    #google-cloud-sdk
-    #azure-cli
-    puppet-lint
+    rke
 
     # network
     wireshark tcpdump
@@ -195,7 +200,7 @@ in
     blueman
     arc-theme
     lxappearance
-    myxclip
+    myxclip stripescapecodes 
     lxqt.lxqt-policykit
     qt5ct
 

@@ -213,6 +213,9 @@ in
       keyMode = "vi";
       shortcut = "a";
       terminal = "screen-256color";
+      extraConfig = ''
+        bind-key = set-window-option synchronize-panes\; display-message "synchronize-panes is now #{?pane_synchronized,on,off}"
+      '';
     };
   };
 
