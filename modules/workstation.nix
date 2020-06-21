@@ -56,6 +56,19 @@ let
     license = lib.licenses.bsd3;
   };
 
+  damdamdammm = pkgs.writeScriptBin "damdamdammm" ''
+    #!${pkgs.bash}/bin/bash
+
+    ${pkgs.v4l-utils}/bin/v4l2-ctl -d /dev/video2 --set-ctrl=zoom_absolute=3
+    sleep 0.3
+    ${pkgs.v4l-utils}/bin/v4l2-ctl -d /dev/video2 --set-ctrl=zoom_absolute=1
+    sleep 0.3
+    ${pkgs.v4l-utils}/bin/v4l2-ctl -d /dev/video2 --set-ctrl=zoom_absolute=5
+
+    sleep 1.5
+    ${pkgs.v4l-utils}/bin/v4l2-ctl -d /dev/video2 --set-ctrl=zoom_absolute=1
+  '';
+
   vpaste = pkgs.writeScriptBin "vpaste" ''
     #!${pkgs.bash}/bin/bash
 
@@ -151,6 +164,7 @@ in
     mosh
     fdupes
     vpaste
+    damdamdammm
     nnn
 
     # media
