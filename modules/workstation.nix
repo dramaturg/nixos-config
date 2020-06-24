@@ -127,6 +127,13 @@ let
     sed 's/\x1b\[[0-9;]*[mGKFH]//g'
   '';
 
+  falloutGrubTheme = pkgs.fetchFromGitHub {
+    owner = "shvchk";
+    repo = "fallout-grub-theme";
+    rev = "cd6cf168cb1a392126cadc5b6bd2e2bf81d53c80";
+    sha256 = "0fhl93gf6ih09k7ad0fmhs4slb0qcdzvnk8lshb07a9c10vkfln4";
+  };
+
   wallpaper_sh = pkgs.writeScriptBin "wallpaper.sh"
     (builtins.readFile ../scripts/wallpaper.sh );
   unstableTarball = fetchTarball
@@ -297,6 +304,17 @@ in
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
   };
+  boot.loader.grub = {
+    extraConfig = ''
+      set theme=($drive1)//themes/fallout-grub-theme/theme.txt
+    '';
+    splashImage = "${falloutGrubTheme}/background.png";
+  };
+
+  system.activationScripts.copyGrubTheme = ''
+    mkdir -p /boot/themes
+    cp -R ${falloutGrubTheme}/ /boot/themes/fallout-grub-theme
+  ''; 
 
   services.xserver = {
     enable = true;
