@@ -48,6 +48,7 @@ in
 
     extraConfig = ''
       access_log off;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
       client_max_body_size 100M;
       send_timeout 100m;

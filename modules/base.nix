@@ -260,6 +260,7 @@ in
       MaxAuthTries 5
     '';
   };
+  programs.mosh.enable = config.services.openssh.enable;
 
   services.fstrim.enable = true;
 

@@ -43,6 +43,7 @@ in
 
     extraConfig = ''
       access_log off;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     '';
   };
 
@@ -67,6 +68,7 @@ in
 
     extraConfig = ''
       access_log off;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     '';
   };
 
@@ -92,6 +94,7 @@ in
 
     extraConfig = ''
       access_log off;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     '';
   };
 
@@ -120,6 +123,7 @@ in
 
     extraConfig = ''
       access_log off;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     '';
   };
 
@@ -151,6 +155,7 @@ in
 
     extraConfig = ''
       access_log off;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
     '';
   };
 }

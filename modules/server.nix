@@ -83,14 +83,15 @@ in
   };
 
   services.nginx = {
-    recommendedGzipSettings = true;
-    recommendedTlsSettings = true;
-    recommendedOptimisation = true;
+    recommendedGzipSettings = lib.mkDefault true;
+    recommendedTlsSettings = lib.mkDefault true;
+    recommendedProxySettings = lib.mkDefault true;
+    recommendedOptimisation = lib.mkDefault true;
 
     # https://cipherli.st/
-    sslProtocols = "TLSv1.3";
+    sslProtocols = lib.mkDefault "TLSv1.3";
     #sslDhparam = dhparam-file;
-    sslCiphers = "EECDH+AESGCM:EDH+AESGCM";
+    sslCiphers = lib.mkDefault "EECDH+AESGCM:EDH+AESGCM";
 
     resolver.addresses = lib.mkDefault [ "127.0.0.53" ];
     resolver.valid = lib.mkDefault "300s";

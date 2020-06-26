@@ -1,12 +1,15 @@
 { config, pkgs, lib, ... }:
-{
+let
+  hostName = "nextcloud.sandkasten.ds.ag";
+in {
   imports = [
     ./server.nix
   ];
 
   services.nextcloud = {
     enable = true;
-    hostName = "nextcloud.sandkasten.ds.ag";
+    package = pkgs.nextcloud18;
+    hostName = hostName;
     https = true;
 
     maxUploadSize = "2048M";
@@ -24,6 +27,10 @@
   services.nginx.virtualHosts."nextcloud.sandkasten.ds.ag" = {
     forceSSL = true;
     enableACME = true;
+
+    extraConfig = ''
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    '';
 
     # https://github.com/NixOS/nixpkgs/issues/73585
     locations."^~ /.well-known/acme-challenge/" = {

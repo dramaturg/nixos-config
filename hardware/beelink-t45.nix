@@ -10,11 +10,15 @@
     beignet
     ocl-icd
     intel-ocl
+    libva
   ];
 
   boot = {
+    extraModulePackages = with pkgs.linuxPackages_hardened; [ it87 ];    
     kernelModules = [
       "kvm-intel"
+      "coretemp"
+      "it87"
     ];
   };
 
