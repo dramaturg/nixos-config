@@ -184,7 +184,7 @@ in
     ansible
     nixops
     vagrant
-    unstable.linuxPackages_5_6.virtualbox
+    linuxPackages_5_7.virtualbox
     rke
 
     # network
@@ -299,7 +299,7 @@ in
     };
   };
 
-  boot.kernelPackages = pkgs.unstable.linuxPackages_5_6;
+  boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_5_7;
   boot.supportedFilesystems = [ "cifs" ];
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
