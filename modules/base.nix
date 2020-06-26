@@ -42,6 +42,7 @@ in
       vim.defaultEditor = true;
     };
   };
+  environment.variables.NIXPKGS_ALLOW_UNFREE = "1";
 
   nix = {
     buildCores = lib.mkDefault 0;
