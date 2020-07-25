@@ -30,4 +30,5 @@ snippets. The appropriate files are included in the installer-generated
 - Lots of ideas for the GPD Pocket were inspired by [andirs config](https://github.com/andir/nixos-gpd-pocket), in particular regarding the kernel options.
 - The handy qemu overlay comes from [cleverca22](https://github.com/cleverca22/nixos-configs)
 - Some handy i3 scripts were found in [xtruders i3 config](https://github.com/xtruder/nix-profiles/blob/master/modules/user/profiles/i3.nix)
+- PIA config by [illegalprime](https://github.com/illegalprime/nix/blob/1eb90ceaa9af14eba9d10d1178076e428994de0d/nixos/pia-system.nix)
 
