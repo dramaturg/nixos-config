@@ -300,6 +300,7 @@ in
   };
 
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_5_7;
+  boot.kernelParams = [ "security=apparmor" ];
   boot.supportedFilesystems = [ "cifs" ];
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
@@ -416,7 +417,7 @@ in
       enable = lib.mkDefault true;
       package = pkgs.unstable.virtualbox;
     };
-    #lxd.enable = lib.mkDefault true;
+    lxd.enable = lib.mkDefault true;
     docker = {
       enable = lib.mkDefault true;
       extraOptions = lib.mkForce "";
@@ -427,6 +428,10 @@ in
     };
     libvirtd.enable = true;
   };
+
+  # flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  services.flatpak.enable = true;
+  xdg.portal.enable = true;
 
   services.syncthing = {
     enable = true;

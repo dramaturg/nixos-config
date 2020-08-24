@@ -63,6 +63,12 @@ in
   #  Option "AccelMethod" "uxa"
   #'';
 
+  services.xserver.synaptics = {
+    palmDetect = true;
+    palmMinWidth = 5;
+    palmMinZ = 20;
+  };
+
   hardware = {
     opengl = {
       enable = true;
@@ -80,4 +86,7 @@ in
       s3tcSupport = true;
     };
   };
+
+  # High-DPI console
+  console.font = lib.mkDefault "${pkgs.terminus_font}/share/consolefonts/ter-u28n.psf.gz";
 }

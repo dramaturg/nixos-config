@@ -103,6 +103,7 @@ in
     # base tools
     file
     (if config.services.xserver.enable then gitAndTools.gitFull else git)
+    unstable.gitAndTools.git-trim
     vim
     parallel
     moreutils
@@ -276,6 +277,8 @@ in
         isNormalUser = true;
         extraGroups = ["wheel" "audio" "dialup"]
             ++ (lib.optional config.networking.networkmanager.enable "networkmanager")
+            ++ (lib.optional config.hardware.sane.enable "lp")
+            ++ (lib.optional config.hardware.sane.enable "scanner")
             ++ (lib.optional config.virtualisation.docker.enable "docker")
             ++ (lib.optional config.virtualisation.libvirtd.enable "libvirtd")
             ++ (lib.optional config.virtualisation.lxd.enable "lxd")
