@@ -15,13 +15,23 @@ in {
     maxUploadSize = "2048M";
     nginx.enable = true;
 
+    # nextcloud-occ config:system:set redis 'host' --value 'localhost' --type string
+    # nextcloud-occ config:system:set redis 'port' --value 6379 --type integer
+    # nextcloud-occ config:system:set memcache.local --value '\OC\Memcache\Redis' --type string
+    # nextcloud-occ config:system:set memcache.locking --value '\OC\Memcache\Redis' --type string
+    caching.redis = true;
+
     config = {
       adminuser = "admin";
       adminpassFile = "/etc/nixos/secrets/nextcloud-adminpass";
       dbpassFile = "/etc/nixos/secrets/nextcloud-dbpass";
-      #overwriteProtocol = "https";
     };
+
     autoUpdateApps.enable = true;
+  };
+
+  services.redis = {
+    enable = true;
   };
 
   services.nginx.virtualHosts."nextcloud.sandkasten.ds.ag" = {
