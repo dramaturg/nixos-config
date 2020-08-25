@@ -200,6 +200,7 @@ in
     git-review
     ocl-icd
     meld
+    gist
 
     # web, chat & docs
     okular
