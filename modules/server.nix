@@ -3,11 +3,14 @@ let
   dhparam-file-for-nixos = pkgs.stdenv.mkDerivation rec {
     name = "dhparam-file-for-nginx";
 
-    nativeBuildInputs = with pkgs; [ openssl ];
+    buildInputs = with pkgs; [ openssl ];
     phases = [ "installPhase" ];
-    installPhase = ''
-      openssl dhparam -out $out/dhparam.pem 4096
-    '';
+    installPhase = let
+        machineId = lib.readFile /etc/machine-id;
+      in ''
+        touch $out/$machineId
+        openssl dhparam -out $out/dhparam.pem 4096
+      '';
   };
   dhparam-file = import dhparam-file-for-nixos;
   cfg = config;
@@ -120,6 +123,19 @@ in
       default = true;
       globalRedirect = "duckduckgo.com";
     };
+    # virtualHosts."localhost" = {
+    #   enableACME = false;
+    #   serverName = "localhost";
+
+    #   locations."/nginx_status" = {
+    #     extraConfig = ''
+    #       # Enable Nginx stats
+    #       stub_status on;
+    #       allow 127.0.0.1;
+    #       deny all;
+    #     '';
+    #   };
+    # };
   };
   #services.prometheus.exporters.nginx = {
   #  enable = (if cfg.services.nginx.enable then true else false);

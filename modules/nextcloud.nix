@@ -50,5 +50,19 @@ in {
         auth_basic off;
       '';
     };
+
+    #lib.mkIf config.services.prometheus.exporters.nextcloud {
+    #  locations."/metrics" = {
+    #    proxyPass = "http://127.0.0.1:" + config.services.prometheus.exporters.nextcloud.port;
+    #  };
+    #};
   };
+
+  #services.prometheus.exporters.nextcloud = {
+  #  enable = (if config.services.nextcloud.enable then true else false);
+  #  group = "nginx";
+  #  username = config.services.nextcloud.config.adminuser;
+  #  passwordFile = config.services.nextcloud.config.adminpassFile;
+  #  url = ("https://" + config.services.nextcloud.hostName);
+  #};
 }
