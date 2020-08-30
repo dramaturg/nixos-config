@@ -14,6 +14,8 @@
   system.autoUpgrade.enable = lib.mkForce false;
   users.mutableUsers = false;
 
+  networking.nat.externalInterface = "eth0";
+
   boot = {
     cleanTmpDir = true;
     loader.grub.device = "/dev/vda";

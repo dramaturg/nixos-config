@@ -27,6 +27,7 @@ in
     "veth" # for containers
   ];
   boot.cleanTmpDir = true;
+  environment.noXlibs = lib.mkDefault true;
 
   services.fail2ban = {
     enable = true;
@@ -41,33 +42,33 @@ in
   };
 
   services.prometheus.exporters.node = {
-      enable = true;
-      enabledCollectors = [
-        # "netclass" "exec" "edec" "boottime"
-        "arp" "bonding" "conntrack" "cpu" "diskstats"
-        "entropy" # "exec"
-        "filefd" "filesystem" "hwmon"
-        "loadavg" "mdadm" "meminfo"
-        "netdev" "netstat"
-        "sockstat" "systemd" "textfile" "time" "vmstat" "wifi" "zfs"
-      ];
-      extraFlags = [
-        "--collector.textfile.directory=/var/lib/prometheus-node-exporter-text-files"
-        ""
-      ];
-    };
+    enable = true;
+    enabledCollectors = [
+      # "netclass" "exec" "edec" "boottime"
+      "arp" "bonding" "conntrack" "cpu" "diskstats"
+      "entropy" # "exec"
+      "filefd" "filesystem" "hwmon"
+      "loadavg" "mdadm" "meminfo"
+      "netdev" "netstat"
+      "sockstat" "systemd" "textfile" "time" "vmstat" "wifi" "zfs"
+    ];
+    extraFlags = [
+      "--collector.textfile.directory=/var/lib/prometheus-node-exporter-text-files"
+      ""
+    ];
+  };
 
-    system.activationScripts.node-exporter-system-version = ''
-      mkdir -pm 0775 /var/lib/prometheus-node-exporter-text-files
+  system.activationScripts.node-exporter-system-version = ''
+    mkdir -pm 0775 /var/lib/prometheus-node-exporter-text-files
+    (
+      cd /var/lib/prometheus-node-exporter-text-files
       (
-        cd /var/lib/prometheus-node-exporter-text-files
-        (
-          echo -n "system_version ";
-          readlink /nix/var/nix/profiles/system | cut -d- -f2
-        ) > system-version.prom.next
-        mv system-version.prom.next system-version.prom
-      )
-    '';
+        echo -n "system_version ";
+        readlink /nix/var/nix/profiles/system | cut -d- -f2
+      ) > system-version.prom.next
+      mv system-version.prom.next system-version.prom
+    )
+  '';
 
   services.mysql = {
     bind = lib.mkDefault "::1";
@@ -88,10 +89,11 @@ in
     recommendedProxySettings = lib.mkDefault true;
     recommendedOptimisation = lib.mkDefault true;
 
-    # https://cipherli.st/
-    sslProtocols = lib.mkDefault "TLSv1.3";
+    # https://ssl-config.mozilla.org/#server=nginx&config=intermediate
+    # some android things shit their pants with TLS1.3 ....
+    sslProtocols = lib.mkDefault "TLSv1.2 TLSv1.3";
     #sslDhparam = dhparam-file;
-    sslCiphers = lib.mkDefault "EECDH+AESGCM:EDH+AESGCM";
+    sslCiphers = lib.mkDefault "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384";
 
     resolver.addresses = lib.mkDefault [ "127.0.0.53" ];
     resolver.valid = lib.mkDefault "300s";

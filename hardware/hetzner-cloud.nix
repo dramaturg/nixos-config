@@ -19,6 +19,7 @@
     cleanTmpDir = true;
     loader.grub.device = "/dev/sda";
     loader.timeout = 0;
+    initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "virtio_pci" "sd_mod" "sr_mod" ];
   };
 
   fileSystems."/" = { device = "/dev/sda1"; fsType = "ext4"; autoResize = true; };

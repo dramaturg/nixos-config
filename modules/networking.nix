@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
   networking = {
     enableIPv6 = true;
@@ -6,6 +7,7 @@
     };
     firewall = {
       enable = true;
+      logRefusedConnections = lib.mkDefault false;
     };
   };
 

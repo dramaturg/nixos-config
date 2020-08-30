@@ -92,6 +92,7 @@ in
 
     # system, hardware & fs
     exfat gptfdisk hdparm
+    smartmontools
     lsof
     patchelf
     pciutils usbutils
@@ -103,7 +104,6 @@ in
     # base tools
     file
     (if config.services.xserver.enable then gitAndTools.gitFull else git)
-    unstable.gitAndTools.git-trim
     vim
     parallel
     moreutils
@@ -111,6 +111,7 @@ in
     gnumake
 
     # net
+    ethtool
     wget curl rclone rsync
     mtr tcpdump
     iptables

@@ -69,40 +69,6 @@ let
     ${pkgs.v4l-utils}/bin/v4l2-ctl -d /dev/video2 --set-ctrl=zoom_absolute=1
   '';
 
-  vpaste = pkgs.writeScriptBin "vpaste" ''
-    #!${pkgs.bash}/bin/bash
-
-    uri="http://vpaste.net/"
-
-    if [ -f "$1" ]; then
-        out=$(curl -s -F "text=<$1" "$uri?$2")
-    else
-        out=$(curl -s -F 'text=<-' "$uri?$1")
-    fi
-
-    echo "$out"
-
-    if [ -x "`which xclip 2>/dev/null`" -a "$DISPLAY" ]; then
-        echo -n "$out" | xclip -i -selection primary
-        echo -n "$out" | xclip -i -selection clipboard
-    fi
-  '';
-
-  zettelkasten = pkgs.stdenv.mkDerivation rec {
-    name = "zettelksten-${version}";
-    version = "3.2.7";
-
-    src = pkgs.fetchurl {
-      url = "https://github.com/sjPlot/Zettelkasten/releases/download/${version}/Zettelkasten3_linux.zip";
-      sha256 = "0mbrg5gr84ijmhpwchgg9xzjc3mh74ap9fsv4s516ark0np670aw";
-    };
-
-    buildInputs = with pkgs; [
-      unzip
-      adoptopenjdk-bin
-    ];
-  };
-
   myxclip = pkgs.writeScriptBin "xclip" ''
     #!${pkgs.bash}/bin/bash
 
@@ -157,6 +123,8 @@ in
     };
   };
 
+  environment.noXlibs = lib.mkForce false;
+
   environment.systemPackages = with pkgs; [
     shared_mime_info
 
@@ -170,7 +138,6 @@ in
     # shell
     mosh
     fdupes
-    vpaste
     damdamdammm
     nnn
 
@@ -196,6 +163,7 @@ in
 
     # dev
     gitAndTools.gitflow
+    unstable.gitAndTools.git-trim
     binutils jq
     git-review
     ocl-icd
@@ -232,7 +200,6 @@ in
     cifs_utils
     google-drive-ocamlfuse
     unstable.enpass
-    #zettelkasten
   ];
 
   nix.daemonIONiceLevel = 7;
@@ -281,6 +248,7 @@ in
 
   # wireshark capturing
   users.groups.wireshark.members = [ "seb" ];
+  programs.wireshark.enable = true;
   security.wrappers.dumpcap = {
     source = "${pkgs.wireshark}/bin/dumpcap";
     permissions = "u+xs,g+x";
@@ -357,6 +325,7 @@ in
   fonts = {
     enableFontDir = true;
     enableDefaultFonts = true;
+    enableGhostscriptFonts = true;
 
     fonts = with pkgs; [
       anonymousPro
@@ -411,7 +380,6 @@ in
     user_allow_other
   '';
 
-  users.groups.vboxusers.members = [ "seb" ];
   boot.kernelModules = [ "vboxdrv" ];
   virtualisation = {
     virtualbox.host = {
@@ -429,6 +397,8 @@ in
     };
     libvirtd.enable = true;
   };
+  users.groups.vboxusers.members = [ "seb" ];
+  users.groups.libvirtd.members = [ "seb" ];
 
   # flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   services.flatpak.enable = true;
@@ -449,9 +419,6 @@ in
     ];
   };
 
-  services.udev.packages = with pkgs; [
-      libu2f-host yubikey-personalization
-  ];
   services.udev.extraRules = ''
     # Access to /dev/bus/usb/* devices. Needed for virt-manager USB
     # redirection.
