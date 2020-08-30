@@ -92,8 +92,6 @@ in
     "ftdi_sio"
   ];
 
-  #nixpkgs.config.packageOverrides = pkgs: with pkgs; rec {
-
   environment.systemPackages = with pkgs; [
     home-assistant-cli
   ];
@@ -101,12 +99,11 @@ in
   users.groups.dialout.members = [ "hass" ];
 
   services.udev.extraRules = ''
-    # z-wave USB stick
-    # Bus 001 Device 024: ID 0658:0200 Sigma Designs, Inc. Aeotec Z-Stick Gen5 (ZW090) - UZB
-    SUBSYSTEM=="tty", ATTR{idVendor}=="0658", ATTR{idProduct}=="0200", \
+    # z-wave - Sigma Designs, Inc. Aeotec Z-Stick Gen5 (ZW090) - UZB
+    SUBSYSTEM=="usb", ATTR{idVendor}=="0658", ATTR{idProduct}=="0200", \
         MODE="0660", OWNER="hass", GROUP="dialout", SYMLINK+="zwave"
-    # Bus 001 Device 025: ID 0451:16ae Texas Instruments, Inc. CC2531 USB Dongle
-    SUBSYSTEM=="tty", ATTR{idVendor}=="0451", ATTR{idProduct}=="16ae", \
+    # Zigbee - Silicon Labs Telegesis USB Device
+    SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="8293", \
         MODE="0660", OWNER="hass", GROUP="dialout", SYMLINK+="zigbee"
   '';
 
@@ -128,22 +125,39 @@ in
 
     config = {
       homeassistant = { name = "Sandweg"; };
-      http = { base_url = "http://192.168.190.57:8123"; };
       config = {};
       frontend = {};
       #mobile_app = {};
       #default_config = "";
 
+      http = {
+        base_url = "https://homeassistant.sandkasten.ds.ag";
+        server_host = "127.0.0.1";
+        trusted_proxies = "127.0.0.1";
+        use_x_forwarded_for = "true";
+      };
+
+      auth_providers = [
+        { type = "homeassistant"; }
+        { type = "trusted_networks";
+          trusted_networks = [ "127.0.0.1/32" ];
+          allow_bypass_login = "true";
+        }
+      ];
+
+      prometheus = {
+        namespace = "hass";
+      };
+
       zwave = {
-        #usb_path = "/dev/zwave";
-        usb_path = "/dev/ttyACM0";
+        usb_path = "/dev/zwave";
         polling_interval = 300000; # 5 minutes
         #autoheal = true;
 	#debug = true;
       };
 
       zigbee = {
-        device = "/dev/ttyACM1";
+        device = "/dev/zigbee";
       };
 
       #tplink = { };
@@ -162,7 +176,8 @@ in
       ];
 
       binary_sensor = [
-        { platform = "workday"; country = "CH"; province = "ZH"; }
+        { platform = "workday"; country = "DE"; province = "SH"; }
+        { platform = "workday"; country = "CH"; province = "VD"; }
       ];
 
       weather = [
@@ -222,10 +237,40 @@ in
     lovelaceConfigWritable = true;
   };
 
-  networking.firewall = {
-    extraCommands = lib.mkMerge [ (lib.mkAfter ''
-      iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p tcp --dport 8123 -j nixos-fw-accept
-    '') ];
+  #networking.firewall = {
+  #  extraCommands = lib.mkMerge [ (lib.mkAfter ''
+  #    iptables -w -t filter -A nixos-fw -s 192.168.190.0/24 -p tcp --dport 8123 -j nixos-fw-accept
+  #  '') ];
+  #};
+
+  services.nginx.virtualHosts."homeassistant.sandkasten.ds.ag" = {
+    forceSSL = true;
+    enableACME = true;
+
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:8123";
+
+      extraConfig = ''
+        proxy_set_header Host $host;
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $http_connection;
+      '';
+    };
+
+    extraConfig = ''
+      access_log off;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    '';
   };
+
+  #services.prometheus.scrapeConfigs = [{
+  #  job_name = "home-assistant-scrape";
+  #  scrape_interval = "60s";
+  #  metrics_path = "/api/prometheus";
+  #  #bearer_token = secrets.ha_access_token_prometheus;
+  #  static_configs = [{ targets = [ "localhost:8123" ]; }];
+  #}];
 }
 
