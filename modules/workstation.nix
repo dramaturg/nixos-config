@@ -140,6 +140,7 @@ in
     fdupes
     damdamdammm
     nnn
+    tmux-cssh
 
     # media
     vlc mpv
@@ -169,6 +170,7 @@ in
     ocl-icd
     meld
     gist
+    fossil
 
     # web, chat & docs
     okular
@@ -177,6 +179,8 @@ in
     thunderbird
     #tor-browser-bundle-bin
     mattermost-desktop #matterhorn
+    toot
+    simple-scan xsane
 
     (pkgs.writeScriptBin "wegwerf_firefox_clone"
       (builtins.readFile ../scripts/wegwerf_firefox_clone.sh ))
@@ -200,6 +204,7 @@ in
     cifs_utils
     google-drive-ocamlfuse
     unstable.enpass
+    chezmoi
   ];
 
   nix.daemonIONiceLevel = 7;

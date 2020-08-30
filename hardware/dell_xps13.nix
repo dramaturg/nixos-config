@@ -22,10 +22,25 @@ in
   ];
 
   boot = {
+    kernelModules = [ "i8k" ];
+
     #kernelParams = [ "i915.enable_fbc=1" "i915.enable_psr=2" "i915.fastboot=1" "i915.lvds_downclock=1" "drm.vblankoffdelay=1" ];
     #kernelParams = [ "i915.modeset=1" "i915.enable_guc=3" "i915.enable_gvt=0" #xxx "i915.enable_psr=0" "i915.fastboot=1" "i915.enable_fbc=1" ];
     kernelParams = [
-      "i915.enable_psr=0"
+      #"i915.enable_psr=0"
+      "i915.modeset=1"
+      "i915.fastboot=1"
+      #"i915.enable_guc=3" 
+    ];
+
+    extraModprobeConfig = ''
+      options i8k ignore_dmi=1
+    '';
+
+    initrd.availableKernelModules = [
+      "xhci_pci"
+      "nvme"
+      "rtsx_pci_sdmmc"
     ];
   };
 
@@ -42,9 +57,9 @@ in
   };
 
   #environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
-  environment.variables = {
-    MESA_LOADER_DRIVER_OVERRIDE = "iris";
-  };
+  #environment.variables = {
+  #  MESA_LOADER_DRIVER_OVERRIDE = "iris";
+  #};
 
   environment.systemPackages = with unstable.pkgs; [
     beignet
@@ -73,9 +88,10 @@ in
     opengl = {
       enable = true;
       #package = mesa_with_iris.drivers;
-      package = (pkgs.mesa.override {
-        galliumDrivers = [ "nouveau" "virgl" "swrast" "iris" ];
-      }).drivers;
+      #package = (pkgs.mesa.override {
+      #  #galliumDrivers = [ "iris" "swrast" "i915" ];
+      #  galliumDrivers = [ "iris" "swrast" "virgl" ];
+      #}).drivers;
       extraPackages = with pkgs; [
         vaapiIntel
         vaapiVdpau
