@@ -123,21 +123,26 @@ in
       default = true;
       globalRedirect = "duckduckgo.com";
     };
-    # virtualHosts."localhost" = {
-    #   enableACME = false;
-    #   serverName = "localhost";
+    virtualHosts."localhost" = {
+      enableACME = false;
+      serverName = "localhost";
+      listen = [ {"addr" = "127.0.0.1"; "port" = 80;} ];
 
-    #   locations."/nginx_status" = {
-    #     extraConfig = ''
-    #       # Enable Nginx stats
-    #       stub_status on;
-    #       allow 127.0.0.1;
-    #       deny all;
-    #     '';
-    #   };
-    # };
+      locations."/nginx_status" = {
+        extraConfig = ''
+          # Enable Nginx stats
+          stub_status on;
+        '';
+      };
+    };
   };
-  #services.prometheus.exporters.nginx = {
-  #  enable = (if cfg.services.nginx.enable then true else false);
-  #};
+  services.prometheus.exporters.nginx = {
+    enable = (if cfg.services.nginx.enable then true else false);
+    scrapeUri = "http://127.0.0.1/nginx_status";
+  };
+  services.prometheus.scrapeConfigs = [{
+    job_name = "nginx";
+    scrape_interval = "60s";
+    static_configs = [{ targets = [ "localhost:9113" ]; }];
+  }];
 }
