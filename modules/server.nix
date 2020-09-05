@@ -140,6 +140,7 @@ in
     enable = (if cfg.services.nginx.enable then true else false);
     scrapeUri = "http://127.0.0.1/nginx_status";
   };
+  systemd.services.prometheus-nginx-exporter.requires = ["nginx.service"];
   services.prometheus.scrapeConfigs = [{
     job_name = "nginx";
     scrape_interval = "60s";

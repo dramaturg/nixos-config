@@ -20,7 +20,7 @@ let
       inherit pname version;
       sha256 = "0mxn9phypb5pzxk160ynl19gzywryh2mnc52diz9lh036kk6vh3p";
     };
-  };  
+  };
 
   xbee-helper = pkgs.python37.pkgs.buildPythonPackage rec {
     pname = "xbee-helper";
@@ -43,7 +43,7 @@ let
       inherit pname version;
       sha256 = "0rzg06x27shcmgsbq2jchrmy2a303jghhpywnymk8gfcjm9hcyq6";
     };
-  };  
+  };
 
   click-datetime = pkgs.python37.pkgs.buildPythonPackage rec {
     pname = "click-datetime";
@@ -63,7 +63,7 @@ let
       inherit pname version;
       sha256 = "05g1lpyrbbmcb5i2jrpy123afcvrm2s434d4ank885vincjasqn5";
     };
-  };  
+  };
 
   pyHS100 = pkgs.python37.pkgs.buildPythonPackage rec {
     pname = "pyHS100";
@@ -81,7 +81,7 @@ let
       inherit pname version;
       sha256 = "0nrq1333q765zsb0h8zp6kl32c3pybcpq558ky4pwph0b3rl4alx";
     };
-  };  
+  };
 in
 {
   imports = [

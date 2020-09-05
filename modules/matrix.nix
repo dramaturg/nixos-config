@@ -61,10 +61,10 @@ in
       url_preview_enabled = true;
       enable_registration = cfg.mymatrix.enable_registration;
 
-      #turn_urls = [
-      #  "turn:turn.matrix.org:3478?transport=udp"
-      #  "turn:turn.matrix.org:3478?transport=tcp"
-      #];
+      turn_uris = [
+        "turn:turn.matrix.org:3478?transport=udp"
+        "turn:turn.matrix.org:3478?transport=tcp"
+      ];
 
       tls_certificate_path = "/var/lib/acme/${cfg.mymatrix.servername}/cert.pem";
       tls_private_key_path = "/var/lib/acme/${cfg.mymatrix.servername}/key.pem";
@@ -85,7 +85,7 @@ in
           bind_address = "127.0.0.1";
           port = 8008;
           resources = [
-            { compress = true; names = [ "client" "webclient" ]; }
+            { compress = true; names = [ "client" "webclient" "metrics" ]; }
           ];
           tls = false;
           type = "http";
@@ -95,6 +95,11 @@ in
 
       extraConfig = ''
         max_upload_size: "100M"
+
+        matrix_mxisd_enabled: false
+        matrix_mailer_enabled: false
+
+        enable_metrics: true
       '';
     };
 
@@ -104,17 +109,21 @@ in
         forceSSL = true;
         enableACME = true;
 
+        basicAuth = { prometheus = "notsecure"; };
+
         locations."/" = {
           root = pkgs.element-web;
 
           extraConfig = ''
             index index.html;
+            auth_basic off;
           '';
         };
         locations."/.well-known/matrix/server" = {
           extraConfig = ''
             return 200 '{"m.server": "${cfg.mymatrix.servername}:443"}';
             add_header Content-Type application/json;
+            auth_basic off;
           '';
         };
         locations."/.well-known/matrix/client" = {
@@ -122,10 +131,20 @@ in
             return 200 '{"m.homeserver": {"base_url": "https://${cfg.mymatrix.servername}"},"m.identity_server": {"base_url": "https://${cfg.mymatrix.identity_server}"}}';
             add_header Content-Type application/json;
             add_header "Access-Control-Allow-Origin" *;
+            auth_basic off;
           '';
         };
 
         locations."/_matrix" = {
+          proxyPass = "http://127.0.0.1:8008";
+
+          extraConfig = ''
+            proxy_set_header X-Forwarded-For $remote_addr;
+            auth_basic off;
+          '';
+        };
+
+        locations."/_synapse/metrics" = {
           proxyPass = "http://127.0.0.1:8008";
 
           extraConfig = ''
@@ -138,6 +157,7 @@ in
         '';
       };
     };
+
 
     security.acme.certs = {
       "${cfg.mymatrix.servername}" = {
