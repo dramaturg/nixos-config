@@ -4,8 +4,8 @@ with luaPackages;
 let
   fennel = pkgs.writeScriptBin "fennel"
     ( builtins.readFile ( pkgs.fetchurl {
-      url = "https://fennel-lang.org/downloads/fennel-0.5.0";
-      sha256 = "1c0bbixc827id4k7gwgzypgc52xzcjld7w0ngsks734772a2lab5";
+      url = "https://fennel-lang.org/downloads/fennel-0.6.0";
+      sha256 = "01f0xfp9g5z6jhdr006n15bnn0rlcfdbgiilamqgkhx28gnjrswf";
     }));
 
   libs = [
