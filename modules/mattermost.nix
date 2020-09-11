@@ -20,6 +20,10 @@ in
       dbpassword = lib.mkOption {
         type = lib.types.str;
       };
+      extraconfig = lib.mkOption {
+        type = lib.types.attrs;
+        default = {};
+      };
     };
   };
 
@@ -30,7 +34,52 @@ in
       siteUrl = "https://${cfg.mymattermost.servername}";
       listenAddress = "[::1]:8065";
       localDatabasePassword = cfg.mymattermost.dbpassword;
-      mutableConfig = true;
+
+      extraConfig = lib.foldl lib.recursiveUpdate
+        {
+          ServiceSettings = {
+            EnableOAuthServiceProvider = true;
+            EnablePostUsernameOverride = true;
+            EnablePostIconOverride = true;
+            EnableLinkPreviews = true;
+            EnableMultifactorAuthentication = true;
+            EnableUserAccessTokens = true;
+            EnableCustomEmoji = true;
+            EnableGifPicker = true;
+            EnableUserTypingMessages = false;
+            EnableTutorial = false;
+            EnableEmailInvitations = false;
+            EnableSVGs = true;
+          };
+          TeamSettings = {
+            MaxUsersPerTeam = 500;
+            RestrictDirectMessage = "team";
+          };
+          LogSettings = {
+            EnableConsole = false;
+          };
+          FileSettings = {
+            MaxFileSize = 157286400;
+          };
+          RateLimitSettings = {
+            Enable = true;
+            VaryByUser = true;
+          };
+          PrivacySettings = {
+            ShowEmailAddress = false;
+            ShowFullName = false;
+          };
+          ThemeSettings = {
+            DefaultTheme = "Mattermost Dark";
+          };
+          ImageProxySettings = {
+            Enable = true;
+            ImageProxyType = "local";
+          };
+          GuestAccountsSettings = {
+            Enable = false;
+          };
+        } [ cfg.mymattermost.extraconfig ];
 
       matterircd = {
         enable = true;
@@ -53,8 +102,8 @@ in
       enable = true;
 
       appendHttpConfig = ''
-            proxy_headers_hash_max_size 512;
-            proxy_headers_hash_bucket_size 128;
+        proxy_headers_hash_max_size 512;
+        proxy_headers_hash_bucket_size 128;
       '';
 
       virtualHosts."${cfg.mymattermost.servername}" = {
