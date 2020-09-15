@@ -176,7 +176,7 @@ in
     okular
     libreoffice
     firefox
-    thunderbird
+    thunderbird-78
     #tor-browser-bundle-bin
     mattermost-desktop #matterhorn
     toot
@@ -339,15 +339,10 @@ in
       corefonts
       dejavu_fonts
       fantasque-sans-mono
-      fira
-      fira-code
       google-fonts
       inconsolata
-      iosevka
       liberation_ttf
       nerdfonts
-      noto-fonts-cjk
-      recursive
       source-code-pro
       terminus_font
       victor-mono

@@ -27,7 +27,7 @@ in
     #kernelParams = [ "i915.enable_fbc=1" "i915.enable_psr=2" "i915.fastboot=1" "i915.lvds_downclock=1" "drm.vblankoffdelay=1" ];
     #kernelParams = [ "i915.modeset=1" "i915.enable_guc=3" "i915.enable_gvt=0" #xxx "i915.enable_psr=0" "i915.fastboot=1" "i915.enable_fbc=1" ];
     kernelParams = [
-      #"i915.enable_psr=0"
+      "i915.enable_psr=0"
       "i915.modeset=1"
       "i915.fastboot=1"
       #"i915.enable_guc=3" 
