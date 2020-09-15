@@ -69,7 +69,7 @@ in
           name = "Prometheus";
           isDefault = true;
           type = "prometheus";
-          url = "https://grafana.sandkasten.ds.ag/prometheus/";
+          url = "http://127.0.0.1:9090/prometheus/";
         }
       ];
       #dashboards = [
@@ -86,13 +86,8 @@ in
     forceSSL = true;
     enableACME = true;
 
-    basicAuth = { seb = lib.readFile config.services.grafana.security.adminPasswordFile; };
-
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString config.services.grafana.port}";
-      extraConfig = ''
-        auth_basic off;
-      '';
     };
 
     locations."/prometheus" = {
