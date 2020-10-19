@@ -269,6 +269,12 @@ in
 
   services.timesyncd.enable = true;
 
+  nix.sshServe = {
+    enable = lib.mkDefault true;
+    keys = config.users.extraUsers.seb.openssh.authorizedKeys.keys;
+    protocol = "ssh-ng";
+  };
+
   users = {
     defaultUserShell = pkgs.zsh;
     extraUsers = {

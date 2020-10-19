@@ -161,6 +161,7 @@ in
     socat
     sshuttle
     ipcalc
+    cipherscan
 
     # dev
     gitAndTools.gitflow
@@ -181,6 +182,7 @@ in
     mattermost-desktop #matterhorn
     toot
     simple-scan xsane
+    python38Packages.mps-youtube
 
     (pkgs.writeScriptBin "wegwerf_firefox_clone"
       (builtins.readFile ../scripts/wegwerf_firefox_clone.sh ))
@@ -367,10 +369,14 @@ in
   };
   hardware.sane = {
     enable = true;
+    #extraBackends = [ pkgs.hplipWithPlugin ];
     #netConf = ''
     #  192.168.190.11
     #'';
   };
+  #services.saned.extraConfig = ''
+  #  bjnp://192.168.190.11
+  #'';
 
   services.colord = {
     enable = true;

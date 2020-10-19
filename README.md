@@ -25,6 +25,14 @@ snippets. The appropriate files are included in the installer-generated
 [...]
 ```
 
+#### Notes
+
+##### Build a package manually
+
+```
+nix-build -E "with import <nixpkgs> {}; callPackage ./default.nix {}"
+```
+
 ####  Credits
 - This repo was originally forked from [sboehler/nixos-config](https://github.com/sboehler/nixos-config) and grew from there
 - Lots of ideas for the GPD Pocket were inspired by [andirs config](https://github.com/andir/nixos-gpd-pocket), in particular regarding the kernel options.
