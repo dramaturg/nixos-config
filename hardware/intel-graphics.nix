@@ -17,7 +17,7 @@
     xorg.libXfixes
   ];
 
-  services.xserver.videoDrivers = [ "intel" ];
+  services.xserver.videoDrivers = [ "intel" "vesa" ];
 
   hardware = {
     opengl = {

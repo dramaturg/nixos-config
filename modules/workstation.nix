@@ -365,7 +365,7 @@ in
   services.printing = {
     enable = true;
     startWhenNeeded = true;
-    drivers = [pkgs.gutenprint];
+    drivers = with pkgs; [ gutenprint hplip ];
   };
   hardware.sane = {
     enable = true;
