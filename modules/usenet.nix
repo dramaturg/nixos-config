@@ -9,14 +9,7 @@ in
 {
   imports = [
     ./server.nix
-    #<unstable/nixos/modules/services/misc/radarr.nix>
-    #<unstable/nixos/modules/services/misc/sonarr.nix>
   ];
-
-  #disabledModules = [
-  #  "services/misc/radarr.nix"
-  #  "services/misc/sonarr.nix"
-  #];
 
   nixpkgs.config.packageOverrides = super: let self = super.pkgs; in {
     radarr = unstable.radarr;
@@ -25,6 +18,9 @@ in
 
   services.nzbget = {
     enable = true;
+  };
+  systemd.services.nzbget = {
+    serviceConfig.Nice = lib.mkDefault 15;
   };
 
   services.nginx.virtualHosts."nzbget.sandkasten.ds.ag" = {
@@ -50,6 +46,9 @@ in
   services.radarr = {
     enable = true;
     group = "filme";
+  };
+  systemd.services.radarr = {
+    serviceConfig.Nice = lib.mkDefault 12;
   };
 
   services.nginx.virtualHosts."radarr.sandkasten.ds.ag" = {
@@ -77,6 +76,9 @@ in
     group = "musik";
     package = unstable.lidarr;
   };
+  systemd.services.lidarr = {
+    serviceConfig.Nice = lib.mkDefault 12;
+  };
 
   services.nginx.virtualHosts."lidarr.sandkasten.ds.ag" = {
     forceSSL = true;
@@ -101,6 +103,9 @@ in
   services.sonarr = {
     enable = true;
     group = "serien";
+  };
+  systemd.services.sonarr = {
+    serviceConfig.Nice = lib.mkDefault 12;
   };
 
   services.nginx.virtualHosts."sonarr.sandkasten.ds.ag" = {
@@ -130,6 +135,9 @@ in
   services.jackett = {
     enable = true;
     package = unstable.jackett;
+  };
+  systemd.services.jackett = {
+    serviceConfig.Nice = lib.mkDefault 15;
   };
 
   services.nginx.virtualHosts."jackett.sandkasten.ds.ag" = {

@@ -23,6 +23,7 @@
   };
 
   hardware = {
+    enableRedistributableFirmware = true;
     ksm.enable = true;
     cpu = {
       amd.updateMicrocode = true;

@@ -14,7 +14,8 @@
   ];
 
   boot = {
-    extraModulePackages = with pkgs.linuxPackages_hardened; [ it87 ];    
+    #extraModulePackages = with pkgs.linuxPackages_hardened; [ it87 ];
+    extraModulePackages = with pkgs.linuxPackages_latest; [ it87 ];
     kernelModules = [
       "kvm-intel"
       "coretemp"
