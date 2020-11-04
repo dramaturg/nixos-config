@@ -33,6 +33,7 @@ in {
   services.redis = {
     enable = true;
   };
+  boot.kernel.sysctl."vm.overcommit_memory" = lib.mkDefault "1";
 
   services.nginx.virtualHosts."nextcloud.sandkasten.ds.ag" = {
     forceSSL = true;

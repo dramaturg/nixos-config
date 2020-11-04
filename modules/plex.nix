@@ -19,6 +19,9 @@ in
     #openFirewall = true;
     package = unstable.plex;
   };
+  systemd.services.plex = {
+    serviceConfig.Nice = lib.mkDefault 5;
+  };
 
   users.users."plex".extraGroups = [
     "video"
