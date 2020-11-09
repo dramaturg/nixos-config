@@ -38,7 +38,16 @@ nix-build -E "with import <nixpkgs> {}; callPackage ./default.nix {}"
 ```
 nix-channel --list
 nix-channel --add https://nixos.org/channels/nixos-20.09 nixos
+nix-channel --update
 nixos-rebuild boot --upgrade
+```
+
+##### Install a NPM package
+
+```
+nix-shell -p node2nix
+node2nix -i <(echo '["clubhouse-cli"]')
+nix-env -f default.nix -iA clubhouse-cli
 ```
 
 ####  Credits

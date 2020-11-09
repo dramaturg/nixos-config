@@ -395,7 +395,7 @@ in
     lxd.enable = lib.mkDefault true;
     docker = {
       enable = lib.mkDefault true;
-      extraOptions = lib.mkForce "";
+      extraOptions = lib.mkDefault "--experimental";
       autoPrune = {
         enable = true;
         dates = "daily";
@@ -519,6 +519,7 @@ in
   environment.variables = {
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
     QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase}/lib/qt-5.12.0/plugins/platforms";
+    QT_QTA_PLATFORMTHEME = "qt5ct";
     GIO_EXTRA_MODULES = [ "${pkgs.gvfs}/lib/gio/modules" ];
     GTK_USE_PORTAL = "0";
     _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
