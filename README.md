@@ -33,6 +33,14 @@ snippets. The appropriate files are included in the installer-generated
 nix-build -E "with import <nixpkgs> {}; callPackage ./default.nix {}"
 ```
 
+##### Upgrade
+
+```
+nix-channel --list
+nix-channel --add https://nixos.org/channels/nixos-20.09 nixos
+nixos-rebuild boot --upgrade
+```
+
 ####  Credits
 - This repo was originally forked from [sboehler/nixos-config](https://github.com/sboehler/nixos-config) and grew from there
 - Lots of ideas for the GPD Pocket were inspired by [andirs config](https://github.com/andir/nixos-gpd-pocket), in particular regarding the kernel options.

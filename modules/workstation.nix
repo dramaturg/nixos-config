@@ -152,7 +152,7 @@ in
     ansible
     nixops
     vagrant
-    linuxPackages_5_7.virtualbox
+    linuxPackages_latest.virtualbox
     rke
 
     # network
@@ -182,7 +182,7 @@ in
     mattermost-desktop #matterhorn
     toot
     simple-scan xsane
-    python38Packages.mps-youtube
+    #python38Packages.mps-youtube
 
     (pkgs.writeScriptBin "wegwerf_firefox_clone"
       (builtins.readFile ../scripts/wegwerf_firefox_clone.sh ))
@@ -275,7 +275,7 @@ in
     };
   };
 
-  boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_5_7;
+  boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
   boot.kernelParams = [ "security=apparmor" ];
   boot.supportedFilesystems = [ "cifs" ];
   boot.kernel.sysctl = {

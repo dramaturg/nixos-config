@@ -72,12 +72,12 @@ in
 
   services.tlp = {
     enable = true;
-    extraConfig = ''
-      START_CHARGE_THRESH_BAT0=75
-      STOP_CHARGE_THRESH_BAT0=95
-      START_CHARGE_THRESH_BAT1=75
-      STOP_CHARGE_THRESH_BAT1=95
-    '';
+    settings = {
+      "START_CHARGE_THRESH_BAT0" = 75;
+      "STOP_CHARGE_THRESH_BAT0" = 95;
+      "START_CHARGE_THRESH_BAT1" = 75;
+      "STOP_CHARGE_THRESH_BAT1" = 95;
+    };
   };
 
   powerManagement = {

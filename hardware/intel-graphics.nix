@@ -29,7 +29,6 @@
         intel-media-driver
       ];
       driSupport32Bit = true;
-      s3tcSupport = true;
     };
   };
 }

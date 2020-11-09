@@ -14,11 +14,11 @@
   };
 
   services.tlp.enable = true;
-  services.tlp.extraConfig = ''
-    TLP_DEFAULT_MODE=BAT
-    CPU_SCALING_GOVERNOR_ON_AC=performance
-    CPU_SCALING_GOVERNOR_ON_BAT=ondemand
-  '';
+  services.tlp.settings = {
+    "TLP_DEFAULT_MODE" = "BAT";
+    "CPU_SCALING_GOVERNOR_ON_AC" = "performance";
+    "CPU_SCALING_GOVERNOR_ON_BAT" = "ondemand";
+  };
   services.upower.enable = true;
 
   services.logind.extraConfig = ''

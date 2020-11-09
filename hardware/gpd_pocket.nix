@@ -18,13 +18,13 @@
   };
 
   services.tlp = {
-    extraConfig = ''
-      DISK_DEVICES="mmcblk0"
-      DISK_IOSCHED="deadline"
+    settings = {
+      "DISK_DEVICES" = "mmcblk0";
+      "DISK_IOSCHED" = "deadline";
 
-      WIFI_PWR_ON_AC=off
-      WIFI_PWR_ON_BAT=off
-    '';
+      "WIFI_PWR_ON_AC" = "off";
+      "WIFI_PWR_ON_BAT" =" off";
+    {;
   };
 
   boot = {
