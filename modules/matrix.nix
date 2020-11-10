@@ -162,7 +162,6 @@ in
     security.acme.certs = {
       "${cfg.mymatrix.servername}" = {
         group = "matrix-synapse";
-        allowKeysForGroup = true;
         postRun = "systemctl reload nginx.service; systemctl restart matrix-synapse.service";
       };
     };

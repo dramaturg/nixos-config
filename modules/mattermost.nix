@@ -150,7 +150,6 @@ in
     security.acme.certs = {
       "${cfg.mymattermost.servername}" = {
         group = "mattermost";
-        allowKeysForGroup = true;
         postRun = "systemctl reload mattermost.service; systemctl reload matterircd.service";
       };
     };

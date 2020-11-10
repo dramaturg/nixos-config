@@ -304,7 +304,6 @@ in
   };
 
   services.dbus = {
-    socketActivated = true;
     packages = [ pkgs.gnome3.gnome-keyring pkgs.gnome3.gcr ];
   };
   services.gvfs.enable = true;
@@ -330,7 +329,7 @@ in
   };
 
   fonts = {
-    enableFontDir = true;
+    fontDir.enable = true;
     enableDefaultFonts = true;
     enableGhostscriptFonts = true;
 
