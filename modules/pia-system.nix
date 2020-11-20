@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 with builtins;
 
@@ -54,9 +54,9 @@ in
   foldl' (init: file: init // {
     "${vpn_str file}" = {
       config = readFile "${pia-config}/config/${file}";
-      autoStart = false;
-      up = "echo nameserver $nameserver | ${pkgs.openresolv}/sbin/resolvconf -m 0 -a $dev";
-      down = "${pkgs.openresolv}/sbin/resolvconf -d $dev";
+      autoStart = lib.mkDefault false;
+      #up = "echo nameserver $nameserver | ${pkgs.openresolv}/sbin/resolvconf -m 0 -a $dev";
+      #down = "${pkgs.openresolv}/sbin/resolvconf -d $dev";
     };
   }) {} (
     attrNames (readDir "${pia-config}/config")

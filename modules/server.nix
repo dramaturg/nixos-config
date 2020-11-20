@@ -81,10 +81,7 @@ in
     enable = (if cfg.services.mysql.enable then true else false);
   };
 
-  security.acme = {
-    email = "seb@ds.ag";
-    acceptTerms = true;
-  };
+  security.acme.acceptTerms = true;
 
   services.nginx = {
     recommendedGzipSettings = lib.mkDefault true;

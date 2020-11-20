@@ -13,7 +13,6 @@ in {
     https = true;
 
     maxUploadSize = "2048M";
-    nginx.enable = true;
 
     # nextcloud-occ config:system:set redis 'host' --value 'localhost' --type string
     # nextcloud-occ config:system:set redis 'port' --value 6379 --type integer
