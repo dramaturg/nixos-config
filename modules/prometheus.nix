@@ -1,8 +1,4 @@
 { config, pkgs, lib, ... }:
-let
-  unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
-  unstable = import unstableTarball { config = removeAttrs config.nixpkgs.config [ "packageOverrides" ]; };
-in
 {
   imports = [
     ./server.nix
@@ -47,7 +43,6 @@ in
 
   services.grafana = {
     enable = true;
-    #package = unstable.grafana;
     domain = "grafana.sandkasten.ds.ag";
     addr = "127.0.0.1";
     security.adminUser = "admin";

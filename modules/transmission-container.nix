@@ -96,6 +96,27 @@
         };
       };
 
+      systemd.services.transmission.requires = [ "openvpn-netherlands.service" ];
+      systemd.services.update-pia-portforward = {
+          description   = "Update PIA port forward";
+          path          = with pkgs.python38Packages; [
+                            pkgs.python38
+                            requests
+                            netifaces
+                          ];
+          #after         = "openvpn-netherlands.service";
+          #before        = "transmission.service";
+          serviceConfig = {
+            "ExecStart" = "${pia-port-forward-py}/bin/piaportforward.py";
+          };
+        };
+      #systemd.timers.update-pia-portforward = {
+      #    description = "Update PIA port forward";
+      #    partOf      = [ "update-pia-portforward.service" ];
+      #    wantedBy    = [ "timers.target" ];
+      #    timerConfig.OnActiveSec = "5m";
+      #  };
+
       users.groups = {
         musik = {
           gid = 997;
