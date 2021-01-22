@@ -150,9 +150,10 @@ in
     security.acme.certs = {
       "${cfg.mymattermost.servername}" = {
         group = "mattermost";
-        postRun = "systemctl reload mattermost.service; systemctl reload matterircd.service";
+        postRun = "systemctl restart mattermost.service; systemctl restart matterircd.service";
       };
     };
+    users.groups."mattermost".members= [ "nginx" ];
 
     networking.firewall = {
       enable = true;

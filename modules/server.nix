@@ -81,6 +81,7 @@ in
     enable = (if cfg.services.mysql.enable then true else false);
   };
 
+  security.acme.email = lib.mkDefault "seb@ds.ag";
   security.acme.acceptTerms = true;
 
   services.nginx = {

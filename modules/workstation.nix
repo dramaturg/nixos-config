@@ -134,6 +134,7 @@ in
     xsel
     xss-lock
     man stdman man-pages posix_man_pages
+    alacritty
 
     # shell
     mosh
@@ -179,7 +180,7 @@ in
     firefox
     thunderbird-78
     #tor-browser-bundle-bin
-    mattermost-desktop #matterhorn
+    mattermost-desktop
     toot
     simple-scan xsane
     #python38Packages.mps-youtube
@@ -190,7 +191,6 @@ in
     # desktop
     arandr
     feh scrot
-    termite
 
     pavucontrol pasystray
     blueman
@@ -329,7 +329,7 @@ in
   };
 
   fonts = {
-    fontDir.enable = true;
+    enableFontDir = true;
     enableDefaultFonts = true;
     enableGhostscriptFonts = true;
 

@@ -27,8 +27,9 @@
         vaapiVdpau
         libvdpau-va-gl
         intel-media-driver
+        intel-compute-runtime
       ];
-      driSupport32Bit = true;
+      #driSupport32Bit = true;
     };
   };
 }

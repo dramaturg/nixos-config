@@ -165,6 +165,7 @@ in
         postRun = "systemctl reload nginx.service; systemctl restart matrix-synapse.service";
       };
     };
+    users.groups."matrix-synapse".members= [ "nginx" ];
 
     networking.firewall = {
       enable = true;

@@ -140,7 +140,7 @@ in
       displayManager = {
         defaultSession = "xfce+i3";
         sessionCommands = ''
-          export TERMINAL=termite
+          export TERMINAL=xfce4-terminal
 
           xset s 600 0
           xset r rate 440 50
