@@ -56,6 +56,7 @@ in
     services.matrix-synapse = {
       enable = true;
       server_name = cfg.mymatrix.servername;
+      public_baseurl = "https://${cfg.mymatrix.servername}/";
 
       database_type = "sqlite3";
       url_preview_enabled = true;
@@ -66,7 +67,7 @@ in
         "turn:turn.matrix.org:3478?transport=tcp"
       ];
 
-      tls_certificate_path = "/var/lib/acme/${cfg.mymatrix.servername}/cert.pem";
+      tls_certificate_path = "/var/lib/acme/${cfg.mymatrix.servername}/fullchain.pem";
       tls_private_key_path = "/var/lib/acme/${cfg.mymatrix.servername}/key.pem";
 
       listeners = [
@@ -94,7 +95,7 @@ in
       ];
 
       extraConfig = ''
-        max_upload_size: "100M"
+        max_upload_size: "50M"
 
         matrix_mxisd_enabled: false
         matrix_mailer_enabled: false
@@ -119,13 +120,15 @@ in
             auth_basic off;
           '';
         };
+
         locations."/.well-known/matrix/server" = {
           extraConfig = ''
-            return 200 '{"m.server": "${cfg.mymatrix.servername}:443"}';
+            return 200 '{"m.server": "${cfg.mymatrix.servername}:8448"}';
             add_header Content-Type application/json;
             auth_basic off;
           '';
         };
+
         locations."/.well-known/matrix/client" = {
           extraConfig = ''
             return 200 '{"m.homeserver": {"base_url": "https://${cfg.mymatrix.servername}"},"m.identity_server": {"base_url": "https://${cfg.mymatrix.identity_server}"}}';
