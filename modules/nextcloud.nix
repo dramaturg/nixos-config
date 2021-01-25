@@ -8,7 +8,7 @@ in {
 
   services.nextcloud = {
     enable = true;
-    package = pkgs.nextcloud19;
+    package = pkgs.nextcloud20;
     hostName = hostName;
     https = true;
 
