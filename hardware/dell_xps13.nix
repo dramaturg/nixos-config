@@ -24,13 +24,12 @@ in
   boot = {
     kernelModules = [ "i8k" ];
 
-    #kernelParams = [ "i915.enable_fbc=1" "i915.enable_psr=2" "i915.fastboot=1" "i915.lvds_downclock=1" "drm.vblankoffdelay=1" ];
-    #kernelParams = [ "i915.modeset=1" "i915.enable_guc=3" "i915.enable_gvt=0" #xxx "i915.enable_psr=0" "i915.fastboot=1" "i915.enable_fbc=1" ];
     kernelParams = [
-      "i915.enable_psr=0"
-      "i915.modeset=1"
+      "i915.enable_guc=2"
+      "i915.enable_psr=1"
+      "i915.enable_fbc=0"
+      "i915.disable_power_well=0"
       "i915.fastboot=1"
-      #"i915.enable_guc=3" 
     ];
 
     extraModprobeConfig = ''
@@ -85,6 +84,7 @@ in
   };
 
   hardware = {
+    video.hidpi.enable = true;
     opengl = {
       enable = true;
       #package = mesa_with_iris.drivers;
@@ -99,7 +99,6 @@ in
         intel-media-driver
       ];
       driSupport32Bit = true;
-      s3tcSupport = true;
     };
   };
 

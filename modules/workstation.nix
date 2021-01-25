@@ -199,6 +199,7 @@ in
     myxclip stripescapecodes 
     lxqt.lxqt-policykit
     qt5ct
+    v4l-utils
 
     # misc
     fuse
@@ -504,6 +505,10 @@ in
       shellAliases = {
         wergwerf_firefox  = "firefox --new-instance --profile $(mktemp -d)";
         wergwerf_chromium = "chromium --user-data-dir $(mktemp -d)";
+        youtube_dl = "${pkgs.youtube-dl}/bin/youtube-dl -o '%(title)s.%(ext)s' --no-call-home -f 'bestaudio'";
+        youtube_playlist_dl = "youtube_dl -o '%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s' --download-archive downloaded.txt --no-overwrites -ic --yes-playlist --socket-timeout 5";
+        youtube_mp3 = "youtube_dl --extract-audio --audio-format mp3 --audio-quality 0";
+        youtube_playlist_mp3 = "youtube_playlist_dl --extract-audio --audio-format mp3 --audio-quality 0 --socket-timeout 5";
       };
     };
   };
@@ -521,6 +526,6 @@ in
     QT_QTA_PLATFORMTHEME = "qt5ct";
     GIO_EXTRA_MODULES = [ "${pkgs.gvfs}/lib/gio/modules" ];
     GTK_USE_PORTAL = "0";
-    _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+    _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd";
   };
 }
