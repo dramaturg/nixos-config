@@ -282,7 +282,7 @@ in
         home = "/home/seb";
         description = "Seb";
         isNormalUser = true;
-        extraGroups = ["wheel" "audio" "dialup"]
+        extraGroups = ["wheel" "audio" "dialout"]
             ++ (lib.optional config.networking.networkmanager.enable "networkmanager")
             ++ (lib.optional config.hardware.sane.enable "lp")
             ++ (lib.optional config.hardware.sane.enable "scanner")
