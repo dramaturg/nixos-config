@@ -367,16 +367,26 @@ in
     startWhenNeeded = true;
     drivers = with pkgs; [ gutenprint hplip ];
   };
+  hardware.printers = {
+    ensurePrinters = [{
+      name = "HP_LaserJet_Pro_M148dw";
+      ppdOptions = {
+        PageSize = "A4";
+        Duplex = "DuplexNoTumble";
+      };
+      # lpinfo -v  or   hp-setup -i  or   hp-makeuri <IP>
+      deviceUri = "hp:/net/HP_LaserJet_Pro_M148-M149?ip=192.168.190.76";
+      # lpinfo -m
+      model = "HP/hp-laserjet_pro_m148-m149-ps.ppd.gz";
+      description = "HP LaserJet Pro M148-M149";
+      location = "Sandweg";
+    }];
+    ensureDefaultPrinter = "HP_LaserJet_Pro_M148dw";
+  };
   hardware.sane = {
     enable = true;
-    #extraBackends = [ pkgs.hplipWithPlugin ];
-    #netConf = ''
-    #  192.168.190.11
-    #'';
+    extraBackends = with pkgs; [ sane-airscan ];
   };
-  #services.saned.extraConfig = ''
-  #  bjnp://192.168.190.11
-  #'';
 
   services.colord = {
     enable = true;

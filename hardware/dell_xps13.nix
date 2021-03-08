@@ -71,6 +71,7 @@ in
     xorg.libXfixes
   ];
 
+
   services.xserver.videoDrivers = [ "intel" ];
   #services.xserver.deviceSection = ''
   #  Option "DRI" "3"
