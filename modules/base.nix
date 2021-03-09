@@ -200,6 +200,9 @@ in
         dkr               = "docker run -ti --rm";
         repo_root         = "git rev-parse --show-toplevel";
         rr                = "cd $(repo_root)";
+        myip              = "dig -4 +short @resolver1.opendns.com myip.opendns.com A ; dig -6 +short @resolver1.opendns.com myip.opendns.com AAAA";
+        myip4             = "dig -4 +short @resolver1.opendns.com myip.opendns.com A";
+        myip6             = "dig -6 +short @resolver1.opendns.com myip.opendns.com AAAA";
       };
       promptInit = ''
         any-nix-shell zsh --info-right | source /dev/stdin
