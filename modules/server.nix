@@ -13,6 +13,41 @@ let
       '';
   };
   dhparam-file = import dhparam-file-for-nixos;
+  node-exporter-textfile-collector-scripts = with pkgs; stdenv.mkDerivation rec {
+    name = "node-exporter-textfile-collector-scripts";
+
+    src = fetchFromGitHub {
+      owner = "janw";
+      repo = "node-exporter-textfile-collector-scripts";
+      rev = "765a349524219b9e03912aa516a898f116a3dd90";
+      sha256 = "1rwy8vpc1j2sz58hc1hm7s6dcn2gfdj3hqj7lnj3zp1m117kbay3";
+    };
+
+    installPhase = ''
+      mkdir -p "$out/bin"
+      install -m755 -D *.sh *.py *_[^\.]\+ $out/bin/
+    '';
+
+    patches = [ "${pkgs.writeText "smartmon.patch" ''
+      --- ./smartmon.sh.org 1970-01-01 01:00:01.000000000 +0100
+      +++ ./smartmon.sh 2021-03-11 18:37:29.997702086 +0100
+      @@ -230,9 +230,6 @@
+         sat+megaraid*) smartctl -A -d "''${type}" "''${disk}" | parse_smartctl_attributes "''${disk_labels}" || true ;;
+         scsi) smartctl -A -d "''${type}" "''${disk}" | parse_smartctl_scsi_attributes "''${disk_labels}" || true ;;
+         megaraid*) smartctl -A -d "''${type}" "''${disk}" | parse_smartctl_scsi_attributes "''${disk_labels}" || true ;;
+      -  *)
+      -    echo "disk type is not sat, scsi or megaraid but ''${type}"
+      -    exit
+      -    ;;
+      +  *) continue ;;
+         esac
+       done | format_output
+    ''}" ];
+
+    postPatch = ''
+      patchShebangs ./
+    '';
+  };
   cfg = config;
 in
 {
@@ -60,7 +95,9 @@ in
       ""
     ];
   };
-
+  services.cron.systemCronJobs = [
+    "*/5 * * * * root ${node-exporter-textfile-collector-scripts}/bin/smartmon.sh | ${pkgs.moreutils}/bin/sponge /var/lib/prometheus-node-exporter-text-files/smartmon.prom"
+  ];
   system.activationScripts.node-exporter-system-version = ''
     mkdir -pm 0775 /var/lib/prometheus-node-exporter-text-files
     (
