@@ -18,44 +18,6 @@ let
     '';
   };
 
-  matterhorn = pkgs.stdenv.mkDerivation rec {
-    pname = "matterhorn";
-    version = "50200.5.0";
-
-    src = fetchFromGitHub {
-      owner = "matterhorn-chat";
-      repo = "matterhorn";
-      rev = version;
-      sha256 = "0x9hniq7b1qdf0375cld2d7pk74pj7k1n4h05pmrzalwg7a2487n";
-    };
-
-    isLibrary = false;
-    isExecutable = true;
-    enableSeparateDataOutput = true;
-
-    executableHaskellDepends = with pkgs.haskellPackages; [
-      aeson aspell-pipe async base base-compat brick brick-skylighting
-      bytestring cheapskate config-ini connection containers data-clist
-      directory filepath gitrev hashable Hclip mattermost-api
-      microlens-platform mtl process random semigroups skylighting-core
-      stm stm-delay strict temporary text text-zipper time timezone-olson
-      timezone-series transformers unix unordered-containers utf8-string
-      uuid vector vty word-wrap xdg-basedir
-    ];
-    testHaskellDepends = with pkgs.haskellPackages; [
-      base base-compat brick bytestring cheapskate checkers config-ini
-      connection containers directory filepath hashable Hclip
-      mattermost-api mattermost-api-qc microlens-platform mtl process
-      quickcheck-text semigroups stm strict string-conversions tasty
-      tasty-hunit tasty-quickcheck text text-zipper time timezone-olson
-      timezone-series transformers Unique unordered-containers uuid
-      vector vty xdg-basedir
-    ];
-
-    description = "Terminal client for the Mattermost chat system";
-    license = lib.licenses.bsd3;
-  };
-
   damdamdammm = pkgs.writeScriptBin "damdamdammm" ''
     #!${pkgs.bash}/bin/bash
 
@@ -181,9 +143,9 @@ in
     thunderbird-78
     #tor-browser-bundle-bin
     mattermost-desktop
+    unstable.matterhorn
     toot
     simple-scan xsane
-    #python38Packages.mps-youtube
 
     (pkgs.writeScriptBin "wegwerf_firefox_clone"
       (builtins.readFile ../scripts/wegwerf_firefox_clone.sh ))
@@ -400,7 +362,6 @@ in
   virtualisation = {
     virtualbox.host = {
       enable = lib.mkDefault true;
-      package = pkgs.unstable.virtualbox;
     };
     lxd.enable = lib.mkDefault true;
     docker = {
