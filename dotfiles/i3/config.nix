@@ -188,6 +188,7 @@ for_window [class="^URxvt$"] border pixel 3
 
 for_window [title="^CSSH: "] floating enable
 for_window [class="^Cssh$"] floating enable
+for_window [class="^Gimp"] floating enable
 
 
 # # session startup script

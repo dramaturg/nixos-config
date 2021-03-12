@@ -71,6 +71,7 @@ in
   imports = [
     ./base.nix
     ./i3.nix
+	./embeddeddev.nix
   ];
 
   nixpkgs = {
@@ -115,7 +116,7 @@ in
     ansible
     nixops
     vagrant
-    linuxPackages_latest.virtualbox
+    #linuxPackages_latest.virtualbox
     rke
 
     # network
@@ -168,7 +169,7 @@ in
     sshfsFuse
     cifs_utils
     google-drive-ocamlfuse
-    unstable.enpass
+    enpass
     chezmoi
   ];
 
@@ -292,7 +293,7 @@ in
   };
 
   fonts = {
-    enableFontDir = true;
+    #fontDir.enable = true;
     enableDefaultFonts = true;
     enableGhostscriptFonts = true;
 
@@ -361,9 +362,10 @@ in
   boot.kernelModules = [ "vboxdrv" ];
   virtualisation = {
     virtualbox.host = {
-      enable = lib.mkDefault true;
+      #enable = lib.mkDefault true;
+      #package = pkgs.unstable.virtualbox;
     };
-    lxd.enable = lib.mkDefault true;
+    #lxd.enable = lib.mkDefault true;
     docker = {
       enable = lib.mkDefault true;
       extraOptions = lib.mkDefault "--experimental";

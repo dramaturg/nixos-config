@@ -94,7 +94,7 @@ in
       #  galliumDrivers = [ "iris" "swrast" "virgl" ];
       #}).drivers;
       extraPackages = with pkgs; [
-        vaapiIntel
+        #vaapiIntel
         vaapiVdpau
         libvdpau-va-gl
         intel-media-driver

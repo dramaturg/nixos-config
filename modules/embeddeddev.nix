@@ -2,6 +2,7 @@
 
 let
   unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
+  unstable = import unstableTarball { config = removeAttrs config.nixpkgs.config [ "packageOverrides" ]; };
 in
 {
   # usefull udev rules for embedded stuff:
@@ -50,6 +51,18 @@ in
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="22b8", ATTRS{idProduct}=="428c", \
         GROUP="users", MODE="0660"
 
+    #GD32V DFU Bootloader
+    ATTRS{idVendor}=="28e9", ATTRS{idProduct}=="0189", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1", \
+        GROUP="users", MODE="0660"
+
+    #TI Stellaris Launchpad
+    ATTRS{idVendor}=="1cbe", ATTRS{idProduct}=="00fd", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1", \
+        GROUP="users", MODE="0660"
+
+    #TI MSP430 Launchpad
+    ATTRS{idVendor}=="0451", ATTRS{idProduct}=="f432", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1", \
+        GROUP="users", MODE="0660"
+
     # buspirate
     # % udevadm info --attribute-walk -n /dev/ttyUSB0  | sed -n '/FTDI/,/serial/p'
     #   ATTRS{manufacturer}=="FTDI"
@@ -91,6 +104,8 @@ in
         MODE="0664", GROUP="users", SYMLINK+="ttyACM-card10-dev", ENV{ID_MM_DEVICE_IGNORE}="1"
   '';
 
+  services.udev.packages = [ unstable.platformio ];
+
   boot.kernelModules = [
     "ftdi_sio"
   ];
@@ -103,8 +118,8 @@ in
 
   environment.systemPackages = with pkgs; [
     #microscheme
-    sdcc
-    openocd
+    #sdcc
+    #openocd
     unstable.platformio
     unstable.openhantek6022
 
