@@ -8,7 +8,7 @@ in {
 
   services.nextcloud = {
     enable = true;
-    package = pkgs.nextcloud20;
+    package = pkgs.nextcloud21;
     hostName = hostName;
     https = true;
 
@@ -27,6 +27,7 @@ in {
     };
 
     autoUpdateApps.enable = true;
+    autoUpdateApps.startAt = "04:00:00";
   };
 
   services.redis = {
