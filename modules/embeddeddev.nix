@@ -6,6 +6,8 @@ in
 {
   # usefull udev rules for embedded stuff:
   # https://raw.githubusercontent.com/platformio/platformio-core/master/scripts/99-platformio-udev.rules
+  #
+  # udevadm info --query=property --name /dev/bus/usb/001/009
   services.udev.extraRules = ''
     # Digispark
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="16d0", ATTRS{idProduct}=="0753", \
@@ -104,6 +106,7 @@ in
     sdcc
     openocd
     unstable.platformio
+    unstable.openhantek6022
 
     # FPGA
     #arachne-pnr yosys nextpnr

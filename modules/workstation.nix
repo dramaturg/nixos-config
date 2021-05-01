@@ -170,7 +170,6 @@ in
     google-drive-ocamlfuse
     unstable.enpass
     chezmoi
-    unstable.openhantek6022
   ];
 
   nix.daemonIONiceLevel = 7;
@@ -397,7 +396,7 @@ in
     ];
   };
 
-  services.udev.extraRules = builtins.toString [ ''
+  services.udev.extraRules = ''
     # Access to /dev/bus/usb/* devices. Needed for virt-manager USB
     # redirection.
     SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", MODE="0664", GROUP="wheel"
@@ -408,8 +407,7 @@ in
 
     # Webcam settings
     SUBSYSTEM=="video4linux", KERNEL=="video[0-9]*", RUN="${pkgs.v4l-utils}/bin/v4l2-ctl -d $devnode --set-ctrl=power_line_frequency=1
-  ''
-  (builtins.readFile "${pkgs.unstable.openhantek6022}/lib/udev/rules.d/60-hantek.rules")];
+  '';
 
   systemd.user.services."unclutter" = {
     enable = true;
