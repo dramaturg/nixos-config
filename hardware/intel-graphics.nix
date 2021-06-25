@@ -6,6 +6,11 @@
     ./intel-generic.nix
   ];
 
+  boot = {
+    kernelModules = [ "i915" ];
+    initrd.availableKernelModules = [ "i915" ];
+  };
+
   environment.systemPackages = with pkgs; [
     beignet
     clinfo

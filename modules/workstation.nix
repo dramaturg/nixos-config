@@ -263,16 +263,16 @@ in
     xkbOptions = "ctrl:nocaps,compose:caps,terminate:ctrl_alt_bksp";
     libinput = {
       enable = true;
-      naturalScrolling = true;
+      touchpad.naturalScrolling = true;
     };
   };
 
   services.dbus = {
-    packages = [ pkgs.gnome3.gnome-keyring pkgs.gnome3.gcr ];
+    packages = [ pkgs.gnome.gnome-keyring pkgs.gnome.gcr ];
   };
   services.gvfs.enable = true;
 
-  services.gnome3 = {
+  services.gnome = {
     sushi.enable = true;
     gnome-keyring.enable = true;
   };
@@ -293,7 +293,7 @@ in
   };
 
   fonts = {
-    #fontDir.enable = true;
+	fontDir.enable = true;
     enableDefaultFonts = true;
     enableGhostscriptFonts = true;
 

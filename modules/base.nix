@@ -24,6 +24,7 @@ in
 {
   imports = [
     ./networking.nix
+    ./vim.nix
   ];
 
   nixpkgs = {
@@ -38,8 +39,6 @@ in
 #      };
       allowUnfree = true;
       sqlite.interactive = true;
-      vim.ruby = false;
-      vim.defaultEditor = true;
     };
   };
   environment.variables.NIXPKGS_ALLOW_UNFREE = "1";
@@ -104,7 +103,6 @@ in
     # base tools
     file
     (if config.services.xserver.enable then gitAndTools.gitFull else git)
-    vim
     parallel
     moreutils
     patchutils

@@ -1,6 +1,6 @@
 # NixOS Config
 
-This is my (NixOS)[https://nixos.org/] config. There are many like it but this
+This is my [NixOS](https://nixos.org/) config. There are many like it but this
 one is mine.
 
 #### Use

@@ -17,6 +17,7 @@ in
 {
   imports = [
     ./intel-generic.nix
+    ./intel-graphics.nix
     <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     (hardwareTarball + "/dell/xps/13-7390")
   ];
@@ -24,12 +25,11 @@ in
   boot = {
     kernelModules = [ "i8k" ];
 
+    # nix-shell -p systool --run "sudo systool -m i915 -av"
     kernelParams = [
       "i915.enable_guc=2"
       "i915.enable_psr=1"
-      "i915.enable_fbc=0"
       "i915.disable_power_well=0"
-      "i915.fastboot=1"
     ];
 
     extraModprobeConfig = ''
