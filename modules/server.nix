@@ -54,7 +54,9 @@ in
   imports = [
     <nixpkgs/nixos/modules/profiles/hardened.nix>
     <nixpkgs/nixos/modules/profiles/headless.nix>
-    <nixpkgs/nixos/modules/profiles/minimal.nix>
+
+    # https://github.com/NixOS/nixpkgs/issues/102137
+    #<nixpkgs/nixos/modules/profiles/minimal.nix>
 
     ./base.nix
   ];
@@ -65,7 +67,6 @@ in
     "veth" # for containers
   ];
   boot.cleanTmpDir = true;
-  environment.noXlibs = lib.mkDefault true;
 
   services.fail2ban = {
     enable = true;

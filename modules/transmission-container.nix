@@ -53,7 +53,10 @@
 	 "resolv.conf".text = "nameserver 9.9.9.9\nnameserver 8.8.8.8\n";
       };
 
-      users.users.transmission.uid = lib.mkForce 1000;
+      users.users.transmission = {
+        uid = lib.mkForce 1000;
+        isNormalUser = true;
+      };
 
       services = {
         openvpn.servers."netherlands".autoStart = true;

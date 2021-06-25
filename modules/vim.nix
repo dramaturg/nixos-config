@@ -3,7 +3,7 @@
 with lib;
 
 let
-  vim = pkgs.vim_configurable.customize {
+  myVim = pkgs.vim_configurable.customize {
     name = "vim";
       vimrcConfig = {
         customRC = ''
@@ -18,9 +18,9 @@ let
           set shiftwidth=2
           set autoindent 
 
-		  set hlsearch    " highlight all search results
-		  set ignorecase  " do case insensitive search
-		  set incsearch   " show incremental search results as you type
+	  set hlsearch    " highlight all search results
+	  set ignorecase  " do case insensitive search
+	  set incsearch   " show incremental search results as you type
         '';
         vam.pluginDictionaries = [
         {
@@ -28,7 +28,7 @@ let
             "vim-nix"
             "Syntastic"
             "undotree"
-          ] ++ optional config.programs.vim.fat "youcompleteme";
+          ] ++ optional config.programs.vim.fat "YouCompleteMe";
         }
       ];
     };
