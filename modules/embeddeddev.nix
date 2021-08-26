@@ -103,6 +103,7 @@ in
     SUBSYSTEM=="tty", ATTRS{idVendor}=="0b6a", ATTRS{idProduct}=="003c", \
         MODE="0664", GROUP="users", SYMLINK+="ttyACM-card10-dev", ENV{ID_MM_DEVICE_IGNORE}="1"
   '';
+  #services.udev.packages = with pkgs; [ unstable.openhantek6022 ];
 
   services.udev.packages = [ unstable.platformio ];
 

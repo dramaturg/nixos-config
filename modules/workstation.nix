@@ -105,6 +105,7 @@ in
     damdamdammm
     nnn
     tmux-cssh
+    direnv
 
     # media
     vlc mpv
@@ -142,6 +143,7 @@ in
     libreoffice
     firefox
     thunderbird-78
+    birdtray
     #tor-browser-bundle-bin
     mattermost-desktop
     unstable.matterhorn
@@ -176,6 +178,7 @@ in
   nix.daemonIONiceLevel = 7;
   nix.daemonNiceLevel = 19;
 
+  services.lorri.enable = true;
   services.emacs = {
     enable = true;
     install = true;
@@ -483,6 +486,9 @@ in
         youtube_mp3 = "youtube_dl --extract-audio --audio-format mp3 --audio-quality 0";
         youtube_playlist_mp3 = "youtube_playlist_dl --extract-audio --audio-format mp3 --audio-quality 0 --socket-timeout 5";
       };
+      interactiveShellInit = ''
+        eval "$(direnv hook zsh)"
+      '';
     };
   };
   services.earlyoom.enable = lib.mkDefault true;

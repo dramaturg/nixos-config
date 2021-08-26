@@ -102,7 +102,6 @@
         "xhci_pci"
         "dm_mod"
         "btrfs"
-        "crc23c"
         "nvme"
         "usbhid"
         "usb_storage"

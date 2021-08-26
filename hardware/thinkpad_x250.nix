@@ -33,7 +33,6 @@ in
         "usbhid"
         "usb_storage"
         "btrfs"
-        "crc23c"
         "usbhid"
       ];
     };
