@@ -137,6 +137,7 @@ in
     meld
     gist
     fossil
+    pythonPackages.markdown
 
     # web, chat & docs
     okular
