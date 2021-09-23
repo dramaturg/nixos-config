@@ -50,6 +50,21 @@ node2nix -i <(echo '["clubhouse-cli"]')
 nix-env -f default.nix -iA clubhouse-cli
 ```
 
+##### Build lxc image
+
+Install generator:
+```
+nix-env -f https://github.com/nix-community/nixos-generators/archive/master.tar.gz -i
+```
+
+Build:
+```
+nixos-generate -f lxc -c /etc/nixos/configuration-sandnix.nix
+nixos-generate -f lxc-metadata -c /etc/nixos/configuration-sandnix.nix
+
+lxc image import $(nixos-generate -f lxc-metadata) $(nixos-generate -f lxc)
+```
+
 ####  Credits
 - This repo was originally forked from [sboehler/nixos-config](https://github.com/sboehler/nixos-config) and grew from there
 - Lots of ideas for the GPD Pocket were inspired by [andirs config](https://github.com/andir/nixos-gpd-pocket), in particular regarding the kernel options.

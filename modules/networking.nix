@@ -18,7 +18,7 @@
   };
 
   services.resolved = {
-    enable = true;
+    enable = lib.mkDefault true;
     dnssec = "false";
   };
 }

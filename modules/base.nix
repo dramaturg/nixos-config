@@ -47,6 +47,7 @@ in
     buildCores = lib.mkDefault 0;
     autoOptimiseStore = true;
     useSandbox = true;
+    trustedUsers = [ "@wheel" ];
 
     gc.automatic = true;
     gc.dates = "Thu 03:15";
