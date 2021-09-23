@@ -1,4 +1,3 @@
-
 { pkgs, lib, config, ... }:
 
 {
@@ -33,7 +32,6 @@
         intel-media-driver
         intel-compute-runtime
       ];
-      #driSupport32Bit = true;
     };
   };
 }
