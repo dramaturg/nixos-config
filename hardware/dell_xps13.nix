@@ -46,6 +46,12 @@ in
     palmMinZ = 20;
   };
 
+  services.xserver.videoDrivers = [ "intel" ];
+  services.xserver.deviceSection = ''
+    Option "DRI" "2"
+    Option "TearFree" "true"
+  '';
+
   hardware = {
     video.hidpi.enable = true;
   };
