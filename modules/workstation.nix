@@ -86,6 +86,13 @@ in
     };
   };
 
+  nix = {
+    package = pkgs.nixUnstable;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+  };
+
   environment.noXlibs = lib.mkForce false;
 
   environment.systemPackages = with pkgs; [
@@ -117,7 +124,7 @@ in
     ansible
     nixops
     vagrant
-    #linuxPackages_latest.virtualbox
+#linuxPackages_latest.virtualbox
     rke
 
     # network
@@ -127,6 +134,14 @@ in
     sshuttle
     ipcalc
     cipherscan
+
+#   (pkgs.makeDesktopItem {
+#    name = "screen";
+#    exec = "${pkgs.xterm}/bin/xterm -e ${pkgs.screen}/bin/screen -xRR";
+#    desktopName = "Screen";
+#    genericName = "screen";
+#    categories = "System;TerminalEmulator;";
+#    })
 
     # dev
     gitAndTools.gitflow
@@ -366,8 +381,8 @@ in
   boot.kernelModules = [ "vboxdrv" ];
   virtualisation = {
     virtualbox.host = {
-      #enable = lib.mkDefault true;
-      #package = pkgs.unstable.virtualbox;
+#enable = lib.mkDefault true;
+#package = pkgs.linuxPackages_latest.virtualbox;
     };
     #lxd.enable = lib.mkDefault true;
     docker = {

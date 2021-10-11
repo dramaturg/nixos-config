@@ -25,6 +25,7 @@ in
   imports = [
     ./networking.nix
     ./vim.nix
+    ../secrets/sops
   ];
 
   nixpkgs = {
@@ -119,6 +120,9 @@ in
     # nix
     nix-prefetch-scripts
     nix-prefetch-github
+    (pkgs.writeShellScriptBin "nixFlakes" ''
+      exec ${pkgs.nixUnstable}/bin/nix --experimental-features "nix-command flakes" "$@"
+    '')
   ];
 
   environment.interactiveShellInit = ''
