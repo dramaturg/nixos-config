@@ -1,3 +1,0 @@
-
-nix-prefetch-url --unpack 'http://snow.iro.umontreal.ca/?operation=download&pkg=snow-generic/v1.1.2&fakeoutput=/snow-generic-v1.2.1.tgz'
-

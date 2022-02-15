@@ -1,7 +1,0 @@
-
-  "url": "git://sourceware.org/git/newlib-cygwin.git",
-  "rev": "037428fae327bb25c4421d01b35036f7f1e81a96",
-  "date": "2018-10-18T17:19:50-05:00",
-  "sha256": "10f4mxs4g6a6gs68q2jlpzmb8h9cv7v3kxrl1a2k7hcx15v4348i",
-  "fetchSubmodules": false
-}
