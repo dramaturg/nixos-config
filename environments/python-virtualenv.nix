@@ -5,7 +5,7 @@ in pkgs.mkShell {
     (python38.withPackages(ps: with ps; [
       pip
     ]))
-    pypi2nix
+    #pypi2nix
   ];
   shellHook = ''
     export PIP_PREFIX="$(pwd)/_build/pip_packages"
