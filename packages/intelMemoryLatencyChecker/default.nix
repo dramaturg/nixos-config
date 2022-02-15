@@ -7,11 +7,12 @@ assert lib.elem stdenv.hostPlatform.system platforms;
 
 stdenv.mkDerivation rec {
   pname = "intelMemoryLatencyChecker";
-  version = "3.8";
+  version = "3.9a";
 
+  # http://www.intel.com/software/mlc
   src = fetchurl {
     url = "http://software.intel.com/content/dam/develop/external/us/en/protected/mlc_v${version}.tgz";
-    sha256 = "19gw8w11jpbs4pkkzkk6whx42mnkv8dv74f9wh5ql2lkpnvpz6ni";
+    sha256 = "0vpmgcpnl2j24637r3d032rrr1sm4ifbgb2p6058xj9h4ky4iwyy";
   };
 
   nativeBuildInputs = [
@@ -29,7 +30,7 @@ stdenv.mkDerivation rec {
     description = "";
     homepage    = https://software.intel.com/content/www/us/en/develop/articles/intelr-memory-latency-checker.html;
     #license     = stdenv.lib.licenses.;
-    maintainers = [ "Sebastian Krohn <sebastian.krohn@ds.ag" ];
+    maintainers = with lib.maintainers; [ dramaturg ];
   };
 }
 
