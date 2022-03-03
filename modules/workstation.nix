@@ -5,7 +5,8 @@ let
     version = "1.1.0";
 
     src = pkgs.fetchurl {
-      url = "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
+      url =
+        "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
       sha256 = "0kkgw32w1ihcw6mabk9a3my7r7a6gw7z3971mzms3c1vd58vx4hm";
     };
 
@@ -63,7 +64,7 @@ let
   };
 
   wallpaper_sh = pkgs.writeScriptBin "wallpaper.sh"
-    (builtins.readFile ../scripts/wallpaper.sh );
+    (builtins.readFile ../scripts/wallpaper.sh);
   unstableTarball = fetchTarball
     https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
 in
@@ -75,15 +76,20 @@ in
   ];
 
   nixpkgs = {
-    overlays = [
-    ];
-    config.packageOverrides = super: let self = super.pkgs; in {
-      unstable = import unstableTarball {
-        config = config.nixpkgs.config;
-      };
+    #overlays = [
+    #  (self: super: {
+    #    firefox = super.firefox.overrideAttrs (oldAttrs: {
+    #      extraPolicies = import ./firefox-policies.nix;
+    #    });
+    #  })
+    #];
+    config.packageOverrides = super:
+      let self = super.pkgs;
+      in {
+        unstable = import unstableTarball { config = config.nixpkgs.config; };
 
-      allowBroken = true;
-    };
+        allowBroken = true;
+      };
   };
 
   nix = {
@@ -103,7 +109,10 @@ in
     xiccd
     xsel
     xss-lock
-    man stdman man-pages posix_man_pages
+    man
+    stdman
+    man-pages
+    posix_man_pages
     alacritty
 
     # shell
@@ -115,20 +124,23 @@ in
     direnv
 
     # media
-    vlc mpv
-    vdpauinfo libva
+    vlc
+    mpv
+    vdpauinfo
+    libva
     geeqie
 
     # ops
-    kubectl kubectx
+    kubectl
+    kubectx
     ansible
-    nixops
     vagrant
 	linuxPackages_latest.virtualbox
     rke
 
     # network
-    wireshark tcpdump
+    wireshark
+    tcpdump
     nmap
     socat
     sshuttle
@@ -145,39 +157,52 @@ in
 
     # dev
     gitAndTools.gitflow
-    unstable.gitAndTools.git-trim
-    binutils jq
+    gitAndTools.diff-so-fancy
+    gitAndTools.git-trim
+    binutils
+    jq
     git-review
     ocl-icd
     meld
     gist
     fossil
     pythonPackages.markdown
+    nixfmt
+    global
+    universal-ctags
 
     # web, chat & docs
     okular
     libreoffice
+<<<<<<< HEAD
     unstable.firefox
     thunderbird
     birdtray
     #tor-browser-bundle-bin
+=======
+    firefox
+    thunderbird
+>>>>>>> 88f3712 (foo)
     mattermost-desktop
-    unstable.matterhorn
-    toot
-    simple-scan xsane
+    linphone
+    simple-scan
+    liferea
 
     (pkgs.writeScriptBin "wegwerf_firefox_clone"
-      (builtins.readFile ../scripts/wegwerf_firefox_clone.sh ))
+      (builtins.readFile ../scripts/wegwerf_firefox_clone.sh))
 
     # desktop
     arandr
-    feh scrot
+    feh
+    scrot
 
-    pavucontrol pasystray
+    pavucontrol
+    pasystray
     blueman
     arc-theme
     lxappearance
-    myxclip stripescapecodes 
+    myxclip
+    stripescapecodes
     lxqt.lxqt-policykit
     qt5ct
     v4l-utils
@@ -208,16 +233,13 @@ in
   hardware.pulseaudio = {
     enable = true;
     zeroconf = {
-        discovery.enable = false;
-        publish.enable = false;
+      discovery.enable = false;
+      publish.enable = false;
     };
     extraConfig = ''
       load-module module-switch-on-connect
 
       load-module module-echo-cancel aec_method=webrtc
-      #load-module module-echo-cancel source_name=noechosource sink_name=noechosink
-      #set-default-source noechosource
-      #set-default-sink noechosink
     '';
   };
 
@@ -252,9 +274,7 @@ in
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
   boot.kernelParams = [ "security=apparmor" ];
   boot.supportedFilesystems = [ "cifs" ];
-  boot.kernel.sysctl = {
-    "vm.swappiness" = 10;
-  };
+  boot.kernel.sysctl = { "vm.swappiness" = 10; };
   boot.loader.grub = {
     extraConfig = ''
       set theme=($drive1)//themes/fallout-grub-theme/theme.txt
@@ -265,7 +285,7 @@ in
   system.activationScripts.copyGrubTheme = ''
     mkdir -p /boot/themes
     cp -R ${falloutGrubTheme}/ /boot/themes/fallout-grub-theme
-  ''; 
+  '';
 
   services.xserver = {
     enable = true;
@@ -294,7 +314,7 @@ in
     temperature.day = 5500;
     temperature.night = 3400;
 
-    extraOptions = ["-v"];
+    extraOptions = [ "-v" ];
   };
   location = {
     provider = "manual";
@@ -303,7 +323,7 @@ in
   };
 
   fonts = {
-	fontDir.enable = true;
+    fontDir.enable = true;
     enableDefaultFonts = true;
     enableGhostscriptFonts = true;
 
@@ -314,21 +334,41 @@ in
       corefonts
       dejavu_fonts
       fantasque-sans-mono
+      fira-code-symbols
+      font-awesome-ttf
+      gohufont
       google-fonts
       inconsolata
+      ipafont
+      kochi-substitute
       liberation_ttf
       nerdfonts
+      noto-fonts
+      noto-fonts-cjk
+      noto-fonts-emoji
+      powerline-fonts
       source-code-pro
       terminus_font
+      ubuntu_font_family
       victor-mono
     ];
+
     fontconfig = {
       enable = lib.mkDefault true;
+      antialias = true;
+      subpixel = {
+        lcdfilter = "default";
+        rgba = "rgb";
+      };
+      hinting = {
+        enable = true;
+        autohint = false;
+      };
       useEmbeddedBitmaps = true;
       defaultFonts = {
-        monospace = [ "Iosevka Nerd Font Mono" ];
-        sansSerif = [ "Roboto" ];
-        serif     = [ "Roboto Slab" ];
+        monospace = [ "Iosevka Nerd Font Mono" "IPAGothic" ];
+        sansSerif = [ "Roboto" "IPAGothic" ];
+        serif = [ "Roboto Slab" "IPAPMincho" ];
       };
     };
   };
@@ -342,7 +382,7 @@ in
   };
   hardware.printers = {
     ensurePrinters = [{
-      name = "HP_LaserJet_Pro_M148dw";
+      name = "LaserJet_Sandweg";
       ppdOptions = {
         PageSize = "A4";
         Duplex = "DuplexNoTumble";
@@ -351,19 +391,17 @@ in
       deviceUri = "hp:/net/HP_LaserJet_Pro_M148-M149?ip=192.168.190.76";
       # lpinfo -m
       model = "HP/hp-laserjet_pro_m148-m149-ps.ppd.gz";
-      description = "HP LaserJet Pro M148-M149";
+      description = "LaserJet Sandweg";
       location = "Sandweg";
     }];
-    ensureDefaultPrinter = "HP_LaserJet_Pro_M148dw";
+    ensureDefaultPrinter = "LaserJet_Sandweg";
   };
   hardware.sane = {
     enable = true;
     extraBackends = with pkgs; [ sane-airscan ];
   };
 
-  services.colord = {
-    enable = true;
-  };
+  services.colord = { enable = true; };
 
   environment.etc."fuse.conf".text = ''
     user_allow_other
@@ -409,6 +447,11 @@ in
   };
 
   services.udev.extraRules = ''
+    # Thunderbolt
+    # Always authorize thunderbolt connections when they are plugged in.
+    # This is to make sure the USB hub of Thunderbolt is working.
+    ACTION=="add", SUBSYSTEM=="thunderbolt", ATTR{authorized}=="0", ATTR{authorized}="1"
+
     # Access to /dev/bus/usb/* devices. Needed for virt-manager USB
     # redirection.
     SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", MODE="0664", GROUP="wheel"
@@ -474,7 +517,8 @@ in
       Type = "simple";
       Restart = "always";
       RestartSec = 10;
-      ExecStart = "${pkgs.xautolock}/bin/xautolock -time 15 -locker \"i3lock -c b31051 -t\"";
+      ExecStart = ''
+        ${pkgs.xautolock}/bin/xautolock -time 15 -locker "i3lock -c b31051 -t"'';
     };
   };
 
@@ -486,12 +530,18 @@ in
     gnupg.agent.enableSSHSupport = true;
     zsh = {
       shellAliases = {
-        wergwerf_firefox  = "firefox --new-instance --profile $(mktemp -d)";
+        wergwerf_firefox = "firefox --new-instance --profile $(mktemp -d)";
         wergwerf_chromium = "chromium --user-data-dir $(mktemp -d)";
-        youtube_dl = "${pkgs.youtube-dl}/bin/youtube-dl -o '%(title)s.%(ext)s' --no-call-home -f 'bestaudio'";
-        youtube_playlist_dl = "youtube_dl -o '%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s' --download-archive downloaded.txt --no-overwrites -ic --yes-playlist --socket-timeout 5";
-        youtube_mp3 = "youtube_dl --extract-audio --audio-format mp3 --audio-quality 0";
-        youtube_playlist_mp3 = "youtube_playlist_dl --extract-audio --audio-format mp3 --audio-quality 0 --socket-timeout 5";
+        youtube_dl =
+          "${pkgs.youtube-dl}/bin/youtube-dl -o '%(title)s.%(ext)s' --no-call-home -f 'bestaudio'";
+        youtube_playlist_dl =
+          "youtube_dl -o '%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s' --download-archive downloaded.txt --no-overwrites -ic --yes-playlist --socket-timeout 5";
+        youtube_mp3 =
+          "youtube_dl --extract-audio --audio-format mp3 --audio-quality 0";
+        youtube_playlist_mp3 =
+          "youtube_playlist_dl --extract-audio --audio-format mp3 --audio-quality 0 --socket-timeout 5";
+        flac2mp3 =
+          "${pkgs.parallel}/bin/parallel ${pkgs.ffmpeg}/bin/ffmpeg -i {} -qscale:a 0 {.}.mp3 ::: ./*.flac";
       };
       interactiveShellInit = ''
         eval "$(direnv hook zsh)"

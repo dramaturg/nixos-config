@@ -8,9 +8,7 @@
     wireless = {
       enable = (if config.services.xserver.enable then false else true);
       iwd.enable = (if config.services.xserver.enable then false else true);
-      networks = {
-        Kunterbunt = { psk = "xxx"; };
-      };
+      networks = { Kunterbunt = { psk = "xxx"; }; };
     };
     networkmanager = {
       enable = (if config.services.xserver.enable then true else false);
@@ -22,6 +20,9 @@
         "interface-name:veth*"
         "interface-name:wg*"
       ];
+      extraConfig = ''
+        autoconnect-retries-default=999
+      '';
       packages = with pkgs; [
         #networkmanager-openconnect
         networkmanager-openvpn

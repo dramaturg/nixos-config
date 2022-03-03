@@ -71,4 +71,6 @@ lxc image import $(nixos-generate -f lxc-metadata) $(nixos-generate -f lxc)
 - The handy qemu overlay comes from [cleverca22](https://github.com/cleverca22/nixos-configs)
 - Some handy i3 scripts were found in [xtruders i3 config](https://github.com/xtruder/nix-profiles/blob/master/modules/user/profiles/i3.nix)
 - PIA config by [illegalprime](https://github.com/illegalprime/nix/blob/1eb90ceaa9af14eba9d10d1178076e428994de0d/nixos/pia-system.nix)
+- Random snippets from [Bob van der Linden](https://github.com/bobvanderlinden/nixos-config/)
+- Random snippets from [KiaraGrouwstra](https://github.com/KiaraGrouwstra/nix-config)
 
