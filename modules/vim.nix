@@ -22,16 +22,16 @@ let
 
         "Persistent undo
         try
-        	if MySys() == "windows"
-        		set undodir=C:\Windows\Temp
-        	else
-        		set undodir=~/.vim_undodir
-        	endif
+          if MySys() == "windows"
+            set undodir=C:\Windows\Temp
+          else
+            set undodir=~/.vim_undodir
+          endif
 
-        	if !isdirectory(&undodir)
-        		exec "silent !mkdir -p " . &undodir
-        	endif
-        	set undofile
+          if !isdirectory(&undodir)
+            exec "silent !mkdir -p " . &undodir
+          endif
+          set undofile
         catch
         endtry
 
@@ -48,7 +48,7 @@ let
 
         " show a wrapper char at wrapped lines
         if has("linebreak")
-        	let &sbr = nr2char(8618).' '
+          let &sbr = nr2char(8618).' '
         endif
 
         " MultipleSearch
@@ -86,8 +86,8 @@ let
 
         " windows resizing
         if bufwinnr(1)
-        	map + <C-W>+
-        	map - <C-W>-
+          map + <C-W>+
+          map - <C-W>-
         endif
 
         " tmux integration
@@ -124,7 +124,7 @@ let
 
         " Strip all trailing whitespace in file
         function! StripWhitespace ()
-        	exec ':%s/ \+$//gc'
+          exec ':%s/ \+$//gc'
         endfunction
         map ,s :call StripWhitespace ()<CR>
       '';
