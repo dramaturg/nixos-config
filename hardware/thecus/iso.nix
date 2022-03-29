@@ -1,5 +1,4 @@
-
-{ config, options, lib, modulesPath, system ? "i686-linux" }:
+{ config, options, lib, modulesPath, system ? "i686-linux", ... }:
 
 {
   imports =

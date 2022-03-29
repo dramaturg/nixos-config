@@ -1,13 +1,50 @@
-{ config, options, lib, modulesPath, pkgs, system ? "i686-linux" }:
+{ config, options, lib, modulesPath, pkgs, system ? "i686-linux", ... }:
 
+let
+  optimizeWithFlags = pkg: flags:
+    pkgs.lib.overrideDerivation pkg (old:
+    let
+      newflags = pkgs.lib.foldl' (acc: x: "${acc} ${x}") "" flags;
+      oldflags = if (pkgs.lib.hasAttr "NIX_CFLAGS_COMPILE" old)
+        then "${old.NIX_CFLAGS_COMPILE}"
+        else "";
+    in
+    {
+      NIX_CFLAGS_COMPILE = "${oldflags} ${newflags}";
+    });
+  useGeodeOptimizations = stdenv: stdenv //
+    { mkDerivation = args: stdenv.mkDerivation (args // {
+        NIX_CFLAGS_COMPILE = toString (args.NIX_CFLAGS_COMPILE or "") +
+          " -march=geode -mtune=geode -O3 -fno-align-jumps -fno-align-functions" +
+          " -fno-align-labels -fno-align-loops -pipe -fomit-frame-pointer";
+        #stdenv = overrideCC stdenv gcc6;
+      });
+    };
+  optimizeForGeode = pkg:
+    optimizeWithFlags pkg [
+      "-march=geode"
+      "-mtune=geode"
+      "-O3"
+      "-fno-align-jumps"
+      "-fno-align-functions"
+      "-fno-align-labels"
+      "-fno-align-loops"
+      "-pipe"
+      "-fomit-frame-pointer"
+    ];
+in
 {
   imports = [
-    ./geode.nix
     <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
   ];
 
+  nixpkgs.config.packageOverrides = pkgs: {
+    nix = optimizeForGeode pkgs.nix;
+    boost = optimizeForGeode pkgs.boost;
+  };
+
   zramSwap.enable = true;
-  security.polkit.enable = false;
+  security.polkit.enable = lib.mkForce false;
 
   boot = {
     kernelPatches =  [ {
@@ -73,10 +110,10 @@
         BPF_JIT y
         BPF_STREAM_PARSER y
       '';
-    }
-    {
-      name = "geode_nopl_emu";
-      patch = ./geode_nopl_emu.patch;
+    #}
+    #{
+    #  name = "geode_nopl_emu";
+    #  patch = ./geode_nopl_emu.patch;
     } ];
 
     kernelParams = [
