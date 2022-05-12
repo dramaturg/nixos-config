@@ -71,7 +71,7 @@ in
   imports = [
     ./base.nix
     ./i3.nix
-	./embeddeddev.nix
+    ./embeddeddev.nix
   ];
 
   nixpkgs = {
@@ -96,7 +96,7 @@ in
   environment.noXlibs = lib.mkForce false;
 
   environment.systemPackages = with pkgs; [
-    shared_mime_info
+    shared-mime-info
 
     mu
     rofi
@@ -124,7 +124,7 @@ in
     ansible
     nixops
     vagrant
-#linuxPackages_latest.virtualbox
+	linuxPackages_latest.virtualbox
     rke
 
     # network
@@ -157,8 +157,8 @@ in
     # web, chat & docs
     okular
     libreoffice
-    firefox
-    thunderbird-78
+    unstable.firefox
+    thunderbird
     birdtray
     #tor-browser-bundle-bin
     mattermost-desktop
@@ -184,15 +184,12 @@ in
 
     # misc
     fuse
-    sshfsFuse
-    cifs_utils
+    sshfs-fuse
+    cifs-utils
     google-drive-ocamlfuse
     enpass
     chezmoi
   ];
-
-  nix.daemonIONiceLevel = 7;
-  nix.daemonNiceLevel = 19;
 
   services.lorri.enable = true;
   services.emacs = {
@@ -239,12 +236,6 @@ in
   # wireshark capturing
   users.groups.wireshark.members = [ "seb" ];
   programs.wireshark.enable = true;
-  security.wrappers.dumpcap = {
-    source = "${pkgs.wireshark}/bin/dumpcap";
-    permissions = "u+xs,g+x";
-    owner = "root";
-    group = "wireshark";
-  };
 
   services.udisks2.enable = true;
 
@@ -287,7 +278,7 @@ in
   };
 
   services.dbus = {
-    packages = [ pkgs.gnome.gnome-keyring pkgs.gnome.gcr ];
+    packages = [ pkgs.gnome.gnome-keyring pkgs.gcr ];
   };
   services.gvfs.enable = true;
 
@@ -382,7 +373,7 @@ in
   virtualisation = {
     virtualbox.host = {
 #enable = lib.mkDefault true;
-#package = pkgs.linuxPackages_latest.virtualbox;
+      package = pkgs.linuxPackages_latest.virtualbox;
     };
     #lxd.enable = lib.mkDefault true;
     docker = {
@@ -517,10 +508,7 @@ in
 
   environment.variables = {
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-    QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase}/lib/qt-5.12.0/plugins/platforms";
     QT_QTA_PLATFORMTHEME = "qt5ct";
-    GIO_EXTRA_MODULES = [ "${pkgs.gvfs}/lib/gio/modules" ];
     GTK_USE_PORTAL = "0";
-    _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd";
   };
 }

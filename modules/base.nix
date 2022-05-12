@@ -19,6 +19,8 @@ let
     # Optimize
     nix-store --gc --print-dead
     nix-store --optimise
+
+    nixos-rebuild boot
   '';
 in
 {
@@ -123,6 +125,7 @@ in
     (pkgs.writeShellScriptBin "nixFlakes" ''
       exec ${pkgs.nixUnstable}/bin/nix --experimental-features "nix-command flakes" "$@"
     '')
+    optimize-nix
   ];
 
   environment.interactiveShellInit = ''
@@ -226,6 +229,8 @@ in
         bind-key = set-window-option synchronize-panes\; display-message "synchronize-panes is now #{?pane_synchronized,on,off}"
       '';
     };
+    iotop.enable = true;
+    command-not-found.enable = false;
   };
 
   services.openssh = {
@@ -238,7 +243,7 @@ in
     allowSFTP = lib.mkDefault true;
     sftpFlags = lib.mkDefault [ "-f AUTHPRIV" "-l INFO" ];
     moduliFile = ssh-moduli-file;
-    logLevel = lib.mkDefault "INFO";
+    #logLevel = lib.mkDefault "INFO";
 
     # https://infosec.mozilla.org/guidelines/openssh
     kexAlgorithms = [
@@ -273,7 +278,7 @@ in
 
   services.fstrim.enable = true;
 
-  services.timesyncd.enable = true;
+  services.timesyncd.enable = lib.mkDefault true;
 
   nix.sshServe = {
     enable = lib.mkDefault true;
@@ -297,10 +302,14 @@ in
             ++ (lib.optional config.virtualisation.lxd.enable "lxd")
             ++ (lib.optional config.virtualisation.virtualbox.host.enable "vboxusers");
         uid = 1000;
-        openssh.authorizedKeys.keys = pkgs.lib.singleton (builtins.readFile ../dotfiles/ssh_authorized_keys.pub);
+        openssh.authorizedKeys.keys = lib.strings.splitString "\n" (
+          lib.strings.removeSuffix "\n" (
+            builtins.readFile ../dotfiles/ssh_authorized_keys.pub));
       };
       root = {
-        openssh.authorizedKeys.keys = pkgs.lib.singleton (builtins.readFile ../dotfiles/ssh_authorized_keys.pub);
+        openssh.authorizedKeys.keys = lib.strings.splitString "\n" (
+          lib.strings.removeSuffix "\n" (
+            builtins.readFile ../dotfiles/ssh_authorized_keys.pub));
       };
     };
   };
@@ -314,6 +323,6 @@ in
 
   services.journald.extraConfig = ''
     SystemMaxUse=128M
-    MaxRetentionSec=3day
+    MaxRetentionSec=7day
   '';
 }

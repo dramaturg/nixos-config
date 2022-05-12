@@ -102,10 +102,15 @@ in
 
     SUBSYSTEM=="tty", ATTRS{idVendor}=="0b6a", ATTRS{idProduct}=="003c", \
         MODE="0664", GROUP="users", SYMLINK+="ttyACM-card10-dev", ENV{ID_MM_DEVICE_IGNORE}="1"
-  '';
-  #services.udev.packages = with pkgs; [ unstable.openhantek6022 ];
 
-  services.udev.packages = [ unstable.platformio ];
+    # For the Espotek Labrador - https://github.com/EspoTek/Labrador/blob/master/Desktop_Interface/rules.d/69-labrador.rules
+    ENV{ID_VENDOR_ID}=="03eb", ENV{ID_MODEL_ID}=="ba94", SYMLINK="EspoTek_Labrador", MODE="0666"
+    ENV{ID_VENDOR_ID}=="03eb", ENV{ID_MODEL_ID}=="a000", SYMLINK="EspoTek_Labrador", MODE="0666"
+    ENV{ID_VENDOR_ID}=="03eb", ENV{ID_MODEL_ID}=="2fe4", SYMLINK="ATXMEGA32A4U DFU Bootloader", MODE="0666"
+  '' ;
+  #services.udev.packages = [ unstable.openhantek6022 ];
+
+  services.udev.packages = [ unstable.platformio unstable.openhantek6022 ];
 
   boot.kernelModules = [
     "ftdi_sio"

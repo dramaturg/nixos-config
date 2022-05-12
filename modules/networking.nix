@@ -12,9 +12,9 @@
   };
 
   boot.kernel.sysctl = {
-    "net.ipv6.conf.default.use_tempaddr" = 2;
-    "net.ipv4.ip_forward" = 1;
-    "net.ipv4.tcp_min_snd_mss" = 536;
+    "net.ipv6.conf.default.use_tempaddr" = lib.mkDefault 2;
+    "net.ipv4.ip_forward" = lib.mkForce 1;
+    "net.ipv4.tcp_min_snd_mss" = lib.mkDefault 536;
   };
 
   services.resolved = {
