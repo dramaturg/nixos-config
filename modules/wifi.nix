@@ -1,5 +1,9 @@
 { pkgs, lib, config, configName, ... }:
 {
+  environment.systemPackages = with pkgs; [
+    networkmanager_dmenu
+  ];
+
   networking = {
     wireless = {
       enable = (if config.services.xserver.enable then false else true);
@@ -19,9 +23,8 @@
         "interface-name:wg*"
       ];
       packages = with pkgs; [
-        networkmanager-openconnect
+        #networkmanager-openconnect
         networkmanager-openvpn
-        networkmanager_dmenu
         networkmanagerapplet
       ];
     };
