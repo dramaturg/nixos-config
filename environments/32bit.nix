@@ -1,3 +1,5 @@
+with import <nixpkgs> {};
+
 { config, lib, pkgs, ... }:
 
 let

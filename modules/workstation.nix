@@ -174,19 +174,13 @@ in
     # web, chat & docs
     okular
     libreoffice
-<<<<<<< HEAD
-    unstable.firefox
-    thunderbird
-    birdtray
-    #tor-browser-bundle-bin
-=======
     firefox
     thunderbird
->>>>>>> 88f3712 (foo)
+    birdtray
+    tor-browser-bundle-bin
     mattermost-desktop
     linphone
     simple-scan
-    liferea
 
     (pkgs.writeScriptBin "wegwerf_firefox_clone"
       (builtins.readFile ../scripts/wegwerf_firefox_clone.sh))
@@ -423,6 +417,7 @@ in
       };
     };
     libvirtd.enable = true;
+    #waydroid.enable = true;
   };
   users.groups.vboxusers.members = [ "seb" ];
   users.groups.libvirtd.members = [ "seb" ];
