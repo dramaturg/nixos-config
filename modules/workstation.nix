@@ -1,24 +1,5 @@
 { pkgs, lib, config, fetchFromGitHub, fetchPypi, ... }:
 let
-  rke = pkgs.stdenv.mkDerivation rec {
-    name = "rke-${version}";
-    version = "1.1.0";
-
-    src = pkgs.fetchurl {
-      url =
-        "https://github.com/rancher/rke/releases/download/v${version}/rke_linux-amd64";
-      sha256 = "0kkgw32w1ihcw6mabk9a3my7r7a6gw7z3971mzms3c1vd58vx4hm";
-    };
-
-    phases = [ "installPhase" ];
-    installPhase = ''
-      mkdir -p $out/bin
-      cp ${src} $out/bin/rke
-      patchelf $out/bin/rke
-      chmod 755 $out/bin/rke
-    '';
-  };
-
   damdamdammm = pkgs.writeScriptBin "damdamdammm" ''
     #!${pkgs.bash}/bin/bash
 
@@ -56,13 +37,6 @@ let
     sed 's/\x1b\[[0-9;]*[mGKFH]//g'
   '';
 
-  falloutGrubTheme = pkgs.fetchFromGitHub {
-    owner = "shvchk";
-    repo = "fallout-grub-theme";
-    rev = "cd6cf168cb1a392126cadc5b6bd2e2bf81d53c80";
-    sha256 = "0fhl93gf6ih09k7ad0fmhs4slb0qcdzvnk8lshb07a9c10vkfln4";
-  };
-
   wallpaper_sh = pkgs.writeScriptBin "wallpaper.sh"
     (builtins.readFile ../scripts/wallpaper.sh);
   unstableTarball = fetchTarball
@@ -76,18 +50,10 @@ in
   ];
 
   nixpkgs = {
-    #overlays = [
-    #  (self: super: {
-    #    firefox = super.firefox.overrideAttrs (oldAttrs: {
-    #      extraPolicies = import ./firefox-policies.nix;
-    #    });
-    #  })
-    #];
     config.packageOverrides = super:
       let self = super.pkgs;
       in {
         unstable = import unstableTarball { config = config.nixpkgs.config; };
-
         allowBroken = true;
       };
   };
@@ -135,8 +101,7 @@ in
     kubectx
     ansible
     vagrant
-	linuxPackages_latest.virtualbox
-    rke
+    #linuxPackages_latest.virtualbox
 
     # network
     wireshark
@@ -145,7 +110,6 @@ in
     socat
     sshuttle
     ipcalc
-    cipherscan
 
 #   (pkgs.makeDesktopItem {
 #    name = "screen";
@@ -178,7 +142,8 @@ in
     thunderbird
     birdtray
     tor-browser-bundle-bin
-    mattermost-desktop
+    unstable.mattermost-desktop
+    slack
     linphone
     simple-scan
 
@@ -206,6 +171,7 @@ in
     sshfs-fuse
     cifs-utils
     google-drive-ocamlfuse
+    nextcloud-client
     enpass
     chezmoi
   ];
@@ -269,17 +235,6 @@ in
   boot.kernelParams = [ "security=apparmor" ];
   boot.supportedFilesystems = [ "cifs" ];
   boot.kernel.sysctl = { "vm.swappiness" = 10; };
-  boot.loader.grub = {
-    extraConfig = ''
-      set theme=($drive1)//themes/fallout-grub-theme/theme.txt
-    '';
-    splashImage = "${falloutGrubTheme}/background.png";
-  };
-
-  system.activationScripts.copyGrubTheme = ''
-    mkdir -p /boot/themes
-    cp -R ${falloutGrubTheme}/ /boot/themes/fallout-grub-theme
-  '';
 
   services.xserver = {
     enable = true;
@@ -329,7 +284,7 @@ in
       dejavu_fonts
       fantasque-sans-mono
       fira-code-symbols
-      font-awesome-ttf
+      font-awesome
       gohufont
       google-fonts
       inconsolata
@@ -404,7 +359,7 @@ in
   boot.kernelModules = [ "vboxdrv" ];
   virtualisation = {
     virtualbox.host = {
-#enable = lib.mkDefault true;
+      #enable = lib.mkDefault true;
       package = pkgs.linuxPackages_latest.virtualbox;
     };
     #lxd.enable = lib.mkDefault true;
@@ -425,14 +380,6 @@ in
   # flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   services.flatpak.enable = true;
   xdg.portal.enable = true;
-
-  services.syncthing = {
-    enable = true;
-    user = "seb";
-    dataDir = "/home/seb/.syncthing";
-    openDefaultPorts = true;
-    package = pkgs.unstable.syncthing;
-  };
 
   networking.firewall = {
     allowedTCPPorts = [

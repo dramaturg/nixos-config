@@ -32,14 +32,6 @@ in
 
   nixpkgs = {
     config = {
-      #      packageOverrides = super: let self = super.pkgs; in {
-      #        fftw = super.fftw.override {
-      #          configureFlags =
-      #            [ "--enable-shared" "--disable-static"
-      #              "--enable-threads" "--disable-doc"
-      #            ]
-      #        };
-      #      };
       allowUnfree = true;
       sqlite.interactive = true;
     };

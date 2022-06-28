@@ -23,10 +23,10 @@
       extraConfig = ''
         autoconnect-retries-default=999
       '';
-      packages = with pkgs; [
+      plugins = with pkgs; [
         #networkmanager-openconnect
         networkmanager-openvpn
-        networkmanagerapplet
+        #networkmanagerapplet
       ];
     };
   };
