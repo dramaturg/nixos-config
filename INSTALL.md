@@ -36,8 +36,12 @@ Number  Start (sector)    End (sector)  Size       Code  Name
 ## Connect to Wifi
 
 ```
-wpa_passphrase ESSID > /etc/wpa_suuplicant.conf
 systemctl restart wpa_supplicant
+wpa_cli -g /run/wpa_supplicant/wl*
+> add_network 0
+> set_network 0 ssid "..."
+> set_network 0 psk "..."
+> enable_network 0
 ```
 
 ## Installing

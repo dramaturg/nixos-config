@@ -123,13 +123,15 @@ in
     gitAndTools.gitflow
     gitAndTools.diff-so-fancy
     gitAndTools.git-trim
+    git-review
+    gh
+    gist
+    glab
+    fossil
     binutils
     jq
-    git-review
     ocl-icd
     meld
-    gist
-    fossil
     pythonPackages.markdown
     nixfmt
     global
