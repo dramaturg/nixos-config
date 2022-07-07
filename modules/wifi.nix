@@ -24,9 +24,7 @@
         autoconnect-retries-default=999
       '';
       plugins = with pkgs; [
-        #networkmanager-openconnect
         networkmanager-openvpn
-        #networkmanagerapplet
       ];
     };
   };

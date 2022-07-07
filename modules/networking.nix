@@ -17,8 +17,5 @@
     "net.ipv4.tcp_min_snd_mss" = lib.mkDefault 536;
   };
 
-  services.resolved = {
-    enable = lib.mkDefault true;
-    dnssec = "false";
-  };
+  services.resolved.enable = lib.mkDefault true;
 }

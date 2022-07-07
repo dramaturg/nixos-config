@@ -17,4 +17,13 @@ in
   #  speed = 0;
   #  emulateWheel = true;
   #};
+
+  services.fwupd.enable = true;
+  services.hardware.bolt.enable = true;
+
+  powerManagement = {
+    powerUpCommands = ''
+      echo 1500 > /proc/sys/vm/dirty_writeback_centisecs
+    '';
+  };
 }

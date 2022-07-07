@@ -1,5 +1,8 @@
 { pkgs, lib, ... }: {
-  imports = [ ./workstation.nix ./wifi.nix ];
+  imports = [
+    ./workstation.nix
+    ./wifi.nix
+  ];
 
   powerManagement = {
     enable = true;

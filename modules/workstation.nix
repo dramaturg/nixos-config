@@ -111,14 +111,6 @@ in
     sshuttle
     ipcalc
 
-#   (pkgs.makeDesktopItem {
-#    name = "screen";
-#    exec = "${pkgs.xterm}/bin/xterm -e ${pkgs.screen}/bin/screen -xRR";
-#    desktopName = "Screen";
-#    genericName = "screen";
-#    categories = "System;TerminalEmulator;";
-#    })
-
     # dev
     gitAndTools.gitflow
     gitAndTools.diff-so-fancy
@@ -145,6 +137,7 @@ in
     birdtray
     tor-browser-bundle-bin
     unstable.mattermost-desktop
+    tdesktop
     slack
     linphone
     simple-scan
@@ -191,19 +184,40 @@ in
     mediaKeys.enable = true;
     mediaKeys.volumeStep = "5";
   };
-  nixpkgs.config.pulseaudio = true;
-  hardware.pulseaudio = {
-    enable = true;
-    zeroconf = {
-      discovery.enable = false;
-      publish.enable = false;
-    };
-    extraConfig = ''
-      load-module module-switch-on-connect
+  hardware.pulseaudio.enable = lib.mkForce false;
 
-      load-module module-echo-cancel aec_method=webrtc
-    '';
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
   };
+  # copied from https://github.com/NixOS/nixpkgs/issues/102547 for high quality cals
+  services.pipewire.media-session.config.bluez-monitor.rules = [
+    {
+      # Matches all cards
+      matches = [ { "device.name" = "~bluez_card.*"; } ];
+      actions = {
+        "update-props" = {
+          "bluez5.reconnect-profiles" = [ "hfp_hf" "hsp_hs" "a2dp_sink" ];
+          # mSBC is not expected to work on all headset + adapter combinations.
+          "bluez5.msbc-support" = true;
+        };
+      };
+    }
+    {
+      matches = [
+        # Matches all sources
+        { "node.name" = "~bluez_input.*"; }
+        # Matches all outputs
+        { "node.name" = "~bluez_output.*"; }
+      ];
+      actions = {
+        "node.pause-on-idle" = false;
+      };
+    }
+  ];
 
   systemd.services.audio-off = {
     description = "Mute audio before suspend";
@@ -279,28 +293,26 @@ in
     enableGhostscriptFonts = true;
 
     fonts = with pkgs; [
-      anonymousPro
       carlito
       comic-relief
       corefonts
-      dejavu_fonts
       fantasque-sans-mono
-      fira-code-symbols
       font-awesome
       gohufont
       google-fonts
-      inconsolata
       ipafont
-      kochi-substitute
-      liberation_ttf
-      nerdfonts
-      noto-fonts
-      noto-fonts-cjk
-      noto-fonts-emoji
-      powerline-fonts
-      source-code-pro
-      terminus_font
-      ubuntu_font_family
+      (nerdfonts.override { fonts = [
+        "AnonymousPro"
+        "DroidSansMono"
+        "FiraCode"
+        "HeavyData"
+        "Inconsolata"
+        "Iosevka"
+        "Noto"
+        "SourceCodePro"
+        "Terminus"
+        "Ubuntu"
+      ]; })
       victor-mono
     ];
 
@@ -362,7 +374,7 @@ in
   virtualisation = {
     virtualbox.host = {
       #enable = lib.mkDefault true;
-      package = pkgs.linuxPackages_latest.virtualbox;
+      package = lib.mkDefault pkgs.linuxPackages_latest.virtualbox;
     };
     #lxd.enable = lib.mkDefault true;
     docker = {
@@ -469,9 +481,9 @@ in
   programs = {
     nm-applet.enable = true;
     dconf.enable = true;
-    ssh.startAgent = false;
+    ssh.startAgent = true;
     gnupg.agent.enable = true;
-    gnupg.agent.enableSSHSupport = true;
+    gnupg.agent.pinentryFlavor = "gnome3";
     zsh = {
       shellAliases = {
         wergwerf_firefox = "firefox --new-instance --profile $(mktemp -d)";
