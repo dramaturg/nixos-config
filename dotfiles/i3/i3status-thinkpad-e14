@@ -13,6 +13,7 @@ order += "wireless wlp0s20f3"
 order += "ethernet enp4s0"
 order += "battery 0"
 order += "volume master"
+order += "tztime eastern"
 order += "time"
 
 
@@ -41,6 +42,11 @@ volume master {
 	device = "default"
 	mixer = "Master"
 	mixer_idx = 0
+}
+
+tztime eastern {
+	format = "ET: %H:%M"
+	timezone = "US/Eastern"
 }
 
 time {
