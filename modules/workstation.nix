@@ -132,12 +132,15 @@ in
     # web, chat & docs
     okular
     libreoffice
+    gimp
+    freecad
     firefox
+    chromium
     thunderbird
     birdtray
     tor-browser-bundle-bin
     unstable.mattermost-desktop
-    tdesktop
+    unstable.tdesktop
     slack
     linphone
     simple-scan
@@ -149,7 +152,6 @@ in
     arandr
     feh
     scrot
-
     pavucontrol
     pasystray
     blueman
@@ -169,6 +171,8 @@ in
     nextcloud-client
     enpass
     chezmoi
+    zip unzip
+    p7zip
   ];
 
   services.lorri.enable = true;
