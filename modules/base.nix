@@ -39,14 +39,18 @@ in
   environment.variables.NIXPKGS_ALLOW_UNFREE = "1";
 
   nix = {
-    buildCores = lib.mkDefault 0;
-    autoOptimiseStore = true;
-    useSandbox = true;
-    trustedUsers = [ "@wheel" ];
+    settings = {
+      cores = lib.mkDefault 0;
+      sandbox = true;
+      trusted-users = [ "@wheel" ];
+      auto-optimise-store = true;
+    };
 
-    gc.automatic = true;
-    gc.dates = "Thu 03:15";
-    gc.options = "--delete-older-than 7d";
+    gc = {
+      automatic = true;
+      dates = "Thu 03:15";
+      options = "--delete-older-than 7d";
+    };
 
     optimise.automatic = true;
 
