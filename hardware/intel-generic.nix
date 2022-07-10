@@ -11,8 +11,8 @@
     grub.configurationLimit = 10;
   };
 
-  nix = {
-    binaryCaches = [
+  nix.settings = {
+    substituters = [
       "https://cache.nixos.org/"
     ];
   };

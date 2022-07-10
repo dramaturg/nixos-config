@@ -52,11 +52,12 @@ let
 in
 {
   nix = {
-    binaryCachePublicKeys = [
-      "nix-cache-dsa3.s3-website.nl-ams.scw.cloud:TO4eXW6vwbQMUzSVDKScYUFlrxSfMaivQ4yeCHLplDQ="
-    ];
-
-    binaryCaches = [ "https://nix-cache-dsa3.s3-website.nl-ams.scw.cloud/" ];
+    settings = {
+      substituters = [ "https://nix-cache-dsa3.s3-website.nl-ams.scw.cloud/" ];
+      trusted-public-keys = [
+        "nix-cache-dsa3.s3-website.nl-ams.scw.cloud:TO4eXW6vwbQMUzSVDKScYUFlrxSfMaivQ4yeCHLplDQ="
+      ];
+    };
 
     extraOptions = ''
       post-build-hook = ${upload-to-s3}/bin/nix-upload-to-s3
