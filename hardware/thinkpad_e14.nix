@@ -11,6 +11,15 @@ in
     (hardwareTarball + "/lenovo/thinkpad/e14")
   ];
 
+  environment.systemPackages = with pkgs; [
+    bolt
+    thunderbolt
+  ];
+
+  #services.xserver.videoDrivers = [ "intel" "displaylink" "vesa" ];
+  ## displaylink/evdi broken in _latest
+  #boot.kernelPackages = pkgs.linuxPackages;
+
   #hardware.trackpoint = {
   #  enable = true;
   #  sensitivity = 220;

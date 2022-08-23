@@ -520,5 +520,6 @@ in
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
     QT_QTA_PLATFORMTHEME = "qt5ct";
     GTK_USE_PORTAL = "0";
+    AWS_PAGER = "";
   };
 }
