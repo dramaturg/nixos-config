@@ -13,6 +13,14 @@ let
     ${pkgs.v4l-utils}/bin/v4l2-ctl -d /dev/video2 --set-ctrl=zoom_absolute=1
   '';
 
+  nix-du-graph = pkgs.writeScriptBin "nix-du-graph" ''
+    #!${pkgs.bash}/bin/bash
+
+    ${pkgs.nix-du}/bin/nix-du -s=500MB | \
+      ${pkgs.graphviz}/bin/tred | \
+      ${pkgs.graphviz}/bin/dot -Tpng
+  '';
+
   myxclip = pkgs.writeScriptBin "xclip" ''
     #!${pkgs.bash}/bin/bash
 
@@ -85,6 +93,7 @@ in
     mosh
     fdupes
     damdamdammm
+    nix-du-graph
     nnn
     tmux-cssh
     direnv

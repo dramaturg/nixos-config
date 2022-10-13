@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 let
   configName = lib.mkDefault "default";
-  ssh-moduli-file = pkgs.runCommand "ssh-moduli-file" {} ''
+  ssh-moduli-file = pkgs.runCommand "ssh-moduli-file" { } ''
     awk '$5 >= 2048' ${pkgs.openssh}/etc/ssh/moduli > $out
   '';
   optimize-nix = pkgs.writeScriptBin "optimize-nix" ''
@@ -22,8 +22,7 @@ let
 
     nixos-rebuild boot
   '';
-in
-{
+in {
   imports = [
     ./networking.nix
     ./vim.nix
@@ -262,11 +261,8 @@ in
       "ecdh-sha2-nistp256"
       "diffie-hellman-group-exchange-sha256"
     ];
-    ciphers = [
-      "chacha20-poly1305@openssh.com"
-      "aes256-gcm@openssh.com"
-      "aes256-ctr"
-    ];
+    ciphers =
+      [ "chacha20-poly1305@openssh.com" "aes256-gcm@openssh.com" "aes256-ctr" ];
     macs = [
       "hmac-sha2-512-etm@openssh.com"
       "hmac-sha2-256-etm@openssh.com"
@@ -303,22 +299,23 @@ in
         description = "Seb";
         isNormalUser = true;
         extraGroups = [ "wheel" "audio" "dialout" ]
-          ++ (lib.optional config.networking.networkmanager.enable "networkmanager")
-          ++ (lib.optional config.hardware.sane.enable "lp")
+          ++ (lib.optional config.networking.networkmanager.enable
+            "networkmanager") ++ (lib.optional config.hardware.sane.enable "lp")
           ++ (lib.optional config.hardware.sane.enable "scanner")
           ++ (lib.optional config.virtualisation.docker.enable "docker")
           ++ (lib.optional config.virtualisation.libvirtd.enable "libvirtd")
           ++ (lib.optional config.virtualisation.lxd.enable "lxd")
-          ++ (lib.optional config.virtualisation.virtualbox.host.enable "vboxusers");
+          ++ (lib.optional config.virtualisation.virtualbox.host.enable
+            "vboxusers");
         uid = 1000;
-        openssh.authorizedKeys.keys = lib.strings.splitString "\n" (
-          lib.strings.removeSuffix "\n" (
-            builtins.readFile ../dotfiles/ssh_authorized_keys.pub));
+        openssh.authorizedKeys.keys = lib.strings.splitString "\n"
+          (lib.strings.removeSuffix "\n"
+            (builtins.readFile ../dotfiles/ssh_authorized_keys.pub));
       };
       root = {
-        openssh.authorizedKeys.keys = lib.strings.splitString "\n" (
-          lib.strings.removeSuffix "\n" (
-            builtins.readFile ../dotfiles/ssh_authorized_keys.pub));
+        openssh.authorizedKeys.keys = lib.strings.splitString "\n"
+          (lib.strings.removeSuffix "\n"
+            (builtins.readFile ../dotfiles/ssh_authorized_keys.pub));
       };
     };
   };
@@ -328,6 +325,15 @@ in
       enable = true;
       wheelNeedsPassword = false;
     };
+  };
+
+  networking.firewall = {
+    enable = lib.mkDefault true;
+    trustedInterfaces = [ ]
+      ++ lib.optionals config.services.tailscale.enable [ "tailscale0" ];
+    allowedUDPPorts = [ ] ++ lib.optionals config.services.tailscale.enable
+      [ config.services.tailscale.port ];
+    checkReversePath = lib.mkIf config.services.tailscale.enable "loose";
   };
 
   services.journald.extraConfig = ''
