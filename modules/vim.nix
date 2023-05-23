@@ -20,10 +20,10 @@ let
         set ignorecase  " do case insensitive search
         set incsearch   " show incremental search results as you type
       '';
-      vam.pluginDictionaries = [{
-        names = [ "vim-nix" "Syntastic" "undotree" ]
-          ++ optional config.programs.vim.fat "YouCompleteMe";
-      }];
+      #vam.pluginDictionaries = [{
+      #  names = [ "vim-nix" "Syntastic" "undotree" ]
+      #    ++ optional config.programs.vim.fat "YouCompleteMe";
+      #}];
     };
   };
 in {

@@ -72,7 +72,7 @@ in {
   #console.keyMap = "us";
 
   # zramSwap.enable = true;
-  boot.cleanTmpDir = lib.mkDefault false;
+  boot.tmp.cleanOnBoot = lib.mkDefault false;
   boot.kernelModules = [ "tcp_bbr" ];
   boot.kernel.sysctl = {
     "fs.inotify.max_user_watches" = 1048576;
@@ -137,13 +137,11 @@ in {
   ];
 
   # creates file /etc/current-system-packages with list of all packages with their versions
-  environment.etc."current-system-packages".text =
-    let
-      packages = builtins.map (p: "${p.name}") config.environment.systemPackages;
-      sortedUnique = builtins.sort builtins.lessThan (lib.unique packages);
-      formatted = builtins.concatStringsSep "\n" sortedUnique;
-    in
-    formatted;
+  environment.etc."current-system-packages".text = let
+    packages = builtins.map (p: "${p.name}") config.environment.systemPackages;
+    sortedUnique = builtins.sort builtins.lessThan (lib.unique packages);
+    formatted = builtins.concatStringsSep "\n" sortedUnique;
+  in formatted;
 
   environment.interactiveShellInit = ''
     # A nix query helper function
@@ -256,32 +254,37 @@ in {
 
   services.openssh = {
     enable = lib.mkDefault true;
-    useDns = lib.mkDefault false;
-    passwordAuthentication = lib.mkDefault false;
-
-    forwardX11 = lib.mkDefault false;
 
     allowSFTP = lib.mkDefault true;
     sftpFlags = lib.mkDefault [ "-f AUTHPRIV" "-l INFO" ];
     moduliFile = ssh-moduli-file;
-    #logLevel = lib.mkDefault "INFO";
+    #logLevel = lib.mkDefault "VERBOSE";
 
-    # https://infosec.mozilla.org/guidelines/openssh
-    kexAlgorithms = [
-      "curve25519-sha256@libssh.org"
-      "ecdh-sha2-nistp521"
-      "ecdh-sha2-nistp384"
-      "ecdh-sha2-nistp256"
-      "diffie-hellman-group-exchange-sha256"
-    ];
-    ciphers =
-      [ "chacha20-poly1305@openssh.com" "aes256-gcm@openssh.com" "aes256-ctr" ];
-    macs = [
-      "hmac-sha2-512-etm@openssh.com"
-      "hmac-sha2-256-etm@openssh.com"
-      "hmac-sha2-512"
-      "hmac-sha2-256"
-    ];
+    settings = {
+      PasswordAuthentication = lib.mkDefault false;
+      UseDns = lib.mkDefault false;
+      X11Forwarding = lib.mkDefault false;
+
+      # https://infosec.mozilla.org/guidelines/openssh
+      KexAlgorithms = [
+        "curve25519-sha256@libssh.org"
+        "ecdh-sha2-nistp521"
+        "ecdh-sha2-nistp384"
+        "ecdh-sha2-nistp256"
+        "diffie-hellman-group-exchange-sha256"
+      ];
+      Ciphers = [
+        "chacha20-poly1305@openssh.com"
+        "aes256-gcm@openssh.com"
+        "aes256-ctr"
+      ];
+      Macs = [
+        "hmac-sha2-512-etm@openssh.com"
+        "hmac-sha2-256-etm@openssh.com"
+        "hmac-sha2-512"
+        "hmac-sha2-256"
+      ];
+    };
     extraConfig = ''
       ClientAliveInterval 30
       ClientAliveCountMax 3

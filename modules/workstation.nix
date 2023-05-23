@@ -199,7 +199,7 @@ in {
     enable = true;
     install = true;
   };
-  services.openssh.forwardX11 = true;
+  services.openssh.settings.X11Forwarding = true;
   documentation.man.enable = true;
 
   sound = {
@@ -237,6 +237,7 @@ in {
 
   services.avahi = {
     enable = true;
+    openFirewall = true;
     ipv6 = true;
     nssmdns = true;
     publish = {
@@ -367,7 +368,7 @@ in {
   };
   hardware.sane = {
     enable = true;
-    extraBackends = with pkgs; [ sane-airscan ];
+    extraBackends = with pkgs; [ sane-airscan hplipWithPlugin ];
   };
 
   services.colord = { enable = true; };
@@ -504,6 +505,11 @@ in {
           "youtube_playlist_dl --extract-audio --audio-format mp3 --audio-quality 0 --socket-timeout 5";
         flac2mp3 =
           "${pkgs.parallel}/bin/parallel ${pkgs.ffmpeg}/bin/ffmpeg -i {} -qscale:a 0 {.}.mp3 ::: ./*.flac";
+        pdfcombine = "gs -sDEVICE=pdfwrite -o ";
+        scanA4pdfFarbe =
+          "${pkgs.hplip}/bin/hp-scan --device=$DRUCKER_URI --dest=pdf --mode=color --size=a4 --compression=none ";
+        scanA4pdfGrau =
+          "${pkgs.hplip}/bin/hp-scan --device=$DRUCKER_URI --dest=pdf --mode=gray --size=a4 --compression=none ";
       };
       interactiveShellInit = ''
         eval "$(direnv hook zsh)"
@@ -518,7 +524,7 @@ in {
   };
   services.earlyoom.enable = lib.mkDefault true;
 
-  qt5 = {
+  qt = {
     enable = true;
     platformTheme = "gtk2";
     style = "cleanlooks";
@@ -530,5 +536,6 @@ in {
     GTK_USE_PORTAL = "0";
     AWS_PAGER = "";
     PYTHONSTARTUP = "${pythonstartup}";
+    DRUCKER_URI = "hpaio:/net/HP_LaserJet_Pro_M148-M149?ip=192.168.190.76";
   };
 }

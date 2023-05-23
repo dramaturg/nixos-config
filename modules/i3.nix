@@ -3,9 +3,8 @@ let
   i3-winmenu = pkgs.stdenv.mkDerivation {
     name = "i3-winmenu";
     buildInputs = [
-      (pkgs.python37.withPackages (pythonPackages: with pythonPackages; [
-        i3-py
-      ]))
+      (pkgs.python3.withPackages
+        (pythonPackages: with pythonPackages; [ i3-py ]))
     ];
     unpackPhase = "true";
     installPhase = ''
@@ -35,7 +34,17 @@ let
 
   monitorSelect = pkgs.writeScriptBin "xrandr-change.sh" ''
     #!${pkgs.stdenv.shell}
-    export PATH="${with pkgs; lib.makeBinPath [xorg.xrandr findutils rofi coreutils pythonPackages.python gnugrep]}"
+    export PATH="${
+      with pkgs;
+      lib.makeBinPath [
+        xorg.xrandr
+        findutils
+        rofi
+        coreutils
+        python3Packages.python
+        gnugrep
+      ]
+    }"
     set -e
 
     state="$(xrandr)";
@@ -128,27 +137,31 @@ let
   '';
 
   cfg = config;
-  unstableTarball = fetchTarball https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
+  unstableTarball = fetchTarball
+    "https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz";
   unstable = import unstableTarball {
     config = removeAttrs config.nixpkgs.config [ "packageOverrides" ];
   };
-in
-{
-  options = {
-    i3statusConfigFile = lib.mkOption {
-      default = "i3status";
-    };
-  };
+in {
+  options = { i3statusConfigFile = lib.mkOption { default = "i3status"; }; };
 
   config = {
     environment.systemPackages = with pkgs; [
-      i3 i3lock dmenu i3-winmenu
-      renameWorkspace monitorSelect reclassAppWindow exposeWorkspace
-      pavucontrol pasystray
+      i3
+      i3lock
+      dmenu
+      i3-winmenu
+      renameWorkspace
+      monitorSelect
+      reclassAppWindow
+      exposeWorkspace
+      pavucontrol
+      pasystray
     ];
 
     environment.etc = {
-      "i3/i3status".source = builtins.toPath ("/etc/nixos/dotfiles/i3/" + (cfg.i3statusConfigFile));
+      "i3/i3status".source =
+        builtins.toPath ("/etc/nixos/dotfiles/i3/" + (cfg.i3statusConfigFile));
     };
 
     security.pam.services.lightdm.enableGnomeKeyring = true;
@@ -176,12 +189,7 @@ in
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [
-            dmenu
-            i3lock
-            i3status
-            i3-winmenu
-          ];
+          extraPackages = with pkgs; [ dmenu i3lock i3status i3-winmenu ];
           configFile = "/etc/nixos/dotfiles/i3/config";
         };
       };
