@@ -1,8 +1,5 @@
 { pkgs, lib, ... }: {
-  imports = [
-    ./workstation.nix
-    ./wifi.nix
-  ];
+  imports = [ ./workstation.nix ./wifi.nix ];
 
   powerManagement = {
     enable = true;
@@ -20,21 +17,21 @@
   };
   services.upower.enable = true;
 
-  services.logind.extraConfig = ''
-    IdleAction=lock
-    IdleActionSec=30s
-    HandleLidSwitch=suspend
-    HandleLidSwitchExternalPower=lock
-    HandleLidSwitchDocked=ignore
-  '';
-
-  environment.systemPackages = with pkgs; [
-    powertop
-  ];
-
-  boot.kernel.sysctl = {
-    "vm.dirty_writeback_centisecs" = 1500;
+  services.logind = {
+    # config for lid close action
+    # 1. if laptop is docked or powered, ignore the lid close
+    # 2. otherwise it will suspend and hibernate, leaves 60s
+    #    for dock or plugin the power
+    lidSwitch = "suspend";
+    lidSwitchDocked = "ignore";
+    lidSwitchExternalPower = "lock";
+    extraConfig =
+      "\n      IdleAction=lock\n      IdleActionSec=30s\n      HoldoffTimeoutSec=60\n    ";
   };
+
+  environment.systemPackages = with pkgs; [ powertop ];
+
+  boot.kernel.sysctl = { "vm.dirty_writeback_centisecs" = 1500; };
 
   hardware = {
     acpilight.enable = true;

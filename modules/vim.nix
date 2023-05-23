@@ -1,40 +1,32 @@
-{ config, pkgs, lib, ...}:
+{ config, pkgs, lib, ... }:
 
 with lib;
 
 let
   myVim = pkgs.vim_configurable.customize {
     name = "vim";
-      vimrcConfig = {
-        customRC = ''
-          syntax on
-          set nu
-          set foldmethod=syntax
-          set listchars=tab:->
-          set list
-          set backspace=indent,eol,start
-          set expandtab
-          set softtabstop=2
-          set shiftwidth=2
-          set autoindent 
+    vimrcConfig = {
+      customRC = ''
+        syntax on
+        set listchars=tab:->
+        set list
+        set backspace=indent,eol,start
+        set expandtab
+        set softtabstop=2
+        set shiftwidth=2
+        set autoindent
 
-          set hlsearch    " highlight all search results
-          set ignorecase  " do case insensitive search
-          set incsearch   " show incremental search results as you type
-        '';
-        vam.pluginDictionaries = [
-        {
-          names = [
-            "vim-nix"
-            "Syntastic"
-            "undotree"
-          ] ++ optional config.programs.vim.fat "YouCompleteMe";
-        }
-      ];
+        set hlsearch    " highlight all search results
+        set ignorecase  " do case insensitive search
+        set incsearch   " show incremental search results as you type
+      '';
+      vam.pluginDictionaries = [{
+        names = [ "vim-nix" "Syntastic" "undotree" ]
+          ++ optional config.programs.vim.fat "YouCompleteMe";
+      }];
     };
   };
-in
-{
+in {
   options = {
     programs.vim.fat = mkOption {
       type = types.bool;
@@ -47,9 +39,7 @@ in
     environment.systemPackages = [ myVim ];
     environment.shellAliases.vi = "vim";
     environment.variables.EDITOR = lib.mkOverride 0 "vim";
-    programs.bash.shellAliases = {
-      vi = "vim";
-    };
+    programs.bash.shellAliases = { vi = "vim"; };
   };
 }
 

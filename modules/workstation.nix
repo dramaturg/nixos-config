@@ -45,17 +45,23 @@ let
     sed 's/\x1b\[[0-9;]*[mGKFH]//g'
   '';
 
+  pythonstartup = pkgs.writeText "pythonstartup.py" ''
+    import sys
+
+    try:
+        from ptpython.repl import embed
+    except ImportError:
+        print("ptpython is not available: falling back to standard prompt")
+    else:
+        sys.exit(embed(globals(), locals()))
+  '';
+
   wallpaper_sh = pkgs.writeScriptBin "wallpaper.sh"
     (builtins.readFile ../scripts/wallpaper.sh);
   unstableTarball = fetchTarball
-    https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz;
-in
-{
-  imports = [
-    ./base.nix
-    ./i3.nix
-    ./embeddeddev.nix
-  ];
+    "https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz";
+in {
+  imports = [ ./base.nix ./i3.nix ./embeddeddev.nix ];
 
   nixpkgs = {
     config.packageOverrides = super:
@@ -104,6 +110,7 @@ in
     vdpauinfo
     libva
     geeqie
+    ffmpeg
 
     # ops
     kubectl
@@ -133,7 +140,9 @@ in
     jq
     ocl-icd
     meld
-    pythonPackages.markdown
+    python3
+    python3Packages.markdown
+    python3Packages.ptpython
     nixfmt
     global
     universal-ctags
@@ -176,11 +185,12 @@ in
     fuse
     sshfs-fuse
     cifs-utils
-    google-drive-ocamlfuse
-    nextcloud-client
+    unstable.nextcloud-client
     enpass
+    #enpass-cli
     chezmoi
-    zip unzip
+    zip
+    unzip
     p7zip
   ];
 
@@ -206,31 +216,6 @@ in
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-  # copied from https://github.com/NixOS/nixpkgs/issues/102547 for high quality cals
-  services.pipewire.media-session.config.bluez-monitor.rules = [
-    {
-      # Matches all cards
-      matches = [ { "device.name" = "~bluez_card.*"; } ];
-      actions = {
-        "update-props" = {
-          "bluez5.reconnect-profiles" = [ "hfp_hf" "hsp_hs" "a2dp_sink" ];
-          # mSBC is not expected to work on all headset + adapter combinations.
-          "bluez5.msbc-support" = true;
-        };
-      };
-    }
-    {
-      matches = [
-        # Matches all sources
-        { "node.name" = "~bluez_input.*"; }
-        # Matches all outputs
-        { "node.name" = "~bluez_output.*"; }
-      ];
-      actions = {
-        "node.pause-on-idle" = false;
-      };
-    }
-  ];
 
   systemd.services.audio-off = {
     description = "Mute audio before suspend";
@@ -275,15 +260,14 @@ in
     };
   };
 
-  services.dbus = {
-    packages = [ pkgs.gnome.gnome-keyring pkgs.gcr ];
-  };
+  services.dbus = { packages = [ pkgs.gnome.gnome-keyring pkgs.gcr ]; };
   services.gvfs.enable = true;
 
   services.gnome = {
     sushi.enable = true;
     gnome-keyring.enable = true;
   };
+  services.ddccontrol.enable = true;
 
   services.redshift = {
     enable = true;
@@ -307,6 +291,7 @@ in
 
     fonts = with pkgs; [
       carlito
+      cascadia-code
       comic-relief
       corefonts
       fantasque-sans-mono
@@ -314,18 +299,26 @@ in
       gohufont
       google-fonts
       ipafont
-      (nerdfonts.override { fonts = [
-        "AnonymousPro"
-        "DroidSansMono"
-        "FiraCode"
-        "HeavyData"
-        "Inconsolata"
-        "Iosevka"
-        "Noto"
-        "SourceCodePro"
-        "Terminus"
-        "Ubuntu"
-      ]; })
+      (nerdfonts.override {
+        fonts = [
+          "AnonymousPro"
+          "DroidSansMono"
+          "FantasqueSansMono"
+          "FiraCode"
+          "Gohu"
+          "HeavyData"
+          "HeavyData"
+          "Inconsolata"
+          "Iosevka"
+          "Mononoki"
+          "Noto"
+          "ShareTechMono"
+          "SourceCodePro"
+          "Terminus"
+          "ProggyClean"
+          "Ubuntu"
+        ];
+      })
       victor-mono
     ];
 
@@ -502,7 +495,7 @@ in
         wergwerf_firefox = "firefox --new-instance --profile $(mktemp -d)";
         wergwerf_chromium = "chromium --user-data-dir $(mktemp -d)";
         youtube_dl =
-          "${pkgs.youtube-dl}/bin/youtube-dl -o '%(title)s.%(ext)s' --no-call-home -f 'bestaudio'";
+          "${pkgs.unstable.youtube-dl}/bin/youtube-dl -o '%(title)s.%(ext)s' --no-call-home -f 'bestaudio'";
         youtube_playlist_dl =
           "youtube_dl -o '%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s' --download-archive downloaded.txt --no-overwrites -ic --yes-playlist --socket-timeout 5";
         youtube_mp3 =
@@ -514,8 +507,14 @@ in
       };
       interactiveShellInit = ''
         eval "$(direnv hook zsh)"
+        source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
       '';
     };
+    command-not-found.enable = false;
+    # for home-manager, use programs.bash.initExtra instead
+    bash.interactiveShellInit = ''
+      source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
+    '';
   };
   services.earlyoom.enable = lib.mkDefault true;
 
@@ -530,5 +529,6 @@ in
     QT_QTA_PLATFORMTHEME = "qt5ct";
     GTK_USE_PORTAL = "0";
     AWS_PAGER = "";
+    PYTHONSTARTUP = "${pythonstartup}";
   };
 }

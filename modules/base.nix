@@ -87,6 +87,8 @@ in {
     screen
     tmux
     rlwrap
+    readline
+    ncurses
     any-nix-shell
 
     # system, hardware & fs
@@ -111,6 +113,8 @@ in {
     moreutils
     patchutils
     gnumake
+    jq
+    jc
 
     # net
     ethtool
@@ -131,6 +135,15 @@ in {
     '')
     optimize-nix
   ];
+
+  # creates file /etc/current-system-packages with list of all packages with their versions
+  environment.etc."current-system-packages".text =
+    let
+      packages = builtins.map (p: "${p.name}") config.environment.systemPackages;
+      sortedUnique = builtins.sort builtins.lessThan (lib.unique packages);
+      formatted = builtins.concatStringsSep "\n" sortedUnique;
+    in
+    formatted;
 
   environment.interactiveShellInit = ''
     # A nix query helper function
